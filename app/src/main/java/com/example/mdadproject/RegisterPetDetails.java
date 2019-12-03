@@ -6,60 +6,63 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-public class RegisterDetails extends AppCompatActivity {
+public class RegisterPetDetails<ToggleButton> extends AppCompatActivity {
 
     private TextView textView5;
     private TextView textView;
-    private EditText txtNric;
+    private EditText txtName;
     private TextView textView2;
-    private EditText txtFirstName;
+    private ToggleButton btnGender;
     private TextView textView3;
     private EditText txtLastName;
     private TextView textView4;
-    private EditText txtTel;
+    private EditText txtAge;
     private TextView textView6;
-    private EditText txtEmail;
+    private DatePicker txtAdoptionDate;
     private TextView textView7;
-    private EditText txtAddress;
+    private EditText txtHeight;
     private TextView textView8;
-    private EditText txtZipcode;
+    private EditText txtWeight;
+    private TextView textView9;
+    private ImageButton btnImage;
     private Button btnNext;
-
-    String nric, firstName, lastName, telephone, email, address, zipcode;
-
-//    private static String url_create_product =MainActivity.ipBaseAddress+"/create_productJson.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_details);
+        setContentView(R.layout.activity_register_pet_details);
 
         textView5 = (TextView)findViewById( R.id.textView5 );
         textView = (TextView)findViewById( R.id.textView );
-        txtNric = (EditText)findViewById( R.id.txtUsername);
+        txtName = (EditText)findViewById( R.id.txtName );
         textView2 = (TextView)findViewById( R.id.textView2 );
-        txtFirstName = (EditText)findViewById( R.id.txtFirstName );
+        btnGender = (ToggleButton)findViewById( R.id.btnGender );
         textView3 = (TextView)findViewById( R.id.textView3 );
         txtLastName = (EditText)findViewById( R.id.txtLastName );
         textView4 = (TextView)findViewById( R.id.textView4 );
-        txtTel = (EditText)findViewById( R.id.txtTel );
+        txtAge = (EditText)findViewById( R.id.txtAge );
         textView6 = (TextView)findViewById( R.id.textView6 );
-        txtEmail = (EditText)findViewById( R.id.txtEmail );
+        txtAdoptionDate = (DatePicker)findViewById( R.id.txtAdoptionDate );
         textView7 = (TextView)findViewById( R.id.textView7 );
-        txtAddress = (EditText)findViewById( R.id.txtAddress );
+        txtHeight = (EditText)findViewById( R.id.txtHeight );
         textView8 = (TextView)findViewById( R.id.textView8 );
-        txtZipcode = (EditText)findViewById( R.id.txtZipcode );
+        txtWeight = (EditText)findViewById( R.id.txtWeight );
+        textView9 = (TextView)findViewById( R.id.textView9 );
+        btnImage = (ImageButton)findViewById( R.id.btnImage );
         btnNext = (Button)findViewById( R.id.btnNext );
 
         getSupportActionBar().hide();
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
                 startActivity(i);
             }
         });
