@@ -26,7 +26,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         textView = (TextView)findViewById( R.id.textView );
-        txtNric = (EditText)findViewById( R.id.txtNric);
+        txtNric = (EditText)findViewById( R.id.txtUsername);
         textView3 = (TextView)findViewById( R.id.textView3 );
         txtPassword = (EditText)findViewById( R.id.txtPassword );
         btnLogin = (Button)findViewById( R.id.btnLogin );
