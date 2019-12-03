@@ -2,7 +2,6 @@ package com.example.mdadproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -27,7 +26,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         textView = (TextView)findViewById( R.id.textView );
-        txtNric = (EditText)findViewById( R.id.txtNric );
+        txtNric = (EditText)findViewById( R.id.txtNric);
         textView3 = (TextView)findViewById( R.id.textView3 );
         txtPassword = (EditText)findViewById( R.id.txtPassword );
         btnLogin = (Button)findViewById( R.id.btnLogin );
