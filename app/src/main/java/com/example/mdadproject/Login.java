@@ -32,7 +32,7 @@ public class Login extends AppCompatActivity {
         btnLogin = (Button)findViewById( R.id.btnLogin );
         btnSignUp = (TextView)findViewById( R.id.btnSignUp );
         textView5 = (TextView)findViewById( R.id.textView5 );
-
+//hello
 //        btnLogin.setOnClickListener( this );
 
         getSupportActionBar().hide();
