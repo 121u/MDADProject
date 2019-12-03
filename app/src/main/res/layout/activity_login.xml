@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="90dp"
         android:text="username"
         android:textColor="#000000"
         android:textSize="18sp"
@@ -57,13 +57,14 @@
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="110sp"
+        android:layout_width="330sp"
         android:layout_height="40sp"
         android:layout_marginTop="30dp"
-        android:text="login"
         android:background="@drawable/button_shadow"
+        android:text="login"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="@+id/txtPassword"
+        app:layout_constraintStart_toStartOf="@+id/txtPassword"
         app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <TextView

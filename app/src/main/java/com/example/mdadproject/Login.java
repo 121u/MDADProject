@@ -38,11 +38,12 @@ public class Login extends AppCompatActivity {
 
         getSupportActionBar().hide();
         setTitle("login");
+//        btnLogin.setEnabled(true);
 
         btnSignUp.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                btnLogin.setEnabled(false);
+//                btnLogin.setEnabled(false);
                 btnSignUp.setClickable(false);
                 Intent i = new Intent(v.getContext(), RegisterDetails.class);
                 startActivity(i);
