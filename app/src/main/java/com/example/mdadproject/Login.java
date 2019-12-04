@@ -24,6 +24,8 @@ import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
+    public static String ipBaseAddress = "http://vetmdad.atspace.cc";
+
     private TextView textView;
     private EditText txtUsername;
     private TextView textView3;
@@ -33,7 +35,7 @@ public class Login extends AppCompatActivity {
     private TextView textView5;
     // url to update product
 
-    public static String ipBaseAddress = "http://vetmdad.atspace.cc";
+
     private static final String url_login = ipBaseAddress+"/login.php";
     // JSON Node names
 
