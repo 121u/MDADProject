@@ -35,6 +35,7 @@ public class Login extends AppCompatActivity {
 //    private static final String url_login = Login.ipBaseAddress+"/loginJ.php";
     // JSON Node names
     //merge test
+    //fuck jarren
     private static final String TAG_SUCCESS = "success";
 
     @Override
