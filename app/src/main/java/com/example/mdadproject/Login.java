@@ -32,11 +32,13 @@ public class Login extends AppCompatActivity {
     private TextView btnSignUp;
     private TextView textView5;
     // url to update product
-//    private static final String url_login = Login.ipBaseAddress+"/loginJ.php";
+
+    public static String ipBaseAddress = "http://vetmdad.atspace.cc";
+    private static final String url_login = ipBaseAddress+"/login.php";
     // JSON Node names
-    //merge test
-    //fuck jarren
+
     private static final String TAG_SUCCESS = "success";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +55,95 @@ public class Login extends AppCompatActivity {
 
         getSupportActionBar().hide();
         setTitle("login");
-//        btnLogin.setEnabled(true);
+        btnLogin.setEnabled(true);
 
-        btnSignUp.setOnTouchListener(new View.OnTouchListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-//                btnLogin.setEnabled(false);
-                btnSignUp.setClickable(false);
-                Intent i = new Intent(v.getContext(), RegisterDetails.class);
-                startActivity(i);
-                return false;
+            public void onClick(View view) {
+
+                String pw= txtPassword.getText().toString();
+                String uName= txtUsername.getText().toString();
+
+                if(pw.isEmpty())
+                {
+                    txtPassword.setError(getString(R.string.error_field_required));
+
+                }else
+
+                if(uName.isEmpty())
+                {
+                    txtUsername.setError(getString(R.string.error_field_required));
+
+                }else
+                {
+                    JSONObject dataJson = new JSONObject();
+                    try{
+                        dataJson.put("username", uName);
+                        dataJson.put("password", pw);
+
+
+                    }catch(JSONException e){
+
+                    }
+
+                    postData(url_login,dataJson,1 );
+
+                }
             }
         });
-
     }
 
+    public void postData(String url, final JSONObject json, final int option){
+
+
+        Log.i("=======", url   );
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest json_obj_req = new JsonObjectRequest(
+                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                switch (option){
+                    case 1:checkResponseLogin(response); break;
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+//                String alert_message;
+//                alert_message = error.toString();
+//                showAlertDialogue("Error", alert_message);
+            }
+
+        });
+        requestQueue.add(json_obj_req);
+    }
+
+    public void checkResponseLogin(JSONObject response)
+    {
+        Log.i("----Response", response+" "+url_login);
+        try {
+            if(response.getInt(TAG_SUCCESS)==1){
+
+                // finish();
+                Intent i = new Intent(this, UserPets.class);
+                startActivity(i);
+                Log.i("121u", "nice");
+            }else{
+                Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
