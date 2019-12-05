@@ -38,17 +38,19 @@
 
         <EditText
             android:id="@+id/txtUsername"
-            android:layout_width="330sp"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="12dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:lines="1"
             android:maxLength="9"
             android:maxLines="1"
-            android:theme="@style/EditTextTheme"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
+            android:theme="@style/EditTextTheme" />
 
         <TextView
             android:id="@+id/textView2"
@@ -63,7 +65,9 @@
 
         <EditText
             android:id="@+id/txtFirstName"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ems="10"
@@ -86,8 +90,10 @@
             android:layout_marginLeft="30dp" />
 
         <EditText
-            android:id="@+id/txtLastName"
-            android:layout_width="330sp"
+            android:id="@+id/txtBreed"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ems="10"
@@ -111,7 +117,9 @@
 
         <EditText
             android:id="@+id/txtTel"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
@@ -136,7 +144,9 @@
 
         <EditText
             android:id="@+id/txtEmail"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
@@ -160,7 +170,9 @@
 
         <EditText
             android:id="@+id/txtAddress"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ems="10"
@@ -185,7 +197,9 @@
 
         <EditText
             android:id="@+id/txtZipcode"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"

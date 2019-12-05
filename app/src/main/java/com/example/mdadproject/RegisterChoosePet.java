@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterChoosePet extends AppCompatActivity {
 
+    public static String pet;
     ListView listView;
     Button btnNext;
     String mTitle[] = {"cat", "dog", "bird", "rabbit", "hamster","terrapin"};
@@ -57,21 +58,27 @@ public class RegisterChoosePet extends AppCompatActivity {
                 view.setSelected(true);
                 if (position ==  0) {
                     Toast.makeText(RegisterChoosePet.this, "cat", Toast.LENGTH_SHORT).show();
+                    pet = "cat";
                 }
                 if (position ==  1) {
                     Toast.makeText(RegisterChoosePet.this, "dog", Toast.LENGTH_SHORT).show();
+                    pet = "dog";
                 }
                 if (position ==  2) {
                     Toast.makeText(RegisterChoosePet.this, "bird", Toast.LENGTH_SHORT).show();
+                    pet = "bird";
                 }
                 if (position ==  3) {
                     Toast.makeText(RegisterChoosePet.this, "rabbit", Toast.LENGTH_SHORT).show();
+                    pet = "rabbit";
                 }
                 if (position ==  4) {
                     Toast.makeText(RegisterChoosePet.this, "hamster", Toast.LENGTH_SHORT).show();
+                    pet = "hamster";
                 }
                 if (position ==  5) {
                     Toast.makeText(RegisterChoosePet.this, "terrapin", Toast.LENGTH_SHORT).show();
+                    pet = "terrapin";
                 }
             }
         });

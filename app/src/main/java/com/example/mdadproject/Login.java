@@ -41,7 +41,6 @@ public class Login extends AppCompatActivity {
 
     private static final String TAG_SUCCESS = "success";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +55,14 @@ public class Login extends AppCompatActivity {
         textView5 = (TextView) findViewById(R.id.textView5);
 
         getSupportActionBar().hide();
-        setTitle("login");
-        btnLogin.setEnabled(true);
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), RegisterDetails.class);
+                startActivity(i);
+            }
+        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -138,7 +143,6 @@ public class Login extends AppCompatActivity {
                 // finish();
                 Intent i = new Intent(this, UserPets.class);
                 startActivity(i);
-                Log.i("121u", "nice");
             }else{
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
             }

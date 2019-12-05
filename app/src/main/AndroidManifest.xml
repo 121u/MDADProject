@@ -24,8 +24,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".UserPets"></activity>
+        <activity
+            android:name=".UserPets1"
+            android:label="@string/title_activity_user_pets1"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".UserPets" />
         <activity android:name=".RegisterPetDetails" />
         <activity android:name=".RegisterChoosePet" />
         <activity android:name=".RegisterUserPass" />
@@ -38,7 +41,5 @@
             </intent-filter>
         </activity>
     </application>
-
-
 
 </manifest>

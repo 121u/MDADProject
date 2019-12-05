@@ -22,14 +22,16 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="349dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView5"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="23dp"
         android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="0dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
@@ -51,6 +53,6 @@
         android:background="@drawable/round_button"
         android:text=">"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/listView" />
 
 </RelativeLayout>

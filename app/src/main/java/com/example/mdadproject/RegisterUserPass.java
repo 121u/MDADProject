@@ -14,6 +14,8 @@ public class RegisterUserPass extends AppCompatActivity {
     private EditText txtPassword;
     private Button btnNext;
 
+    public static String username, password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,25 @@ public class RegisterUserPass extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                username = txtUsername.getText().toString();
+                password = txtPassword.getText().toString();
+
+                if(username.isEmpty())
+                {
+                    txtUsername.setError(getString(R.string.error_field_required));
+
+                }
+                else if(password.isEmpty())
+                {
+                    txtPassword.setError(getString(R.string.error_field_required));
+
+                }
+                else
+                {
+//                    Intent i = new Intent(v.getContext(), RegisterChoosePet.class);
+//                    startActivity(i);
+                }
                 Intent i = new Intent(v.getContext(), RegisterChoosePet.class);
                 startActivity(i);
             }

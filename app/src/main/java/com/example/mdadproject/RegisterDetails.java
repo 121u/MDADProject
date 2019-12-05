@@ -28,7 +28,7 @@ public class RegisterDetails extends AppCompatActivity {
     private EditText txtZipcode;
     private Button btnNext;
 
-    String nric, firstName, lastName, telephone, email, address, zipcode;
+    public static String nric, firstName, lastName, telephone, email, address, zipcode;
 
 //    private static String url_create_product =MainActivity.ipBaseAddress+"/create_productJson.php";
 
@@ -43,7 +43,7 @@ public class RegisterDetails extends AppCompatActivity {
         textView2 = (TextView)findViewById( R.id.textView2 );
         txtFirstName = (EditText)findViewById( R.id.txtFirstName );
         textView3 = (TextView)findViewById( R.id.textView3 );
-        txtLastName = (EditText)findViewById( R.id.txtLastName );
+        txtLastName = (EditText)findViewById( R.id.txtBreed);
         textView4 = (TextView)findViewById( R.id.textView4 );
         txtTel = (EditText)findViewById( R.id.txtTel );
         textView6 = (TextView)findViewById( R.id.textView6 );
@@ -59,6 +59,49 @@ public class RegisterDetails extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                nric = txtNric.getText().toString().toUpperCase();
+                firstName = txtFirstName.getText().toString().toUpperCase();
+                lastName = txtLastName.getText().toString().toUpperCase();
+                telephone = txtTel.getText().toString().toUpperCase();
+                email = txtEmail.getText().toString().toUpperCase();
+                address = txtAddress.getText().toString().toUpperCase();
+                zipcode = txtZipcode.getText().toString().toUpperCase();
+
+                if(nric.isEmpty())
+                {
+                    txtNric.setError(getString(R.string.error_field_required));
+                }
+                else if(firstName.isEmpty())
+                {
+                    txtFirstName.setError(getString(R.string.error_field_required));
+                }
+                else if(lastName.isEmpty())
+                {
+                    txtLastName.setError(getString(R.string.error_field_required));
+                }
+                else if(telephone.isEmpty())
+                {
+                    txtTel.setError(getString(R.string.error_field_required));
+                }
+                else if(email.isEmpty())
+                {
+                    txtEmail.setError(getString(R.string.error_field_required));
+                }
+                else if(address.isEmpty())
+                {
+                    txtAddress.setError(getString(R.string.error_field_required));
+
+                }
+                else if(zipcode.isEmpty())
+                {
+                    txtZipcode.setError(getString(R.string.error_field_required));
+                }
+                else
+                {
+//                    Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+//                    startActivity(i);
+                }
                 Intent i = new Intent(v.getContext(), RegisterUserPass.class);
                 startActivity(i);
             }

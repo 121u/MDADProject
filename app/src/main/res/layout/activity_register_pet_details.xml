@@ -38,7 +38,9 @@
 
         <EditText
             android:id="@+id/txtName"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ems="10"
@@ -63,8 +65,10 @@
             android:layout_marginLeft="30dp" />
 
         <ToggleButton
-            android:id="@+id/btnGender"
-            android:layout_width="330sp"
+            android:id="@+id/btnSex"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textOn="male"
@@ -86,8 +90,10 @@
             android:layout_marginLeft="30dp" />
 
         <EditText
-            android:id="@+id/txtLastName"
-            android:layout_width="330sp"
+            android:id="@+id/txtBreed"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ems="10"
@@ -111,11 +117,13 @@
 
         <EditText
             android:id="@+id/txtAge"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
             android:ems="10"
             android:inputType="number"
             android:lines="1"
@@ -136,7 +144,9 @@
 
         <DatePicker
             android:id="@+id/txtAdoptionDate"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
@@ -157,17 +167,19 @@
 
         <EditText
             android:id="@+id/txtHeight"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:lines="1"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
-            android:hint="in cm"/>
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:ems="10"
+            android:hint="in cm"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            android:theme="@style/EditTextTheme" />
 
         <TextView
             android:id="@+id/textView8"
@@ -182,7 +194,9 @@
 
         <EditText
             android:id="@+id/txtWeight"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
@@ -210,7 +224,9 @@
 
         <ImageButton
             android:id="@+id/btnImage"
-            android:layout_width="330sp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_height="330sp"
             app:srcCompat="@mipmap/ic_launcher"
             android:layout_marginStart="30dp"
