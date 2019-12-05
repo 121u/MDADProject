@@ -25,10 +25,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".UserPets1"
-            android:label="@string/title_activity_user_pets1"
+            android:name=".UserPets"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".UserPets" />
         <activity android:name=".RegisterPetDetails" />
         <activity android:name=".RegisterChoosePet" />
         <activity android:name=".RegisterUserPass" />

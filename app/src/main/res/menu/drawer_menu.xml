@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_appointment"
+            android:icon="@drawable/cat"
+            android:title="book an appointment" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/dog"
+            android:title="profile" />
+        <item
+            android:id="@+id/nav_pet"
+            android:icon="@drawable/bird"
+            android:title="pet(s)" />
+        <item
+            android:id="@+id/nav_qr"
+            android:icon="@drawable/bird"
+            android:title="qr code" />
+    </group>
+
+</menu>
