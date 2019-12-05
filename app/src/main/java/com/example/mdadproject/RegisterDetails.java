@@ -30,29 +30,27 @@ public class RegisterDetails extends AppCompatActivity {
 
     public static String nric, firstName, lastName, telephone, email, address, zipcode;
 
-//    private static String url_create_product =MainActivity.ipBaseAddress+"/create_productJson.php";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_details);
 
-        textView5 = (TextView)findViewById( R.id.textView5 );
-        textView = (TextView)findViewById( R.id.textView );
-        txtNric = (EditText)findViewById( R.id.txtUsername);
-        textView2 = (TextView)findViewById( R.id.textView2 );
-        txtFirstName = (EditText)findViewById( R.id.txtFirstName );
-        textView3 = (TextView)findViewById( R.id.textView3 );
-        txtLastName = (EditText)findViewById( R.id.txtBreed);
-        textView4 = (TextView)findViewById( R.id.textView4 );
-        txtTel = (EditText)findViewById( R.id.txtTel );
-        textView6 = (TextView)findViewById( R.id.textView6 );
-        txtEmail = (EditText)findViewById( R.id.txtEmail );
-        textView7 = (TextView)findViewById( R.id.textView7 );
-        txtAddress = (EditText)findViewById( R.id.txtAddress );
-        textView8 = (TextView)findViewById( R.id.textView8 );
-        txtZipcode = (EditText)findViewById( R.id.txtZipcode );
-        btnNext = (Button)findViewById( R.id.btnNext );
+        textView5 = (TextView) findViewById(R.id.textView5);
+        textView = (TextView) findViewById(R.id.textView);
+        txtNric = (EditText) findViewById(R.id.txtUsername);
+        textView2 = (TextView) findViewById(R.id.textView2);
+        txtFirstName = (EditText) findViewById(R.id.txtFirstName);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        txtLastName = (EditText) findViewById(R.id.txtBreed);
+        textView4 = (TextView) findViewById(R.id.textView4);
+        txtTel = (EditText) findViewById(R.id.txtTel);
+        textView6 = (TextView) findViewById(R.id.textView6);
+        txtEmail = (EditText) findViewById(R.id.txtEmail);
+        textView7 = (TextView) findViewById(R.id.textView7);
+        txtAddress = (EditText) findViewById(R.id.txtAddress);
+        textView8 = (TextView) findViewById(R.id.textView8);
+        txtZipcode = (EditText) findViewById(R.id.txtZipcode);
+        btnNext = (Button) findViewById(R.id.btnNext);
 
         getSupportActionBar().hide();
 
@@ -68,42 +66,24 @@ public class RegisterDetails extends AppCompatActivity {
                 address = txtAddress.getText().toString().toUpperCase();
                 zipcode = txtZipcode.getText().toString().toUpperCase();
 
-                if(nric.isEmpty())
-                {
+                if (nric.isEmpty()) {
                     txtNric.setError(getString(R.string.error_field_required));
-                }
-                else if(firstName.isEmpty())
-                {
+                } else if (firstName.isEmpty()) {
                     txtFirstName.setError(getString(R.string.error_field_required));
-                }
-                else if(lastName.isEmpty())
-                {
+                } else if (lastName.isEmpty()) {
                     txtLastName.setError(getString(R.string.error_field_required));
-                }
-                else if(telephone.isEmpty())
-                {
+                } else if (telephone.isEmpty()) {
                     txtTel.setError(getString(R.string.error_field_required));
-                }
-                else if(email.isEmpty())
-                {
+                } else if (email.isEmpty()) {
                     txtEmail.setError(getString(R.string.error_field_required));
-                }
-                else if(address.isEmpty())
-                {
+                } else if (address.isEmpty()) {
                     txtAddress.setError(getString(R.string.error_field_required));
-
-                }
-                else if(zipcode.isEmpty())
-                {
+                } else if (zipcode.isEmpty()) {
                     txtZipcode.setError(getString(R.string.error_field_required));
+                } else {
+                    Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                    startActivity(i);
                 }
-                else
-                {
-//                    Intent i = new Intent(v.getContext(), RegisterUserPass.class);
-//                    startActivity(i);
-                }
-                Intent i = new Intent(v.getContext(), RegisterUserPass.class);
-                startActivity(i);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.mdadproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class Login extends AppCompatActivity {
     private Button btnLogin;
     private TextView btnSignUp;
     private TextView textView5;
+    private ProgressDialog pDialog;
     // url to update product
 
 
@@ -84,6 +86,12 @@ public class Login extends AppCompatActivity {
 
                 }else
                 {
+                    pDialog = new ProgressDialog(Login.this);
+                    pDialog.setMessage("This purr-obably won't take long..");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(true);
+                    pDialog.show();
+
                     JSONObject dataJson = new JSONObject();
                     try{
                         dataJson.put("username", uName);
@@ -143,6 +151,7 @@ public class Login extends AppCompatActivity {
                 // finish();
                 Intent i = new Intent(this, UserPets.class);
                 startActivity(i);
+                pDialog.dismiss();
             }else{
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
             }

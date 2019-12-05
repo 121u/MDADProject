@@ -51,22 +51,9 @@ public class RegisterPetDetails extends AppCompatActivity {
 
     public static String name, sex, breed, age, dateofadoption, height, weight, image;
 
-    private static String url_create_owner =Login.ipBaseAddress+"/create_ownerJson.php";
     private static String url_create_pet =Login.ipBaseAddress+"/create_petJson.php";
 
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_OWNER = "owner";
-    private static final String TAG_OWNERID = "ownerid";
-    private static final String TAG_NRIC = "nric";
-    private static final String TAG_FIRSTNAME = "firstname";
-    private static final String TAG_LASTNAME = "lastname";
-    private static final String TAG_TELEPHONE = "telephone";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_ZIPCODE = "zipcode";
-    private static final String TAG_USERNAME = "username";
-    private static final String TAG_PASSWORD = "password";
-
     private static final String TAG_NAME = "name";
     private static final String TAG_SEX = "sex";
     private static final String TAG_BREED = "breed";
@@ -83,7 +70,6 @@ public class RegisterPetDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_pet_details);
 
-        Log.i("Ip address CREATE ", url_create_owner);
         Log.i("Ip address CREATE ", url_create_pet);
 
         textView5 = (TextView)findViewById( R.id.textView5 );
@@ -184,16 +170,6 @@ public class RegisterPetDetails extends AppCompatActivity {
 
                 JSONObject dataJson = new JSONObject();
                 try{
-                    dataJson.put(TAG_NRIC, RegisterDetails.nric);
-                    dataJson.put(TAG_FIRSTNAME, RegisterDetails.firstName);
-                    dataJson.put(TAG_LASTNAME, RegisterDetails.lastName);
-                    dataJson.put(TAG_TELEPHONE, RegisterDetails.telephone);
-                    dataJson.put(TAG_EMAIL, RegisterDetails.email);
-                    dataJson.put(TAG_ADDRESS, RegisterDetails.address);
-                    dataJson.put(TAG_ZIPCODE, RegisterDetails.zipcode);
-                    dataJson.put(TAG_USERNAME, RegisterUserPass.username);
-                    dataJson.put(TAG_PASSWORD, RegisterUserPass.password);
-
                     dataJson.put(TAG_NAME, name);
                     dataJson.put(TAG_SEX, sex);
                     dataJson.put(TAG_BREED, breed);
@@ -208,7 +184,6 @@ public class RegisterPetDetails extends AppCompatActivity {
 
                 }
 
-                postData(url_create_owner,dataJson,1 );
                 postData(url_create_pet,dataJson,1 );
             }
         });
