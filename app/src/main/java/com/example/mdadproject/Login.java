@@ -42,6 +42,8 @@ public class Login extends AppCompatActivity {
     // JSON Node names
 
     private static final String TAG_SUCCESS = "success";
+    private static final String TAG_USERNAME = "username";
+    private static final String TAG_PASSWORD = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +96,8 @@ public class Login extends AppCompatActivity {
 
                     JSONObject dataJson = new JSONObject();
                     try{
-                        dataJson.put("username", uName);
-                        dataJson.put("password", pw);
+                        dataJson.put(TAG_USERNAME, uName);
+                        dataJson.put(TAG_PASSWORD, pw);
 
 
                     }catch(JSONException e){
@@ -149,8 +151,12 @@ public class Login extends AppCompatActivity {
             if(response.getInt(TAG_SUCCESS)==1){
 
                 // finish();
-                Intent i = new Intent(this, UserPets.class);
-                startActivity(i);
+//                Intent i = new Intent(this, UserPets.class);
+//                startActivity(i);
+                String username = txtUsername.getText().toString();
+                Intent in = new Intent(getApplicationContext(), UserPets.class);
+                in.putExtra(TAG_USERNAME,username);
+                startActivityForResult(in, 100);
                 pDialog.dismiss();
             }else{
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
