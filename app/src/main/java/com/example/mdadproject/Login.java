@@ -154,9 +154,10 @@ public class Login extends AppCompatActivity {
 //                Intent i = new Intent(this, UserPets.class);
 //                startActivity(i);
                 String username = txtUsername.getText().toString();
-                Intent in = new Intent(getApplicationContext(), UserPets.class);
-                in.putExtra(TAG_USERNAME,username);
-                startActivityForResult(in, 100);
+                Intent intent = new Intent(getApplicationContext(), UserPets.class);
+                intent.putExtra(TAG_USERNAME,username);
+                startActivityForResult(intent, 100);
+                Log.i("page1",username);
                 pDialog.dismiss();
             }else{
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();

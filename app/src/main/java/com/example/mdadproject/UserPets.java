@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,27 +39,27 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
 
-    public static final String TAG_SUCCESS = "success";
-    public static final String TAG_OWNERS = "owner";
-    public static final String TAG_OWNERID = "ownerid";
-    public static final String TAG_NRIC = "nric";
-    public static final String TAG_FIRSTNAME = "firstname";
-    public static final String TAG_LASTNAME = "lastname";
-    public static final String TAG_TELEPHONE = "telephone";
-    public static final String TAG_EMAIL = "email";
-    public static final String TAG_ADDRESS = "address";
-    public static final String TAG_ZIPCODE = "zipcode";
-    public static final String TAG_USERNAME = "username";
-    public static final String TAG_PASSWORD = "password";
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_OWNERS = "owner";
+    private static final String TAG_OWNERID = "ownerid";
+    private static final String TAG_NRIC = "nric";
+    private static final String TAG_FIRSTNAME = "firstname";
+    private static final String TAG_LASTNAME = "lastname";
+    private static final String TAG_TELEPHONE = "telephone";
+    private static final String TAG_EMAIL = "email";
+    private static final String TAG_ADDRESS = "address";
+    private static final String TAG_ZIPCODE = "zipcode";
+    private static final String TAG_USERNAME = "username";
+    private static final String TAG_PASSWORD = "password";
 
-    public static  String ownNric = "";
-    public static  String ownFirstName = "";
-    public static  String ownLastName = "";
-    public static  String ownTel = "";
-    public static  String ownEmail = "";
-    public static  String ownAddress = "";
-    public static  String ownZipcode = "";
-    public static  String ownUsername = "";
+    private static  String ownNric = "";
+    private static  String ownFirstName = "";
+    private static  String ownLastName = "";
+    private static  String ownTel = "";
+    private static  String ownEmail = "";
+    private static  String ownAddress = "";
+    private static  String ownZipcode = "";
+    private static  String ownUsername = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,23 +68,14 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 
         setTitle("");
 
-        Log.i("url_owner", UserPets.url_owner);
-        Intent i = getIntent();
-
-        username = i.getStringExtra(UserPets.TAG_USERNAME);
-
-        JSONObject dataJson = new JSONObject();
-        try {
-            dataJson.put("username", username);
-        } catch (JSONException e) {
-
-        }
-        postData(UserPets.url_owner, dataJson);
+        Intent intent = getIntent();
+        username = intent.getStringExtra(TAG_USERNAME);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -93,6 +85,8 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         txtGreeting.setText("Hello, " + ownFirstName + "!");
         txtUserN.setText(username);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
                 toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -105,75 +99,18 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    public void postData(String url, final JSONObject json){
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        JsonObjectRequest json_obj_req = new JsonObjectRequest(
-                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                checkResponse(response, json);
-
-//                String alert_message;
-//                alert_message = response.toString();
-
-//                showAlertDialogue("Response", alert_message);
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-
-//                String alert_message;
-//                alert_message = error.toString();
-
-//                showAlertDialogue("Error", alert_message);
-
-            }
-
-        });
-
-        requestQueue.add(json_obj_req);
-    }
-
-    private void checkResponse(JSONObject response, JSONObject creds) {
-        try {
-            if (response.getInt(UserPets.TAG_SUCCESS) == 1) {
-
-                JSONArray ownerObj = response.getJSONArray(UserPets.TAG_OWNERS);
-
-                JSONObject owner = ownerObj.getJSONObject(0);
-                ownNric = owner.getString(TAG_NRIC);
-                ownFirstName = owner.getString(TAG_FIRSTNAME);
-                ownLastName = owner.getString(TAG_LASTNAME);
-                ownTel = owner.getString(TAG_TELEPHONE);
-                ownEmail = owner.getString(TAG_EMAIL);
-                ownAddress = owner.getString(TAG_ADDRESS);
-                ownZipcode = owner.getString(TAG_ZIPCODE);
-                ownUsername = owner.getString(TAG_USERNAME);
-            } else {
-                Log.i("nric","oops");
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.nav_appointment:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AppointmentFragment()).commit();
                 break;
             case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProfileFragment()).commit();
+                Log.i("page1",username);
+                intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.putExtra(TAG_USERNAME,username);
                 break;
             case R.id.nav_pet:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -184,17 +121,8 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                         new QRCodeFragment()).commit();
                 break;
         }
-
+        startActivityForResult(intent,100);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 }

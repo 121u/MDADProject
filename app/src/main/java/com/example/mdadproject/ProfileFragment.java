@@ -79,12 +79,12 @@ public class ProfileFragment extends Fragment {
         txtAddress.setEnabled(false);
         txtZipcode.setEnabled(false);
 
-        txtNric.setText(UserPets.ownNric);
-        txtFirstName.setText(UserPets.ownFirstName);
-        txtLastName.setText(UserPets.ownLastName);
-        txtTel.setText(UserPets.ownTel);
-        txtEmail.setText(UserPets.ownEmail);
-        txtAddress.setText(UserPets.ownAddress);
-        txtZipcode.setText(UserPets.ownZipcode);
+//        txtNric.setText(UserPets.ownNric);
+//        txtFirstName.setText(UserPets.ownFirstName);
+//        txtLastName.setText(UserPets.ownLastName);
+//        txtTel.setText(UserPets.ownTel);
+//        txtEmail.setText(UserPets.ownEmail);
+//        txtAddress.setText(UserPets.ownAddress);
+//        txtZipcode.setText(UserPets.ownZipcode);
     }
 }
