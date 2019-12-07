@@ -1,128 +1,92 @@
 package com.example.mdadproject;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 
-import android.content.Intent;
-import android.hardware.usb.UsbRequest;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
+public class UserPets extends AppCompatActivity {
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.material.navigation.NavigationView;
+    public static String pet;
+    ListView listView;
+    Button btnNext;
+    String mTitle[] = {"cat", "dog", "bird", "rabbit", "hamster","terrapin"};
+    int images[] = {R.drawable.cat, R.drawable.dog, R.drawable.bird, R.drawable.rabbit, R.drawable.hamster, R.drawable.terrapin};
+    // so our images and other things are set in array
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class UserPets extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private DrawerLayout drawer;
-    private TextView txtGreeting;
-    private TextView txtUserN;
-
-    JSONObject json = null;
-    String username;
-
-    public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
-
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_OWNERS = "owner";
-    private static final String TAG_OWNERID = "ownerid";
-    private static final String TAG_NRIC = "nric";
-    private static final String TAG_FIRSTNAME = "firstname";
-    private static final String TAG_LASTNAME = "lastname";
-    private static final String TAG_TELEPHONE = "telephone";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_ZIPCODE = "zipcode";
-    private static final String TAG_USERNAME = "username";
-    private static final String TAG_PASSWORD = "password";
-
-    private static  String ownNric = "";
-    private static  String ownFirstName = "";
-    private static  String ownLastName = "";
-    private static  String ownTel = "";
-    private static  String ownEmail = "";
-    private static  String ownAddress = "";
-    private static  String ownZipcode = "";
-    private static  String ownUsername = "";
+    // now paste some images in drawable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_pets);
 
-        setTitle("");
-
-        Intent intent = getIntent();
-        username = intent.getStringExtra(TAG_USERNAME);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        drawer = findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        View header = navigationView.getHeaderView(0);
-        txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-        txtUserN = (TextView) header.findViewById(R.id.txtUsern);
-        txtGreeting.setText("Hello, " + ownFirstName + "!");
-        txtUserN.setText(username);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                PorterDuff.Mode.SRC_ATOP);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new AppointmentFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_appointment);
-        }
+        listView = (ListView)findViewById(R.id.listView);
+
+        final MyAdapter adapter = new MyAdapter(this, mTitle, images);
+        listView.setAdapter(adapter);
+
+        // now set item click on list view
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                view.setSelected(true);
+                if (position ==  0) {
+
+                }
+            }
+        });
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Intent intent = null;
-        switch (item.getItemId()) {
-            case R.id.nav_appointment:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AppointmentFragment()).commit();
-                break;
-            case R.id.nav_profile:
-                Log.i("page1",username);
-                intent = new Intent(getApplicationContext(), UserProfile.class);
-                intent.putExtra(TAG_USERNAME,username);
-                break;
-            case R.id.nav_pet:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new PetsFragment()).commit();
-                break;
-            case R.id.nav_qr:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new QRCodeFragment()).commit();
-                break;
+    class MyAdapter extends ArrayAdapter<String> {
+
+        Context context;
+        String rTitle[];
+        int rImgs[];
+
+        MyAdapter (Context c, String title[], int imgs[]) {
+            super(c, R.layout.row, R.id.textView1, title);
+            this.context = c;
+            this.rTitle = title;
+            this.rImgs = imgs;
         }
-        startActivityForResult(intent,100);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = layoutInflater.inflate(R.layout.row2, parent, false);
+            ImageView images = row.findViewById(R.id.image);
+            TextView myTitle = row.findViewById(R.id.textView1);
+
+            // now set our resources on views
+            images.setImageResource(rImgs[position]);
+            myTitle.setText(rTitle[position]);
+
+            return row;
+        }
     }
 }

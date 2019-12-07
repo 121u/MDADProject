@@ -25,10 +25,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".UserProfile"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".UserPets"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserBookAppointment"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RegisterPetDetails" />
         <activity android:name=".RegisterChoosePet" />

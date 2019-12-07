@@ -76,7 +76,7 @@ public class UserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("We're seeing a lot of pet-tential\n..");
+        pDialog.setMessage("We're seeing a lot of p`et-tential\n..");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(true);
         pDialog.show();
@@ -85,7 +85,8 @@ public class UserProfile extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black), PorterDuff.Mode.SRC_ATOP);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                PorterDuff.Mode.SRC_ATOP);
 
         textView5 = (TextView) findViewById(R.id.textView5);
         textView = (TextView) findViewById(R.id.textView);

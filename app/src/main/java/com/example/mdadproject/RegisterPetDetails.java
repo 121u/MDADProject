@@ -224,7 +224,7 @@ public class RegisterPetDetails extends AppCompatActivity {
             if(response.getInt(TAG_SUCCESS)==1){
 
                 finish();
-                Intent i = new Intent(this, UserPets.class);
+                Intent i = new Intent(this, UserBookAppointment.class);
                 startActivity(i);
 
                 // dismiss the dialog once product uupdated

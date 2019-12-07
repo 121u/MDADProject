@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -151,10 +150,10 @@ public class Login extends AppCompatActivity {
             if(response.getInt(TAG_SUCCESS)==1){
 
                 // finish();
-//                Intent i = new Intent(this, UserPets.class);
+//                Intent i = new Intent(this, UserBookAppointment.class);
 //                startActivity(i);
                 String username = txtUsername.getText().toString();
-                Intent intent = new Intent(getApplicationContext(), UserPets.class);
+                Intent intent = new Intent(getApplicationContext(), UserBookAppointment.class);
                 intent.putExtra(TAG_USERNAME,username);
                 startActivityForResult(intent, 100);
                 Log.i("page1",username);
