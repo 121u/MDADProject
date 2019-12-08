@@ -27,6 +27,7 @@
         <activity
             android:name=".UserPets"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TestListView" />
         <activity
             android:name=".UserProfile"
             android:theme="@style/AppTheme.NoActionBar" />

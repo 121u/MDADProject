@@ -76,7 +76,7 @@ public class UserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("We're seeing a lot of p`et-tential\n..");
+        pDialog.setMessage("We're seeing a lot of pet-tential..");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(true);
         pDialog.show();
