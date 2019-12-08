@@ -175,7 +175,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                     dataJson.put(TAG_BREED, breed);
                     dataJson.put(TAG_AGE, age);
                     dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
-                    dataJson.put(TAG_HEIGHT, sex);
+                    dataJson.put(TAG_HEIGHT, height);
                     dataJson.put(TAG_WEIGHT, weight);
                     dataJson.put(TAG_PET, RegisterChoosePet.pet);
                     dataJson.put(TAG_IMAGE, image);

@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +33,9 @@ public class UserPets extends AppCompatActivity {
     JSONArray pets = null;
     ListView listView;
     String username;
+    String pid;
     ProgressDialog pDialog;
+    FloatingActionButton fab;
 
     public static String url_pet = Login.ipBaseAddress + "/get_all_petsJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -65,6 +71,17 @@ public class UserPets extends AppCompatActivity {
                 PorterDuff.Mode.SRC_ATOP);
 
         listView = (ListView) findViewById(R.id.listView);
+        fab = (FloatingActionButton) findViewById(R.id.btnAdd);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                intent = new Intent(getApplicationContext(), RegisterChoosePet.class);
+                intent.putExtra(TAG_USERNAME,username);
+                startActivityForResult(intent,100);
+            }
+        });
 
         Intent intent = getIntent();
 
@@ -77,6 +94,19 @@ public class UserPets extends AppCompatActivity {
 
         }
         postData(url_pet, dataJson);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
+                Intent in = new Intent(getApplicationContext(), PetDetails.class);
+                // sending pid to next activity
+                in.putExtra(TAG_PID, pid);
+                // starting new activity and expecting some response back
+                startActivityForResult(in, 100);
+            }
+        });
 
     }
 
@@ -128,7 +158,6 @@ public class UserPets extends AppCompatActivity {
 
                 // looping through All Products
                 for (int i = 0; i < pets.length(); i++) {
-                    Log.i("oops", "nothing");
                     JSONObject c = pets.getJSONObject(i);
 
                     Pet p = new Pet();
@@ -153,7 +182,7 @@ public class UserPets extends AppCompatActivity {
                 pDialog.dismiss();
             }
             else{
-                Log.i("oops", "nothing");
+                pDialog.dismiss();
 
             }
 

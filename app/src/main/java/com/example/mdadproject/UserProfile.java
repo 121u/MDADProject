@@ -64,7 +64,6 @@ public class UserProfile extends AppCompatActivity {
     private static  String ownEmail = "";
     private static  String ownAddress = "";
     private static  String ownZipcode = "";
-    private static  String ownUsername = "";
 
     JSONObject json=null;
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
@@ -112,7 +111,7 @@ public class UserProfile extends AppCompatActivity {
         txtAddress.setEnabled(false);
         txtZipcode.setEnabled(false);
 
-        Log.i("url_owner", url_owner);
+        Log.i("url_pet", url_owner);
         Intent intent = getIntent();
 
         username = intent.getStringExtra(TAG_USERNAME);

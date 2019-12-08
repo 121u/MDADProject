@@ -82,9 +82,9 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         toggle.syncState();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new AppointmentFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_appointment);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                    new AppointmentFragment()).commit();
+//            navigationView.setCheckedItem(R.id.nav_appointment);
         }
     }
 
@@ -93,8 +93,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         Intent intent = null;
         switch (item.getItemId()) {
             case R.id.nav_appointment:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AppointmentFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new AppointmentFragment()).commit();
                 break;
             case R.id.nav_profile:
                 Log.i("page1",username);
@@ -106,8 +106,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                 intent.putExtra(TAG_USERNAME,username);
                 break;
             case R.id.nav_qr:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new QRCodeFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new QRCodeFragment()).commit();
                 break;
         }
         startActivityForResult(intent,100);

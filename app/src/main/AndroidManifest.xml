@@ -24,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".PetDetails"></activity>
         <activity
             android:name=".UserPets"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TestListView" />
         <activity
             android:name=".UserProfile"
             android:theme="@style/AppTheme.NoActionBar" />

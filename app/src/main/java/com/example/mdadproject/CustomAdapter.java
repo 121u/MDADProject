@@ -49,11 +49,11 @@ public class CustomAdapter extends BaseAdapter {
 
         Pet tempPet = (Pet) getItem(position);
 
-//        TextView tvId = (TextView)convertView.findViewById(R.id.pid);
+        TextView tvId = (TextView)convertView.findViewById(R.id.pid);
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         ImageView imgPet = (ImageView)convertView.findViewById(R.id.imgPet);
 
-//        tvId.setText(tempPet.getPid());
+        tvId.setText(tempPet.getPid());
         tvName.setText(tempPet.getName());
         String iconSrc = tempPet.getPet();
         imgPet.setImageResource(mContext.getResources().getIdentifier(iconSrc,"drawable",mContext.getPackageName()));
