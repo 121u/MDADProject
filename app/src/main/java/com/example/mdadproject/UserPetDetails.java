@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PetDetails extends AppCompatActivity {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class UserPetDetails extends AppCompatActivity {
 
     private TextView textView5;
     private TextView textView;
@@ -37,7 +40,7 @@ public class PetDetails extends AppCompatActivity {
     private TextView textView4;
     private EditText txtAge;
     private TextView textView6;
-    private DatePicker txtAdoptionDate;
+    private TextView txtAdoptionDate;
     private TextView textView7;
     private EditText txtHeight;
     private TextView textView8;
@@ -75,7 +78,7 @@ public class PetDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pet_details);
+        setContentView(R.layout.activity_user_pet_details);
 
         textView5 = (TextView)findViewById( R.id.textView5 );
         textView = (TextView)findViewById( R.id.textView );
@@ -87,7 +90,7 @@ public class PetDetails extends AppCompatActivity {
         textView4 = (TextView)findViewById( R.id.textView4 );
         txtAge = (EditText)findViewById( R.id.txtAge );
         textView6 = (TextView)findViewById( R.id.textView6 );
-        txtAdoptionDate = (DatePicker)findViewById( R.id.txtAdoptionDate );
+        txtAdoptionDate = (TextView) findViewById( R.id.txtAdoptionDate );
         textView7 = (TextView)findViewById( R.id.textView7 );
         txtHeight = (EditText)findViewById( R.id.txtHeight );
         textView8 = (TextView)findViewById( R.id.textView8 );
@@ -177,7 +180,7 @@ public class PetDetails extends AppCompatActivity {
                 btnSex.setText(petSex);
                 txtBreed.setText(petBreed);
                 txtAge.setText(petAge);
-//                txtAdoptionDate.setText(petAge);
+                txtAdoptionDate.setText(petDate);
                 txtHeight.setText(petHeight);
                 txtWeight.setText(petWeight);
 //                btnImage

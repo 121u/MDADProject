@@ -49,9 +49,9 @@ public class RegisterPetDetails extends AppCompatActivity {
     private Button btnNext;
     private ProgressDialog pDialog;
 
-    public static String name, sex, breed, age, dateofadoption, height, weight, image;
+    public static String name, sex, breed, age, dateofadoption, height, weight, image, username;
 
-    private static String url_create_pet =Login.ipBaseAddress+"/create_petJson.php";
+    private static String url_create_pet = Login.ipBaseAddress + "/create_petJson.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_NAME = "name";
@@ -63,6 +63,7 @@ public class RegisterPetDetails extends AppCompatActivity {
     private static final String TAG_WEIGHT = "weight";
     private static final String TAG_PET = "pet";
     private static final String TAG_IMAGE = "image";
+    private static final String TAG_USERNAME = "username";
 
 
     @Override
@@ -70,26 +71,30 @@ public class RegisterPetDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_pet_details);
 
+        Intent intent = getIntent();
+        username = intent.getStringExtra(TAG_USERNAME);
+        Log.i("nric", username);
+
         Log.i("Ip address CREATE ", url_create_pet);
 
-        textView5 = (TextView)findViewById( R.id.textView5 );
-        textView = (TextView)findViewById( R.id.textView );
-        txtName = (EditText)findViewById( R.id.txtName );
-        textView2 = (TextView)findViewById( R.id.textView2 );
-        final ToggleButton btnSex = (ToggleButton)findViewById( R.id.btnSex);
-        textView3 = (TextView)findViewById( R.id.textView3 );
-        txtBreed = (EditText)findViewById( R.id.txtBreed);
-        textView4 = (TextView)findViewById( R.id.textView4 );
-        txtAge = (EditText)findViewById( R.id.txtAge );
-        textView6 = (TextView)findViewById( R.id.textView6 );
-        txtAdoptionDate = (DatePicker)findViewById( R.id.txtAdoptionDate );
-        textView7 = (TextView)findViewById( R.id.textView7 );
-        txtHeight = (EditText)findViewById( R.id.txtHeight );
-        textView8 = (TextView)findViewById( R.id.textView8 );
-        txtWeight = (EditText)findViewById( R.id.txtWeight );
-        textView9 = (TextView)findViewById( R.id.textView9 );
-        btnImage = (ImageButton)findViewById( R.id.btnImage );
-        btnNext = (Button)findViewById( R.id.btnNext );
+        textView5 = (TextView) findViewById(R.id.textView5);
+        textView = (TextView) findViewById(R.id.textView);
+        txtName = (EditText) findViewById(R.id.txtName);
+        textView2 = (TextView) findViewById(R.id.textView2);
+        final ToggleButton btnSex = (ToggleButton) findViewById(R.id.btnSex);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        txtBreed = (EditText) findViewById(R.id.txtBreed);
+        textView4 = (TextView) findViewById(R.id.textView4);
+        txtAge = (EditText) findViewById(R.id.txtAge);
+        textView6 = (TextView) findViewById(R.id.textView6);
+        txtAdoptionDate = (DatePicker) findViewById(R.id.txtAdoptionDate);
+        textView7 = (TextView) findViewById(R.id.textView7);
+        txtHeight = (EditText) findViewById(R.id.txtHeight);
+        textView8 = (TextView) findViewById(R.id.textView8);
+        txtWeight = (EditText) findViewById(R.id.txtWeight);
+        textView9 = (TextView) findViewById(R.id.textView9);
+        btnImage = (ImageButton) findViewById(R.id.btnImage);
+        btnNext = (Button) findViewById(R.id.btnNext);
 
         getSupportActionBar().hide();
 
@@ -139,8 +144,8 @@ public class RegisterPetDetails extends AppCompatActivity {
                 age = txtAge.getText().toString().toUpperCase();
 
                 //get date from datepicker
-                int day  = txtAdoptionDate.getDayOfMonth();
-                int month= txtAdoptionDate.getMonth();
+                int day = txtAdoptionDate.getDayOfMonth();
+                int month = txtAdoptionDate.getMonth();
                 int year = txtAdoptionDate.getYear();
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
@@ -152,15 +157,15 @@ public class RegisterPetDetails extends AppCompatActivity {
                 weight = txtWeight.getText().toString().toUpperCase();
                 image = "image";
 
-                Log.i("name",RegisterChoosePet.pet);
-                Log.i("name",name);
-                Log.i("name",sex);
-                Log.i("name",breed);
+                Log.i("name", RegisterChoosePet.pet);
+                Log.i("name", name);
+                Log.i("name", sex);
+                Log.i("name", breed);
                 Log.i("name", age);
-                Log.i("name",dateofadoption);
-                Log.i("name",height);
-                Log.i("name",weight);
-                Log.i("name",image);
+                Log.i("name", dateofadoption);
+                Log.i("name", height);
+                Log.i("name", weight);
+                Log.i("name", image);
 
                 pDialog = new ProgressDialog(RegisterPetDetails.this);
                 pDialog.setMessage("Welcoming you to the bark side..");
@@ -169,7 +174,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 pDialog.show();
 
                 JSONObject dataJson = new JSONObject();
-                try{
+                try {
                     dataJson.put(TAG_NAME, name);
                     dataJson.put(TAG_SEX, sex);
                     dataJson.put(TAG_BREED, breed);
@@ -179,17 +184,18 @@ public class RegisterPetDetails extends AppCompatActivity {
                     dataJson.put(TAG_WEIGHT, weight);
                     dataJson.put(TAG_PET, RegisterChoosePet.pet);
                     dataJson.put(TAG_IMAGE, image);
+                    dataJson.put(TAG_USERNAME, username);
 
-                }catch(JSONException e){
+                } catch (JSONException e) {
 
                 }
 
-                postData(url_create_pet,dataJson,1 );
+                postData(url_create_pet, dataJson, 1);
             }
         });
     }
 
-    public void postData(String url, final JSONObject json, final int option){
+    public void postData(String url, final JSONObject json, final int option) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest json_obj_req = new JsonObjectRequest(
                 Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
@@ -197,8 +203,10 @@ public class RegisterPetDetails extends AppCompatActivity {
             public void onResponse(JSONObject response) {
 
 
-                switch (option){
-                    case 1:checkResponseCreate_Product(response); break;
+                switch (option) {
+                    case 1:
+                        checkResponseCreate_Product(response);
+                        break;
 
                 }
 
@@ -217,20 +225,18 @@ public class RegisterPetDetails extends AppCompatActivity {
         requestQueue.add(json_obj_req);
     }
 
-    public void checkResponseCreate_Product(JSONObject response)
-    {
-        Log.i("----Response", response+" ");
+    public void checkResponseCreate_Product(JSONObject response) {
+        Log.i("----Response", response + " ");
         try {
-            if(response.getInt(TAG_SUCCESS)==1){
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
                 finish();
-                Intent i = new Intent(this, UserBookAppointment.class);
+                Intent i = new Intent(this, Login.class);
                 startActivity(i);
-
                 // dismiss the dialog once product uupdated
                 pDialog.dismiss();
 
-            }else{
+            } else {
                 // product with pid not found
             }
 

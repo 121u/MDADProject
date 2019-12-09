@@ -92,7 +92,7 @@ public class RegisterUserPass extends AppCompatActivity {
                     } catch (JSONException e) {
 
                     }
-                    postData(url_create_owner,dataJson,1 );
+                    postData(url_create_owner, dataJson, 1);
                 }
             }
         });
@@ -134,7 +134,7 @@ public class RegisterUserPass extends AppCompatActivity {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
                 finish();
-                Intent i = new Intent(this, UserBookAppointment.class);
+                Intent i = new Intent(this, Login.class);
                 startActivity(i);
                 // dismiss the dialog once product uupdated
                 pDialog.dismiss();

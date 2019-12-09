@@ -57,6 +57,8 @@ public class UserPets extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_pets);
 
+        Log.i("url", url_pet);
+
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("We're giving it whatevfur we'ge got..");
         pDialog.setIndeterminate(false);
@@ -100,7 +102,7 @@ public class UserPets extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
-                Intent in = new Intent(getApplicationContext(), PetDetails.class);
+                Intent in = new Intent(getApplicationContext(), UserPetDetails.class);
                 // sending pid to next activity
                 in.putExtra(TAG_PID, pid);
                 // starting new activity and expecting some response back

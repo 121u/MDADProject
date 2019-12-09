@@ -3,6 +3,7 @@ package com.example.mdadproject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ public class RegisterChoosePet extends AppCompatActivity {
     public static String pet;
     ListView listView;
     Button btnNext;
+    String username = "";
+    private static final String TAG_USERNAME = "username";
+
     String mTitle[] = {"cat", "dog", "bird", "rabbit", "hamster","terrapin"};
     int images[] = {R.drawable.cat, R.drawable.dog, R.drawable.bird, R.drawable.rabbit, R.drawable.hamster, R.drawable.terrapin};
     // so our images and other things are set in array
@@ -33,6 +37,11 @@ public class RegisterChoosePet extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_choose_pet);
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra(TAG_USERNAME);
+
+        Log.i("nric",username);
 
         listView = (ListView)findViewById(R.id.listView);
         btnNext = (Button)findViewById(R.id.btnNext);
@@ -45,8 +54,10 @@ public class RegisterChoosePet extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), RegisterPetDetails.class);
-                startActivity(i);
+                Intent intent = null;
+                intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
+                intent.putExtra(TAG_USERNAME,username);
+                startActivityForResult(intent,100);
             }
         });
 

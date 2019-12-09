@@ -74,6 +74,8 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        setTitle("");
+
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("We're seeing a lot of pet-tential..");
         pDialog.setIndeterminate(false);
