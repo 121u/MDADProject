@@ -1,14 +1,10 @@
 package com.example.mdadproject;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,7 +45,7 @@ public class CustomAdapter extends BaseAdapter {
 
         Pet tempPet = (Pet) getItem(position);
 
-        TextView tvId = (TextView)convertView.findViewById(R.id.pid);
+        TextView tvId = (TextView)convertView.findViewById(R.id.id);
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         ImageView imgPet = (ImageView)convertView.findViewById(R.id.imgPet);
 

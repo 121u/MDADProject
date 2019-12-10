@@ -101,7 +101,7 @@ public class UserPets extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String pid = ((TextView) view.findViewById(R.id.pid)).getText().toString();
+                String pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
                 Intent in = new Intent(getApplicationContext(), UserPetDetails.class);
                 // sending pid to next activity
                 in.putExtra(TAG_PID, pid);
@@ -154,8 +154,6 @@ public class UserPets extends AppCompatActivity {
         try {
             if(response.getInt(TAG_SUCCESS)==1){
 
-                // products found
-                // Getting Array of Products
                 pets = response.getJSONArray(TAG_PETS);
 
                 // looping through All Products
@@ -185,7 +183,6 @@ public class UserPets extends AppCompatActivity {
             }
             else{
                 pDialog.dismiss();
-
             }
 
         } catch (JSONException e) {

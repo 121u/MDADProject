@@ -2,6 +2,8 @@ package com.example.mdadproject;
 
 import android.app.Person;
 
+import androidx.annotation.NonNull;
+
 class Pet {
 
     public Pet() {
@@ -121,5 +123,11 @@ class Pet {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
     }
 }

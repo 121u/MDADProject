@@ -10,14 +10,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,8 +35,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class UserBookAppointment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ProgressDialog pDialog;
@@ -47,15 +53,12 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     private FloatingActionButton button;
     private Spinner spinner2;
 
-    JSONObject json = null;
     String username;
 
     public static String url_create_appointment = Login.ipBaseAddress + "/create_appointmentJson.php";
-    public static String url_get_PetList = Login.ipBaseAddress + "/get_petListJson.php";
+    public static String url_get_PetList = Login.ipBaseAddress + "/get_all_petsJson.php";
 
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_APPOINTMENT = "appointment";
-    private static final String TAG_ID = "id";
     private static final String TAG_DATE = "date";
     private static final String TAG_STARTTIME = "starttime";
     private static final String TAG_ENDTIME = "endtime";
@@ -63,32 +66,45 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     private static final String TAG_PID = "pid";
     private static final String TAG_USERNAME = "username";
 
-    ArrayList<HashMap<String, String>> petsList;
-    private static final String TAG_PETS = "pet";
+    List<Pet> petList = new ArrayList<>();
+    private static final String TAG_PETS = "pets";
     private static final String TAG_NAME = "name";
-    JSONArray pets = null;
-    String[] pets2 = new String[]{};
+    private static final String TAG_SEX = "sex";
+    private static final String TAG_BREED = "breed";
+    private static final String TAG_AGE = "age";
+    private static final String TAG_DATEOFADOPTION = "dateofadoption";
+    private static final String TAG_HEIGHT = "height";
+    private static final String TAG_WEIGHT = "weight";
+    private static final String TAG_IMAGE = "image";
+    private static final String TAG_PET = "pet";
 
+    JSONArray pets = null;
     String date, starttime, endttime, status, pid;
 
-    private static String ownNric = "";
     private static String ownFirstName = "";
-    private static String ownLastName = "";
-    private static String ownTel = "";
-    private static String ownEmail = "";
-    private static String ownAddress = "";
-    private static String ownZipcode = "";
-    private static String ownUsername = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_book_appointment);
-
         setTitle("");
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("We're giving it whatevfur we'ge got..");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
+        Log.i("oops", username);
+
+        JSONObject dataJson = new JSONObject();
+        try {
+            dataJson.put("username", username);
+        } catch (JSONException e) {
+
+        }
+        postData(url_get_PetList, dataJson, 2);
 
         textView5 = (TextView) findViewById(R.id.textView5);
         calendarView = (CalendarView) findViewById(R.id.calendarView);
@@ -98,7 +114,6 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         button = (FloatingActionButton) findViewById(R.id.btnBook);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -133,7 +148,9 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
                 int d = dayOfMonth;
-                date =String.valueOf(d);
+                int m = month + 1;
+                int y = year;
+                date = (d + "-" + m + "-" + y);
             }
         });
 
@@ -141,49 +158,56 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
             @Override
             public void onClick(View v) {
 
+                if (TextUtils.isEmpty(date)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    String selectedDate = sdf.format(new Date(calendarView.getDate()));
+                    date = selectedDate;
+                }
                 starttime = spinner.getSelectedItem().toString();
                 String start1 = starttime.replaceAll("[^\\d]", "");
                 int start2 = Integer.parseInt(start1) + 100;
                 endttime = Integer.toString(start2);
                 status = "pending";
+                getSelectedPet();
+
+                Log.i("yeet", date);
+                Log.i("yeet", starttime);
+                Log.i("yeet", endttime);
+                Log.i("yeet", status);
+                Log.i("yeet", pid);
 
                 pDialog = new ProgressDialog(UserBookAppointment.this);
-                pDialog.setMessage("Adding product ...");
+                pDialog.setMessage("Creating your a-pet-ment..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
 
                 JSONObject dataJson = new JSONObject();
-                try{
+                try {
                     dataJson.put(TAG_DATE, date);
                     dataJson.put(TAG_STARTTIME, starttime);
                     dataJson.put(TAG_ENDTIME, endttime);
                     dataJson.put(TAG_STATUS, status);
                     dataJson.put(TAG_PID, pid);
 
-                }catch(JSONException e){
+                } catch (JSONException e) {
 
                 }
-
-                postData(url_create_appointment,dataJson,1 );
+                postData(url_create_appointment, dataJson, 1);
             }
         });
-
-        petsList = new ArrayList<HashMap<String, String>>();
-
-        // Loading products in Background Thread
-        username = intent.getStringExtra(TAG_USERNAME);
-
-        JSONObject dataJson = new JSONObject();
-        try {
-            dataJson.put("username", username);
-        } catch (JSONException e) {
-
-        }
-        postData2(url_get_PetList, dataJson);
     }
 
-    public void postData(String url, final JSONObject json, final int option){
+    public void getSelectedPet() {
+        Pet pet = (Pet) spinner2.getSelectedItem();
+        getPetPid(pet);
+    }
+
+    private void getPetPid(Pet pet) {
+        pid = pet.getPid();
+    }
+
+    public void postData(String url, final JSONObject json, final int option) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest json_obj_req = new JsonObjectRequest(
                 Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
@@ -191,10 +215,13 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
             public void onResponse(JSONObject response) {
 
 
-                switch (option){
+                switch (option) {
                     case 1:
-                        checkResponseCreate_Appointment(response); break;
-
+                        checkResponseCreate_Appointment(response);
+                        break;
+                    case 2:
+                        checkResponse(response, json);
+                        break;
                 }
 
             }
@@ -212,44 +239,10 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         requestQueue.add(json_obj_req);
     }
 
-    public void postData2(String url, final JSONObject json){
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        JsonObjectRequest json_obj_req = new JsonObjectRequest(
-                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                checkResponse(response, json);
-
-//                String alert_message;
-//                alert_message = response.toString();
-
-//                showAlertDialogue("Response", alert_message);
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-
-//                String alert_message;
-//                alert_message = error.toString();
-
-//                showAlertDialogue("Error", alert_message);
-
-            }
-
-        });
-
-        requestQueue.add(json_obj_req);
-    }
-
-    public void checkResponseCreate_Appointment(JSONObject response)
-    {
-        Log.i("----Response", response+" ");
+    public void checkResponseCreate_Appointment(JSONObject response) {
+        Log.i("----Response", response + " ");
         try {
-            if(response.getInt(TAG_SUCCESS)==1){
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
                 finish();
 //                Intent i = new Intent(this, AllProductsActivity.class);
@@ -258,7 +251,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                 // dismiss the dialog once product uupdated
                 pDialog.dismiss();
 
-            }else{
+            } else {
                 // product with pid not found
             }
 
@@ -269,49 +262,38 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
     }
 
-    private void checkResponse(JSONObject response, JSONObject creds){
+    private void checkResponse(JSONObject response, JSONObject creds) {
         try {
-            if(response.getInt(TAG_SUCCESS)==1){
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
-                // products found
-                // Getting Array of Products
                 pets = response.getJSONArray(TAG_PETS);
 
                 // looping through All Products
                 for (int i = 0; i < pets.length(); i++) {
                     JSONObject c = pets.getJSONObject(i);
 
-                    // Storing each json item in variable
-                    String id = c.getString(TAG_PID);
+                    Pet p = new Pet();
+                    String pid = c.getString(TAG_PID);
                     String name = c.getString(TAG_NAME);
+                    String pet = c.getString(TAG_PET);
+                    String sex = c.getString(TAG_SEX);
+                    String breed = c.getString(TAG_BREED);
+                    String age = c.getString(TAG_AGE);
+                    String dateofadoption = c.getString(TAG_DATEOFADOPTION);
+                    String height = c.getString(TAG_HEIGHT);
+                    String weight = c.getString(TAG_WEIGHT);
+                    String image = c.getString(TAG_IMAGE);
 
-                    // creating new HashMap
-//                    HashMap<String, String> map = new HashMap<String, String>();
-                    // adding each child node to HashMap key => value
-//                    map.put(TAG_PID, id);
-//                    map.put(TAG_NAME, name);
-                    pets2[i] = name;
-                    // adding HashList to ArrayList
-//                    petsList.add(pets2);
+                    p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, image, username);
+                    petList.add(p);
                 }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pets2);
+                ArrayAdapter<Pet> adapter = new ArrayAdapter<Pet>(this, android.R.layout.simple_spinner_item, petList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner2.setAdapter(adapter);
+                pDialog.dismiss();
 
-//                /**
-//                 * Updating parsed JSON data into ListView
-//                 * */
-//                ListAdapter adapter = new SimpleAdapter(
-//                        AllProductsActivity.this, productsList,
-//                        R.layout.list_item, new String[] { TAG_PID,
-//                        TAG_NAME},
-//                        new int[] { R.id.pid, R.id.name });
-//                // updating listview
-//                setListAdapter(adapter);
-
-            }
-            else{
-
+            } else {
+                Log.i("oops", "ssibal");
             }
 
         } catch (JSONException e) {
@@ -320,8 +302,6 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         }
 
     }
-
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

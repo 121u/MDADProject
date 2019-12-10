@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -24,8 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class UserPetDetails extends AppCompatActivity {
@@ -48,6 +48,8 @@ public class UserPetDetails extends AppCompatActivity {
     private TextView textView9;
     private ImageButton btnImage;
     private ProgressDialog pDialog;
+    private ListView listView;
+    private ListView listView2;
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
@@ -61,6 +63,16 @@ public class UserPetDetails extends AppCompatActivity {
     private static final String TAG_PET = "pet";
     private static final String TAG_IMAGE = "image";
 
+    public static String url_appointment = Login.ipBaseAddress + "/get_all_appointmentsJson.php";
+    private static final String TAG_APPOINTMENT = "appointment";
+    private static final String TAG_ID = "id";
+    private static final String TAG_DATE = "date";
+    private static final String TAG_STARTTIME = "starttime";
+    private static final String TAG_ENDTIME = "endtime";
+    private static final String TAG_STATUS = "status";
+    private static final String TAG_USERNAME = "username";
+
+
     private static String petName = "";
     private static String petSex = "";
     private static String petBreed = "";
@@ -68,35 +80,41 @@ public class UserPetDetails extends AppCompatActivity {
     private static String petDate = "";
     private static String petWeight = "";
     private static String petHeight = "";
-    private static String petPet = "";
     private static String petImage = "";
 
     public static String url_pet = Login.ipBaseAddress + "/get_pet_detailsJson.php";
     JSONObject json = null;
     String pid;
+    String newFormatttedDate;
+    JSONArray appointments = null;
+    ArrayList<Appointment> AppointmentList = new ArrayList();
+    ArrayList<Appointment> completedList = new ArrayList();
+    ArrayList<Appointment> pendingList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_pet_details);
 
-        textView5 = (TextView)findViewById( R.id.textView5 );
-        textView = (TextView)findViewById( R.id.textView );
-        txtName = (EditText)findViewById( R.id.txtName );
-        textView2 = (TextView)findViewById( R.id.textView2 );
-        btnSex = (Button) findViewById( R.id.btnSex);
-        textView3 = (TextView)findViewById( R.id.textView3 );
-        txtBreed = (EditText)findViewById( R.id.txtBreed);
-        textView4 = (TextView)findViewById( R.id.textView4 );
-        txtAge = (EditText)findViewById( R.id.txtAge );
-        textView6 = (TextView)findViewById( R.id.textView6 );
-        txtAdoptionDate = (TextView) findViewById( R.id.txtAdoptionDate );
-        textView7 = (TextView)findViewById( R.id.textView7 );
-        txtHeight = (EditText)findViewById( R.id.txtHeight );
-        textView8 = (TextView)findViewById( R.id.textView8 );
-        txtWeight = (EditText)findViewById( R.id.txtWeight );
-        textView9 = (TextView)findViewById( R.id.textView9 );
-        btnImage = (ImageButton)findViewById( R.id.btnImage );
+        textView5 = (TextView) findViewById(R.id.textView5);
+        textView = (TextView) findViewById(R.id.textView);
+        txtName = (EditText) findViewById(R.id.txtName);
+        textView2 = (TextView) findViewById(R.id.textView2);
+        btnSex = (Button) findViewById(R.id.btnSex);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        txtBreed = (EditText) findViewById(R.id.txtBreed);
+        textView4 = (TextView) findViewById(R.id.textView4);
+        txtAge = (EditText) findViewById(R.id.txtAge);
+        textView6 = (TextView) findViewById(R.id.textView6);
+        txtAdoptionDate = (TextView) findViewById(R.id.txtAdoptionDate);
+        textView7 = (TextView) findViewById(R.id.textView7);
+        txtHeight = (EditText) findViewById(R.id.txtHeight);
+        textView8 = (TextView) findViewById(R.id.textView8);
+        txtWeight = (EditText) findViewById(R.id.txtWeight);
+        textView9 = (TextView) findViewById(R.id.textView9);
+        btnImage = (ImageButton) findViewById(R.id.btnImage);
+        listView = (ListView) findViewById(R.id.listView);
+        listView2 = (ListView) findViewById(R.id.listView2);
 
         txtName.setEnabled(false);
         btnSex.setEnabled(false);
@@ -117,7 +135,8 @@ public class UserPetDetails extends AppCompatActivity {
         } catch (JSONException e) {
 
         }
-        postData(url_pet, dataJson);
+        postData(url_pet, dataJson, 1);
+        postData(url_appointment, dataJson, 2);
 
         setupTabs();
     }
@@ -127,19 +146,23 @@ public class UserPetDetails extends AppCompatActivity {
         return true;
     }
 
-    public void postData(String url, final JSONObject json){
+    public void postData(String url, final JSONObject json, final int option) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-
         JsonObjectRequest json_obj_req = new JsonObjectRequest(
                 Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                checkResponse(response, json);
 
-//                String alert_message;
-//                alert_message = response.toString();
 
-//                showAlertDialogue("Response", alert_message);
+                switch (option) {
+                    case 1:
+                        checkResponse(response, json);
+                        break;
+                    case 2:
+                        checkResponse2(response, json);
+                        break;
+
+                }
 
             }
 
@@ -147,16 +170,12 @@ public class UserPetDetails extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-
 //                String alert_message;
 //                alert_message = error.toString();
-
 //                showAlertDialogue("Error", alert_message);
-
             }
 
         });
-
         requestQueue.add(json_obj_req);
     }
 
@@ -168,7 +187,7 @@ public class UserPetDetails extends AppCompatActivity {
 
                 JSONObject pet = ownerObj.getJSONObject(0);
                 petName = pet.getString(TAG_NAME).toLowerCase();
-                petSex= pet.getString(TAG_SEX).toLowerCase();
+                petSex = pet.getString(TAG_SEX).toLowerCase();
                 petBreed = pet.getString(TAG_BREED).toLowerCase();
                 petAge = pet.getString(TAG_AGE).toLowerCase();
                 petDate = pet.getString(TAG_DATEOFADOPTION).toLowerCase();
@@ -187,7 +206,7 @@ public class UserPetDetails extends AppCompatActivity {
 
 //                pDialog.dismiss();
             } else {
-                Log.i("nric","oops");
+                Log.i("nric", "oops");
             }
 
         } catch (JSONException e) {
@@ -197,11 +216,67 @@ public class UserPetDetails extends AppCompatActivity {
 
     }
 
-    private void setupTabs(){
+    private void checkResponse2(JSONObject response, JSONObject creds) {
+        try {
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
-        TabHost tabs =(TabHost) this.findViewById(R.id.DStabhost);
+                appointments = response.getJSONArray(TAG_APPOINTMENT);
+
+                // looping through All Products
+                for (int i = 0; i < appointments.length(); i++) {
+                    JSONObject c = appointments.getJSONObject(i);
+
+                    Appointment a = new Appointment();
+                    // Storing each json item in variable
+                    String id = c.getString(TAG_ID);
+                    String date = c.getString(TAG_DATE);
+                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+                    try {
+                        Date parsedDate = simpleDateFormat2.parse(date);
+                        simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
+                        newFormatttedDate = simpleDateFormat2.format(parsedDate);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String startime = c.getString(TAG_STARTTIME);
+                    String endtime = c.getString(TAG_ENDTIME);
+                    String status = c.getString(TAG_STATUS);
+                    String pid = c.getString(TAG_PID);
+
+                    a = new Appointment(id, newFormatttedDate, startime, endtime, status, pid);
+                    AppointmentList.add(a);
+                }
+
+                for (Appointment a1 : AppointmentList) {
+                    if(a1.getStatus().equals("completed")){
+                        completedList.add(a1);
+                    }
+                    else{
+                        pendingList.add(a1);
+                    }
+                }
+
+                CustomAdapter2 myCustomAdapter = new CustomAdapter2(UserPetDetails.this, pendingList);
+                listView.setAdapter(myCustomAdapter);
+
+                CustomAdapter2 myCustomAdapter2 = new CustomAdapter2(UserPetDetails.this, completedList);
+                listView2.setAdapter(myCustomAdapter2);
+//                pDialog.dismiss();
+            } else {
+//                pDialog.dismiss();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    private void setupTabs() {
+
+        TabHost tabs = (TabHost) this.findViewById(R.id.DStabhost);
         tabs.setup();
-
 
         //Tab #1 SharedPreferences Example
         TabHost.TabSpec ts1 = tabs.newTabSpec("SharedPreferences");

@@ -259,7 +259,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView10"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="30dp"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10.0sp" />
