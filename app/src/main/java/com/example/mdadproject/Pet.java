@@ -10,7 +10,7 @@ class Pet {
 
     }
 
-    public Pet(String pid, String name, String pet, String sex, String breed, String age, String dateofadoption, String height, String weight, String image, String username) {
+    public Pet(String pid, String name, String pet, String sex, String breed, String age, String dateofadoption, String height, String weight, String username, String imagepath, String imagename) {
         this.pid = pid;
         this.name = name;
         this.pet = pet;
@@ -20,10 +20,10 @@ class Pet {
         this.dateofadoption = dateofadoption;
         this.height = height;
         this.weight = weight;
-        this.image = image;
         this.username = username;
+        this.imagepath = imagepath;
+        this.imagename = imagename;
     }
-
 
     String pid;
     String name;
@@ -34,8 +34,9 @@ class Pet {
     String dateofadoption;
     String height;
     String weight;
-    String image;
     String username;
+    String imagepath;
+    String imagename;
 
     public String getPid() {
         return pid;
@@ -109,20 +110,28 @@ class Pet {
         this.weight = weight;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getImagepath() {
+        return imagepath;
+    }
+
+    public void setImagepath(String imagepath) {
+        this.imagepath = imagepath;
+    }
+
+    public String getImagename() {
+        return imagename;
+    }
+
+    public void setImagename(String imagename) {
+        this.imagename = imagename;
     }
 
     @NonNull

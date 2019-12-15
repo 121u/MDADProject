@@ -3,18 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_appointment"
-            android:icon="@drawable/cat"
-            android:title="book an appointment" />
+            android:id="@+id/nav_qr_scanner"
+            android:icon="@drawable/terrapin"
+            android:title="qr code" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/dog"
             android:title="profile" />
         <item
             android:id="@+id/nav_pet"
-            android:icon="@drawable/bird"
+            android:icon="@drawable/cat"
             android:title="pet(s)" />
         <item
             android:id="@+id/nav_qr"

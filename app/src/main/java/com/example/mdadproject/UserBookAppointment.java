@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,7 +46,6 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     private ProgressDialog pDialog;
     private DrawerLayout drawer;
     private TextView txtGreeting;
-    private TextView txtUserN;
     private TextView textView5;
     private CalendarView calendarView;
     private TextView textView6;
@@ -75,11 +75,13 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     private static final String TAG_DATEOFADOPTION = "dateofadoption";
     private static final String TAG_HEIGHT = "height";
     private static final String TAG_WEIGHT = "weight";
-    private static final String TAG_IMAGE = "image";
     private static final String TAG_PET = "pet";
+    private static final String TAG_IMAGEPATH = "image_path";
+    private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
     String date, starttime, endttime, status, pid;
+    boolean disabled;
 
     private static String ownFirstName = "";
 
@@ -121,9 +123,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
         View header = navigationView.getHeaderView(0);
         txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-        txtUserN = (TextView) header.findViewById(R.id.txtUsern);
-        txtGreeting.setText("Hello, " + ownFirstName + "!");
-        txtUserN.setText(username);
+        ;
+        txtGreeting.setText("Hello, " + username + "!");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -142,6 +143,24 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(adapter);
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        if (username.equals("effertz")){
+            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
+        }
+        else {
+            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
+        }
+
+//        if (spinner2.getCount() == 0) {
+//            disabled = true;
+//            button.setBackgroundTintList(getResources().getColorStateList(R.color.disabled));
+//        }
+//        else {
+//            disabled = false;
+//            button.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
+//        }
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -157,43 +176,45 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    Toast.makeText(UserBookAppointment.this, "You have no pets yet! Go to the pet(s) page to add one!", Toast.LENGTH_SHORT).show();
 
-                if (TextUtils.isEmpty(date)) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                    String selectedDate = sdf.format(new Date(calendarView.getDate()));
-                    date = selectedDate;
-                }
-                starttime = spinner.getSelectedItem().toString();
-                String start1 = starttime.replaceAll("[^\\d]", "");
-                int start2 = Integer.parseInt(start1) + 100;
-                endttime = Integer.toString(start2);
-                status = "pending";
-                getSelectedPet();
+                    if (TextUtils.isEmpty(date)) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                        String selectedDate = sdf.format(new Date(calendarView.getDate()));
+                        date = selectedDate;
+                    }
+                    starttime = spinner.getSelectedItem().toString();
+                    String start1 = starttime.replaceAll("[^\\d]", "");
+                    int start2 = Integer.parseInt(start1) + 100;
+                    endttime = Integer.toString(start2);
+                    status = "pending";
+                    getSelectedPet();
 
-                Log.i("yeet", date);
-                Log.i("yeet", starttime);
-                Log.i("yeet", endttime);
-                Log.i("yeet", status);
-                Log.i("yeet", pid);
+                    Log.i("yeet", date);
+                    Log.i("yeet", starttime);
+                    Log.i("yeet", endttime);
+                    Log.i("yeet", status);
+                    Log.i("yeet", pid);
 
-                pDialog = new ProgressDialog(UserBookAppointment.this);
-                pDialog.setMessage("Creating your a-pet-ment..");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
+                    pDialog = new ProgressDialog(UserBookAppointment.this);
+                    pDialog.setMessage("Creating your a-pet-ment..");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(true);
+                    pDialog.show();
 
-                JSONObject dataJson = new JSONObject();
-                try {
-                    dataJson.put(TAG_DATE, date);
-                    dataJson.put(TAG_STARTTIME, starttime);
-                    dataJson.put(TAG_ENDTIME, endttime);
-                    dataJson.put(TAG_STATUS, status);
-                    dataJson.put(TAG_PID, pid);
+                    JSONObject dataJson = new JSONObject();
+                    try {
+                        dataJson.put(TAG_DATE, date);
+                        dataJson.put(TAG_STARTTIME, starttime);
+                        dataJson.put(TAG_ENDTIME, endttime);
+                        dataJson.put(TAG_STATUS, status);
+                        dataJson.put(TAG_PID, pid);
 
-                } catch (JSONException e) {
+                    } catch (JSONException e) {
 
-                }
-                postData(url_create_appointment, dataJson, 1);
+                    }
+                    postData(url_create_appointment, dataJson, 1);
+
             }
         });
     }
@@ -274,17 +295,18 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
                     Pet p = new Pet();
                     String pid = c.getString(TAG_PID);
-                    String name = c.getString(TAG_NAME);
-                    String pet = c.getString(TAG_PET);
-                    String sex = c.getString(TAG_SEX);
-                    String breed = c.getString(TAG_BREED);
-                    String age = c.getString(TAG_AGE);
-                    String dateofadoption = c.getString(TAG_DATEOFADOPTION);
-                    String height = c.getString(TAG_HEIGHT);
-                    String weight = c.getString(TAG_WEIGHT);
-                    String image = c.getString(TAG_IMAGE);
+                    String name = c.getString(TAG_NAME).toLowerCase();
+                    String pet = c.getString(TAG_PET).toLowerCase();
+                    String sex = c.getString(TAG_SEX).toLowerCase();
+                    String breed = c.getString(TAG_BREED).toLowerCase();
+                    String age = c.getString(TAG_AGE).toLowerCase();
+                    String dateofadoption = c.getString(TAG_DATEOFADOPTION).toLowerCase();
+                    String height = c.getString(TAG_HEIGHT).toLowerCase();
+                    String weight = c.getString(TAG_WEIGHT).toLowerCase();
+                    String imagepath = c.getString(TAG_IMAGEPATH);
+                    String imagename = c.getString(TAG_IMAGENAME);
 
-                    p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, image, username);
+                    p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, username, imagepath, imagename);
                     petList.add(p);
                 }
                 ArrayAdapter<Pet> adapter = new ArrayAdapter<Pet>(this, android.R.layout.simple_spinner_item, petList);
@@ -293,7 +315,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                 pDialog.dismiss();
 
             } else {
-                Log.i("oops", "ssibal");
+                pDialog.dismiss();
             }
 
         } catch (JSONException e) {
@@ -307,9 +329,9 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.nav_appointment:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new AppointmentFragment()).commit();
+            case R.id.nav_qr_scanner:
+                intent = new Intent(getApplicationContext(), ZxingScannerActivity.class);
+                intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_profile:
                 intent = new Intent(getApplicationContext(), UserProfile.class);
@@ -320,8 +342,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_qr:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new QRCodeFragment()).commit();
+                intent = new Intent(getApplicationContext(), UserQrCode.class);
+                intent.putExtra(TAG_USERNAME, username);
                 break;
         }
         startActivityForResult(intent, 100);

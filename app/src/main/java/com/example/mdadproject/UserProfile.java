@@ -1,14 +1,11 @@
 package com.example.mdadproject;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -91,11 +88,11 @@ public class UserProfile extends AppCompatActivity {
 
         textView5 = (TextView) findViewById(R.id.textView5);
         textView = (TextView) findViewById(R.id.textView);
-        txtNric = (EditText) findViewById(R.id.txtUsername);
+        txtNric = (EditText) findViewById(R.id.txtNric);
         textView2 = (TextView) findViewById(R.id.textView2);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         textView3 = (TextView) findViewById(R.id.textView3);
-        txtLastName = (EditText) findViewById(R.id.txtBreed);
+        txtLastName = (EditText) findViewById(R.id.txtLastName);
         textView4 = (TextView) findViewById(R.id.textView4);
         txtTel = (EditText) findViewById(R.id.txtTel);
         textView6 = (TextView) findViewById(R.id.textView6);

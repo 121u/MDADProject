@@ -1,8 +1,10 @@
 package com.example.mdadproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,11 +39,11 @@ public class RegisterDetails extends AppCompatActivity {
 
         textView5 = (TextView) findViewById(R.id.textView5);
         textView = (TextView) findViewById(R.id.textView);
-        txtNric = (EditText) findViewById(R.id.txtUsername);
+        txtNric = (EditText) findViewById(R.id.txtNric);
         textView2 = (TextView) findViewById(R.id.textView2);
         txtFirstName = (EditText) findViewById(R.id.txtFirstName);
         textView3 = (TextView) findViewById(R.id.textView3);
-        txtLastName = (EditText) findViewById(R.id.txtBreed);
+        txtLastName = (EditText) findViewById(R.id.txtLastName);
         textView4 = (TextView) findViewById(R.id.textView4);
         txtTel = (EditText) findViewById(R.id.txtTel);
         textView6 = (TextView) findViewById(R.id.textView6);
@@ -52,7 +54,15 @@ public class RegisterDetails extends AppCompatActivity {
         txtZipcode = (EditText) findViewById(R.id.txtZipcode);
         btnNext = (Button) findViewById(R.id.btnNext);
 
-        getSupportActionBar().hide();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,5 +96,10 @@ public class RegisterDetails extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

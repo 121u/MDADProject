@@ -43,7 +43,7 @@
             android:src="@mipmap/ic_launcher" />
     </RelativeLayout>
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/imgPic"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -53,8 +53,7 @@
         android:layout_marginLeft="15dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp"
-        app:srcCompat="@drawable/cat" />
+        android:layout_marginBottom="10dp"/>
 
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -49,8 +50,9 @@ public class UserPets extends AppCompatActivity {
     private static final String TAG_DATEOFADOPTION = "dateofadoption";
     private static final String TAG_HEIGHT = "height";
     private static final String TAG_WEIGHT = "weight";
-    private static final String TAG_IMAGE = "image";
     private static final String TAG_PET = "pet";
+    private static final String TAG_IMAGEPATH = "image_path";
+    private static final String TAG_IMAGENAME = "image_name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,19 +163,20 @@ public class UserPets extends AppCompatActivity {
                     JSONObject c = pets.getJSONObject(i);
 
                     Pet p = new Pet();
-                    // Storing each json item in variable
-                    String pid = c.getString(TAG_PID);
-                    String name = c.getString(TAG_NAME);
-                    String pet = c.getString(TAG_PET);
-                    String sex = c.getString(TAG_SEX);
-                    String breed = c.getString(TAG_BREED);
-                    String age = c.getString(TAG_AGE);
-                    String dateofadoption = c.getString(TAG_DATEOFADOPTION);
-                    String height = c.getString(TAG_HEIGHT);
-                    String weight = c.getString(TAG_WEIGHT);
-                    String image = c.getString(TAG_IMAGE);
 
-                    p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, image, username);
+                    String pid = c.getString(TAG_PID).toLowerCase();
+                    String name = c.getString(TAG_NAME).toLowerCase();
+                    String pet = c.getString(TAG_PET).toLowerCase();
+                    String sex = c.getString(TAG_SEX).toLowerCase();
+                    String breed = c.getString(TAG_BREED).toLowerCase();
+                    String age = c.getString(TAG_AGE).toLowerCase();
+                    String dateofadoption = c.getString(TAG_DATEOFADOPTION).toLowerCase();
+                    String height = c.getString(TAG_HEIGHT).toLowerCase();
+                    String weight = c.getString(TAG_WEIGHT).toLowerCase();
+                    String imagepath = c.getString(TAG_IMAGEPATH);
+                    String imagename = c.getString(TAG_IMAGENAME);
+
+                    p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, username, imagepath, imagename);
                     petsList.add(p);
                 }
 

@@ -90,7 +90,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/txtBreed"
+                    android:id="@+id/txtLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"

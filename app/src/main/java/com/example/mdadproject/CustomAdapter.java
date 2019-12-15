@@ -8,10 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.ArrayList;
 
 public class CustomAdapter extends BaseAdapter {
 
+    ImageLoader imageLoader;
     Context mContext;
     ArrayList<Pet> pets = new ArrayList<>();
 
@@ -48,6 +52,11 @@ public class CustomAdapter extends BaseAdapter {
         TextView tvId = (TextView)convertView.findViewById(R.id.id);
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         ImageView imgPet = (ImageView)convertView.findViewById(R.id.imgPet);
+        NetworkImageView imgPic = (NetworkImageView)convertView.findViewById(R.id.imgPic);
+
+        imageLoader = CustomVolleyRequest.getInstance(mContext).getImageLoader();
+//        imageLoader.get(tempPet.getImagepath(), ImageLoader.getImageListener(imgPic,0,android.R.drawable.ic_dialog_alert));
+        imgPic.setImageUrl(tempPet.getImagepath(), imageLoader);
 
         tvId.setText(tempPet.getPid());
         tvName.setText(tempPet.getName());

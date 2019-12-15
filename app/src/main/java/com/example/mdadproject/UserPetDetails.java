@@ -102,7 +102,7 @@ public class UserPetDetails extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.textView2);
         btnSex = (Button) findViewById(R.id.btnSex);
         textView3 = (TextView) findViewById(R.id.textView3);
-        txtBreed = (EditText) findViewById(R.id.txtBreed);
+        txtBreed = (EditText) findViewById(R.id.txtLastName);
         textView4 = (TextView) findViewById(R.id.textView4);
         txtAge = (EditText) findViewById(R.id.txtAge);
         textView6 = (TextView) findViewById(R.id.textView6);

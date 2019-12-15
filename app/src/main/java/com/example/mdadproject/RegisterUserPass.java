@@ -49,7 +49,7 @@ public class RegisterUserPass extends AppCompatActivity {
 
         Log.i("Ip address CREATE ", url_create_owner);
 
-        txtUsername = (EditText) findViewById(R.id.txtUsername);
+        txtUsername = (EditText) findViewById(R.id.txtNric);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         btnNext = (Button) findViewById(R.id.btnNext);
 
