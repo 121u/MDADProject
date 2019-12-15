@@ -1,9 +1,11 @@
 package com.example.mdadproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,14 +18,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegisterUserPass extends AppCompatActivity {
 
-    private EditText txtUsername;
-    private EditText txtPassword;
+    private TextInputLayout etUsername;
+    private TextInputLayout etPassword;
     private Button btnNext;
     private ProgressDialog pDialog;
 
@@ -33,9 +36,8 @@ public class RegisterUserPass extends AppCompatActivity {
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_NRIC = "nric";
-    private static final String TAG_FIRSTNAME = "firstname";
-    private static final String TAG_LASTNAME = "lastname";
-    private static final String TAG_TELEPHONE = "telephone";
+    private static final String TAG_NAME = "name";
+    private static final String TAG_MOBILENUMBER = "mobilenumber";
     private static final String TAG_EMAIL = "email";
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_ZIPCODE = "zipcode";
@@ -47,26 +49,34 @@ public class RegisterUserPass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user_pass);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
+
         Log.i("Ip address CREATE ", url_create_owner);
 
-        txtUsername = (EditText) findViewById(R.id.txtNric);
-        txtPassword = (EditText) findViewById(R.id.txtPassword);
+        etUsername = (TextInputLayout) findViewById(R.id.etUsername);
+        etPassword = (TextInputLayout) findViewById(R.id.etPassword);
         btnNext = (Button) findViewById(R.id.btnNext);
-
-        getSupportActionBar().hide();
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                username = txtUsername.getText().toString();
-                password = txtPassword.getText().toString();
+                username = etUsername.getEditText().getText().toString();
+                password = etPassword.getEditText().getText().toString();
 
                 if (username.isEmpty()) {
-                    txtUsername.setError(getString(R.string.error_field_required));
+                    etUsername.setError(getString(R.string.error_field_required));
 
                 } else if (password.isEmpty()) {
-                    txtPassword.setError(getString(R.string.error_field_required));
+                    etPassword.setError(getString(R.string.error_field_required));
 
                 } else {
 
@@ -80,9 +90,8 @@ public class RegisterUserPass extends AppCompatActivity {
                     try {
 
                         dataJson.put(TAG_NRIC, RegisterDetails.nric);
-                        dataJson.put(TAG_FIRSTNAME, RegisterDetails.firstName);
-                        dataJson.put(TAG_LASTNAME, RegisterDetails.lastName);
-                        dataJson.put(TAG_TELEPHONE, RegisterDetails.telephone);
+                        dataJson.put(TAG_NAME, RegisterDetails.name);
+                        dataJson.put(TAG_MOBILENUMBER, RegisterDetails.mobilenumber);
                         dataJson.put(TAG_EMAIL, RegisterDetails.email);
                         dataJson.put(TAG_ADDRESS, RegisterDetails.address);
                         dataJson.put(TAG_ZIPCODE, RegisterDetails.zipcode);
@@ -96,6 +105,11 @@ public class RegisterUserPass extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void postData(String url, final JSONObject json, final int option) {

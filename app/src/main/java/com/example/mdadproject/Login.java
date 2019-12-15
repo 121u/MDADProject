@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,13 +27,10 @@ public class Login extends AppCompatActivity {
 
     public static String ipBaseAddress = "http://vetmdad.atspace.cc";
 
-    private TextView textView;
-    private EditText txtUsername;
-    private TextView textView3;
-    private EditText txtPassword;
+    private TextInputLayout etUsername;
+    private TextInputLayout etPassword;
     private Button btnLogin;
     private TextView btnSignUp;
-    private TextView textView5;
     private ProgressDialog pDialog;
     // url to update product
 
@@ -49,13 +47,10 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        textView = (TextView) findViewById(R.id.textView);
-        txtUsername = (EditText) findViewById(R.id.txtNric);
-        textView3 = (TextView) findViewById(R.id.textView3);
-        txtPassword = (EditText) findViewById(R.id.txtPassword);
+        etUsername = (TextInputLayout) findViewById(R.id.etUsername);
+        etPassword = (TextInputLayout) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnSignUp = (TextView) findViewById(R.id.btnSignUp);
-        textView5 = (TextView) findViewById(R.id.textView5);
 
         getSupportActionBar().hide();
 
@@ -72,18 +67,20 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String pw= txtPassword.getText().toString();
-                String uName= txtUsername.getText().toString();
+//                String pw= etPassword.getText().toString();
+                String pw = etPassword.getEditText().getText().toString();
+                String uName= etUsername.getEditText().getText().toString();
 
                 if(pw.isEmpty())
                 {
-                    txtPassword.setError(getString(R.string.error_field_required));
-
+                    etPassword.setErrorEnabled(false);
+                    etPassword.setError(getString(R.string.error_field_required));
                 }else
 
                 if(uName.isEmpty())
                 {
-                    txtUsername.setError(getString(R.string.error_field_required));
+                    etUsername.setErrorEnabled(false);
+                    etUsername.setError(getString(R.string.error_field_required));
 
                 }else
                 {
@@ -152,7 +149,7 @@ public class Login extends AppCompatActivity {
                 // finish();
 //                Intent i = new Intent(this, UserBookAppointment.class);
 //                startActivity(i);
-                String username = txtUsername.getText().toString();
+                String username = etUsername.getEditText().getText().toString();
                 Intent intent = new Intent(getApplicationContext(), UserBookAppointment.class);
                 intent.putExtra(TAG_USERNAME,username);
                 startActivityForResult(intent, 100);

@@ -9,49 +9,33 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 public class RegisterDetails extends AppCompatActivity {
 
-    private TextView textView5;
-    private TextView textView;
-    private EditText txtNric;
-    private TextView textView2;
-    private EditText txtFirstName;
-    private TextView textView3;
-    private EditText txtLastName;
-    private TextView textView4;
-    private EditText txtTel;
-    private TextView textView6;
-    private EditText txtEmail;
-    private TextView textView7;
-    private EditText txtAddress;
-    private TextView textView8;
-    private EditText txtZipcode;
+    private TextInputLayout etNric;
+    private TextInputLayout etName;
+    private TextInputLayout txtLastName;
+    private TextInputLayout etMobileNumber;
+    private TextInputLayout etEmail;
+    private TextInputLayout etAddress;
+    private TextInputLayout etZipcode;
     private Button btnNext;
 
-    public static String nric, firstName, lastName, telephone, email, address, zipcode;
+    public static String nric, name, mobilenumber, email, address, zipcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_details);
 
-        textView5 = (TextView) findViewById(R.id.textView5);
-        textView = (TextView) findViewById(R.id.textView);
-        txtNric = (EditText) findViewById(R.id.txtNric);
-        textView2 = (TextView) findViewById(R.id.textView2);
-        txtFirstName = (EditText) findViewById(R.id.txtFirstName);
-        textView3 = (TextView) findViewById(R.id.textView3);
-        txtLastName = (EditText) findViewById(R.id.txtLastName);
-        textView4 = (TextView) findViewById(R.id.textView4);
-        txtTel = (EditText) findViewById(R.id.txtTel);
-        textView6 = (TextView) findViewById(R.id.textView6);
-        txtEmail = (EditText) findViewById(R.id.txtEmail);
-        textView7 = (TextView) findViewById(R.id.textView7);
-        txtAddress = (EditText) findViewById(R.id.txtAddress);
-        textView8 = (TextView) findViewById(R.id.textView8);
-        txtZipcode = (EditText) findViewById(R.id.txtZipcode);
+        etNric = (TextInputLayout) findViewById(R.id.etNric);
+        etName = (TextInputLayout) findViewById(R.id.etName);
+        etMobileNumber = (TextInputLayout) findViewById(R.id.etMobileNumber);
+        etEmail = (TextInputLayout) findViewById(R.id.etEmail);
+        etAddress = (TextInputLayout) findViewById(R.id.etAddress);
+        etZipcode = (TextInputLayout) findViewById(R.id.etZipcode);
         btnNext = (Button) findViewById(R.id.btnNext);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
@@ -68,28 +52,25 @@ public class RegisterDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                nric = txtNric.getText().toString().toUpperCase();
-                firstName = txtFirstName.getText().toString().toUpperCase();
-                lastName = txtLastName.getText().toString().toUpperCase();
-                telephone = txtTel.getText().toString().toUpperCase();
-                email = txtEmail.getText().toString().toUpperCase();
-                address = txtAddress.getText().toString().toUpperCase();
-                zipcode = txtZipcode.getText().toString().toUpperCase();
+                nric = etNric.getEditText().getText().toString().toUpperCase();
+                name = etName.getEditText().getText().toString().toUpperCase();
+                mobilenumber = etMobileNumber.getEditText().getText().toString().toUpperCase();
+                email = etEmail.getEditText().getText().toString().toUpperCase();
+                address = etAddress.getEditText().getText().toString().toUpperCase();
+                zipcode = etZipcode.getEditText().getText().toString().toUpperCase();
 
                 if (nric.isEmpty()) {
-                    txtNric.setError(getString(R.string.error_field_required));
-                } else if (firstName.isEmpty()) {
-                    txtFirstName.setError(getString(R.string.error_field_required));
-                } else if (lastName.isEmpty()) {
-                    txtLastName.setError(getString(R.string.error_field_required));
-                } else if (telephone.isEmpty()) {
-                    txtTel.setError(getString(R.string.error_field_required));
+                    etNric.setError(getString(R.string.error_field_required));
+                } else if (name.isEmpty()) {
+                    etName.setError(getString(R.string.error_field_required));
+                } else if (mobilenumber.isEmpty()) {
+                    etMobileNumber.setError(getString(R.string.error_field_required));
                 } else if (email.isEmpty()) {
-                    txtEmail.setError(getString(R.string.error_field_required));
+                    etEmail.setError(getString(R.string.error_field_required));
                 } else if (address.isEmpty()) {
-                    txtAddress.setError(getString(R.string.error_field_required));
+                    etAddress.setError(getString(R.string.error_field_required));
                 } else if (zipcode.isEmpty()) {
-                    txtZipcode.setError(getString(R.string.error_field_required));
+                    etZipcode.setError(getString(R.string.error_field_required));
                 } else {
                     Intent i = new Intent(v.getContext(), RegisterUserPass.class);
                     startActivity(i);
