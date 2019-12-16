@@ -100,6 +100,7 @@ public class RegisterDetails extends AppCompatActivity {
 
         }
 
+
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
