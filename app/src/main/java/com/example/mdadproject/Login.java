@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -89,8 +90,6 @@ public class Login extends AppCompatActivity {
                     try {
                         dataJson.put(TAG_USERNAME, uName);
                         dataJson.put(TAG_PASSWORD, pw);
-
-
                     } catch (JSONException e) {
 
                     }
@@ -142,6 +141,9 @@ public class Login extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
                 String username = etUsername.getEditText().getText().toString();
+                if (username.equals("staff")) {
+                    Constants.IS_STAFF = "yes";
+                }
                 Intent intent = new Intent(getApplicationContext(), UserBookAppointment.class);
                 intent.putExtra(TAG_USERNAME, username);
                 startActivityForResult(intent, 100);

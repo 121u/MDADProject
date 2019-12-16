@@ -202,9 +202,6 @@ public class UserPetDetails extends AppCompatActivity {
                 txtAdoptionDate.setText(petDate);
                 txtHeight.setText(petHeight);
                 txtWeight.setText(petWeight);
-//                btnImage
-
-//                pDialog.dismiss();
             } else {
                 Log.i("nric", "oops");
             }

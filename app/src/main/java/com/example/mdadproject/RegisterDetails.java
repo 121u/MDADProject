@@ -40,7 +40,7 @@ public class RegisterDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, staff, username, username0;
+    public static String nric, name, mobilenumber, email, address, zipcode, username;
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
 
     private static final String TAG_SUCCESS = "success";
@@ -51,15 +51,12 @@ public class RegisterDetails extends AppCompatActivity {
     private static final String TAG_EMAIL = "email";
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_ZIPCODE = "zipcode";
-    private static final String TAG_STAFF = "staff";
     private static final String TAG_USERNAME = "username";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_details);
-
-//        Log.i("page1", username);
 
         txtView = (TextView) findViewById(R.id.txtView);
         etNric = (TextInputLayout) findViewById(R.id.etNric);
@@ -94,7 +91,25 @@ public class RegisterDetails extends AppCompatActivity {
         } catch (JSONException e) {
 
         }
-        postData(url_owner, dataJson, 1);
+
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+        } else if (username != null) {
+            txtView.setText("your profile");
+            txtView.setTextColor(Color.BLACK);
+            etNric.getEditText().setEnabled(false);
+            etName.getEditText().setEnabled(false);
+            etMobileNumber.getEditText().setEnabled(false);
+            etEmail.getEditText().setEnabled(false);
+            etAddress.getEditText().setEnabled(false);
+            etZipcode.getEditText().setEnabled(false);
+            btmToolbar.setVisibility(View.GONE);
+
+            postData(url_owner, dataJson, 1);
+        } else {
+
+        }
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,30 +185,13 @@ public class RegisterDetails extends AppCompatActivity {
                 email = owner.getString(TAG_EMAIL);
                 address = owner.getString(TAG_ADDRESS);
                 zipcode = owner.getString(TAG_ZIPCODE);
-                staff = owner.getString(TAG_STAFF);
-                Log.i("nric", staff);
 
-                if (username != null && username.equals("staff") && staff!=null && staff.equals("yes")) {
-                    btnUpdate.setVisibility(View.VISIBLE);
-                    btnDelete.setVisibility(View.VISIBLE);
-                } else if (username != null) {
-                    txtView.setText("your profile");
-                    txtView.setTextColor(Color.BLACK);
-                    etNric.getEditText().setEnabled(false);
-                    etName.getEditText().setEnabled(false);
-                    etMobileNumber.getEditText().setEnabled(false);
-                    etEmail.getEditText().setEnabled(false);
-                    etAddress.getEditText().setEnabled(false);
-                    etZipcode.getEditText().setEnabled(false);
-                    btmToolbar.setVisibility(View.GONE);
-
-                    etNric.getEditText().setText(nric);
-                    etName.getEditText().setText(name);
-                    etMobileNumber.getEditText().setText(mobilenumber);
-                    etEmail.getEditText().setText(email);
-                    etAddress.getEditText().setText(address);
-                    etZipcode.getEditText().setText(zipcode);
-                }
+                etNric.getEditText().setText(nric);
+                etName.getEditText().setText(name);
+                etMobileNumber.getEditText().setText(mobilenumber);
+                etEmail.getEditText().setText(email);
+                etAddress.getEditText().setText(address);
+                etZipcode.getEditText().setText(zipcode);
             } else {
             }
 

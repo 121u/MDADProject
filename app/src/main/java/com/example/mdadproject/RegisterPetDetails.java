@@ -26,8 +26,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 //import com.android.volley.Request;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -73,6 +84,7 @@ public class RegisterPetDetails extends AppCompatActivity {
 
     public static String pet, name, sex, breed, age, dateofadoption, height, weight, image, username;
 
+    private static final String TAG_SUCCESS = "success";
     private static final String TAG_NAME = "name";
     private static final String TAG_SEX = "sex";
     private static final String TAG_BREED = "breed";
@@ -241,6 +253,71 @@ public class RegisterPetDetails extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void postData(String url, final JSONObject json, final int option) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest json_obj_req = new JsonObjectRequest(
+                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                switch (option) {
+                    case 1:
+                        checkResponseRead(response, json);
+                        break;
+                    case 2:
+//                        checkResponseEdit(response, json);
+                        break;
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+
+        });
+        requestQueue.add(json_obj_req);
+    }
+
+    private void checkResponseRead(JSONObject response, JSONObject creds) {
+        try {
+            if (response.getInt(TAG_SUCCESS) == 1) {
+
+                JSONArray ownerObj = response.getJSONArray(TAG_PET);
+
+                JSONObject petObj = ownerObj.getJSONObject(0);
+                pet = petObj.getString(TAG_PET).toLowerCase();
+                name = petObj.getString(TAG_NAME).toLowerCase();
+                sex = petObj.getString(TAG_SEX).toLowerCase();
+                breed = petObj.getString(TAG_BREED).toLowerCase();
+                age = petObj.getString(TAG_AGE).toLowerCase();
+                dateofadoption = petObj.getString(TAG_DATEOFADOPTION).toLowerCase();
+                height = petObj.getString(TAG_HEIGHT).toLowerCase();
+                weight = petObj.getString(TAG_WEIGHT).toLowerCase();
+
+//                ImageLoader imageLoader;
+//                imageLoader = CustomVolleyRequest.getInstance(mContext).getImageLoader();
+//                pet.setImageUrl(tempPet.getImagepath(), imageLoader);
+                etPetType.getEditText().setText(pet);
+                etPetName.getEditText().setText(name);
+                etPetSex.getEditText().setText(sex);
+                etPetAge.getEditText().setText(age);
+                etPetDate.getEditText().setText(dateofadoption);
+                etPetHeight.getEditText().setText(height);
+                etPetWeight.getEditText().setText(weight);
+
+            } else {
+                Log.i("nric", "oops");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateLabel() {
