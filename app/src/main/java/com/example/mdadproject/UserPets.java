@@ -104,10 +104,8 @@ public class UserPets extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
-                Intent in = new Intent(getApplicationContext(), UserPetDetails.class);
-                // sending pid to next activity
+                Intent in = new Intent(getApplicationContext(), RegisterPetDetails.class);
                 in.putExtra(TAG_PID, pid);
-                // starting new activity and expecting some response back
                 startActivityForResult(in, 100);
             }
         });

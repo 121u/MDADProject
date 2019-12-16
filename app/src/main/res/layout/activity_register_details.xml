@@ -167,20 +167,22 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUpdate"
-            style="@style/Widget.MaterialComponents.Button.TextButton"            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
-            android:text="update"/>
+            android:text="update" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
-            style="@style/Widget.MaterialComponents.Button.TextButton"            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="delete"/>
+            android:text="delete" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
@@ -190,7 +192,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="next"/>
+            android:text="next" />
     </RelativeLayout>
 
 

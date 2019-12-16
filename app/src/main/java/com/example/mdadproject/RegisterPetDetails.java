@@ -23,6 +23,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 //import com.android.volley.Request;
@@ -73,18 +74,22 @@ public class RegisterPetDetails extends AppCompatActivity {
     private TextInputLayout etPetHeight;
     private TextInputLayout etPetWeight;
     private TextInputLayout etPetImage;
-    private Button btnNext;
     private ProgressDialog pDialog;
     private ImageView imgPet;
+    private RelativeLayout btmToolbar;
+    private Button btnNext;
+    private Button btnUpdate;
+    private Button btnDelete;
 
     final Calendar myCalendar = Calendar.getInstance();
 
     String[] typeOptions = new String[]{"cat", "dog", "bird", "rabbit", "hamster", "terrapin"};
     String[] sexOptions = new String[]{"female", "male"};
 
-    public static String pet, name, sex, breed, age, dateofadoption, height, weight, image, username;
+    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, image, username;
 
     private static final String TAG_SUCCESS = "success";
+    private static final String TAG_PID = "pid";
     private static final String TAG_NAME = "name";
     private static final String TAG_SEX = "sex";
     private static final String TAG_BREED = "breed";
@@ -96,6 +101,7 @@ public class RegisterPetDetails extends AppCompatActivity {
     private static final String TAG_USERNAME = "username";
 
     static String urlPhp = "http://vetmdad.atspace.cc/upload-image-to-server.php";
+    public static String url_pet = Login.ipBaseAddress + "/get_pet_detailsJson.php";
     String timeStamp;
     String imageFileName;
     Bitmap fixBitmap;
@@ -120,9 +126,7 @@ public class RegisterPetDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_pet_details);
 
-        Intent intent = getIntent();
-        username = intent.getStringExtra(TAG_USERNAME);
-
+        etPetType = (TextInputLayout) findViewById(R.id.etPetType);
         etPetType = (TextInputLayout) findViewById(R.id.etPetType);
         etPetName = (TextInputLayout) findViewById(R.id.etPetName);
         etPetSex = (TextInputLayout) findViewById(R.id.etPetSex);
@@ -133,8 +137,11 @@ public class RegisterPetDetails extends AppCompatActivity {
         etPetHeight = (TextInputLayout) findViewById(R.id.etPetHeight);
         etPetWeight = (TextInputLayout) findViewById(R.id.etPetWeight);
         etPetImage = (TextInputLayout) findViewById(R.id.etPetImage);
-        btnNext = (Button) findViewById(R.id.btnNext);
         imgPet = (ImageView) findViewById(R.id.imgPet);
+        btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
+        btnNext = (Button) findViewById(R.id.btnNext);
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
@@ -154,13 +161,36 @@ public class RegisterPetDetails extends AppCompatActivity {
         AutoCompleteTextView editTextFilledExposedDropdown2 = findViewById(R.id.filled_exposed_dropdown_2);
         editTextFilledExposedDropdown2.setAdapter(adapter2);
 
-        etPetImage.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                showPictureDialog();
-            }
-        });
+        Intent intent = getIntent();
+        pid = intent.getStringExtra(TAG_PID);
+
+        JSONObject dataJson = new JSONObject();
+        try {
+            dataJson.put(TAG_PID, pid);
+        } catch (JSONException e) {
+
+        }
+
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+        } else if (pid != null) {
+            postData(url_pet, dataJson, 1);
+            btmToolbar.setVisibility(View.GONE);
+            etPetType.getEditText().setEnabled(false);
+            etPetName.getEditText().setEnabled(false);
+            etPetSex.getEditText().setEnabled(false);
+            etPetBreed.getEditText().setEnabled(false);
+            etPetDate.getEditText().setEnabled(false);
+            etPetAge.getEditText().setEnabled(false);
+            etPetHeight.getEditText().setEnabled(false);
+            etPetWeight.getEditText().setEnabled(false);
+            etPetImage.getEditText().setEnabled(false);
+            etPetImage.setEndIconVisible(false);
+        } else {
+            btnUpdate.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
+        }
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,6 +278,13 @@ public class RegisterPetDetails extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+        etPetImage.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPictureDialog();
+            }
+        });
     }
 
     public boolean onSupportNavigateUp() {
@@ -300,6 +337,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 dateofadoption = petObj.getString(TAG_DATEOFADOPTION).toLowerCase();
                 height = petObj.getString(TAG_HEIGHT).toLowerCase();
                 weight = petObj.getString(TAG_WEIGHT).toLowerCase();
+//                image = pet.getStr
 
 //                ImageLoader imageLoader;
 //                imageLoader = CustomVolleyRequest.getInstance(mContext).getImageLoader();
@@ -307,6 +345,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 etPetType.getEditText().setText(pet);
                 etPetName.getEditText().setText(name);
                 etPetSex.getEditText().setText(sex);
+                etPetBreed.getEditText().setText(breed);
                 etPetAge.getEditText().setText(age);
                 etPetDate.getEditText().setText(dateofadoption);
                 etPetHeight.getEditText().setText(height);

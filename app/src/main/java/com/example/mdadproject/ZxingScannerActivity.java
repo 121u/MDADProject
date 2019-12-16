@@ -20,11 +20,15 @@ public class ZxingScannerActivity extends AppCompatActivity implements ZXingScan
 
     private ZXingScannerView mScannerView;
     static final Integer CAMERA = 0x1;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zxing_scanner);
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
 
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZXingScannerView(this);
@@ -90,10 +94,10 @@ public class ZxingScannerActivity extends AppCompatActivity implements ZXingScan
         Toast.makeText(this, "Contents = " + result.getText() +
                 ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
-        Intent i = new Intent(this,StaffQrScanner.class);
+        Intent i = new Intent(this,UserBookAppointment.class);
         i.putExtra("qr",result.getText());
+        i.putExtra("username", username);
         startActivity(i);
-
 
         // * Wait 3 seconds to resume the preview.
         Handler handler = new Handler();

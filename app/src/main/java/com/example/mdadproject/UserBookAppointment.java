@@ -80,7 +80,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String date, starttime, endttime, status, pid;
+    String date, starttime, endttime, status, pid, qr;
     boolean disabled;
 
     private static String ownFirstName = "";
@@ -98,7 +98,12 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
-        Log.i("oops", username);
+
+        Intent intent1 = getIntent();
+        qr = intent.getStringExtra("qr");
+        if (qr != null){
+            Log.i("qr",qr);
+        }
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -145,7 +150,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        if (username.equals("staff")){
+        if (username!= null && username.equals("staff")){
             nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
         }
         else {
@@ -336,10 +341,12 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
             case R.id.nav_profile:
                 intent = new Intent(getApplicationContext(), RegisterDetails.class);
                 intent.putExtra(TAG_USERNAME, username);
+                intent.putExtra("qr",qr);
                 break;
             case R.id.nav_pet:
                 intent = new Intent(getApplicationContext(), UserPets.class);
                 intent.putExtra(TAG_USERNAME, username);
+                intent.putExtra("qr",qr);
                 break;
             case R.id.nav_qr:
                 intent = new Intent(getApplicationContext(), UserQrCode.class);

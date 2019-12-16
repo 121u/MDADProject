@@ -40,7 +40,7 @@ public class RegisterDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, username;
+    public static String nric, name, mobilenumber, email, address, zipcode, username, qr;
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
 
     private static final String TAG_SUCCESS = "success";
@@ -70,9 +70,6 @@ public class RegisterDetails extends AppCompatActivity {
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
 
-        btnUpdate.setVisibility(View.GONE);
-        btnDelete.setVisibility(View.GONE);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -85,9 +82,20 @@ public class RegisterDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
+
         JSONObject dataJson = new JSONObject();
         try {
-            dataJson.put("username", username);
+            dataJson.put(TAG_USERNAME, username);
+        } catch (JSONException e) {
+
+        }
+
+        Intent intent1 = getIntent();
+        qr = intent1.getStringExtra("qr");
+
+        JSONObject dataJson2 = new JSONObject();
+        try {
+            dataJson2.put(TAG_USERNAME, qr);
         } catch (JSONException e) {
 
         }
@@ -95,6 +103,8 @@ public class RegisterDetails extends AppCompatActivity {
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
+
+            postData(url_owner, dataJson2, 1);
         } else if (username != null) {
             txtView.setText("your profile");
             txtView.setTextColor(Color.BLACK);
@@ -108,6 +118,8 @@ public class RegisterDetails extends AppCompatActivity {
 
             postData(url_owner, dataJson, 1);
         } else {
+            btnUpdate.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
 
         }
 
