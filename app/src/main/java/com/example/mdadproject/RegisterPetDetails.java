@@ -1,13 +1,16 @@
 package com.example.mdadproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,24 +18,16 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 //import com.android.volley.Request;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -50,38 +45,36 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class RegisterPetDetails extends AppCompatActivity {
 
-    private TextView textView5;
-    private TextView textView;
-    private EditText txtName;
-    private TextView textView2;
-    private ToggleButton btnSex;
-    private TextView textView3;
-    private EditText txtBreed;
-    private TextView textView4;
-    private EditText txtAge;
-    private TextView textView6;
-    private DatePicker txtAdoptionDate;
-    private TextView textView7;
-    private EditText txtHeight;
-    private TextView textView8;
-    private EditText txtWeight;
-    private TextView textView9;
-    private Button btnImage;
+    private TextInputLayout etPetType;
+    private TextInputLayout etPetName;
+    private TextInputLayout etPetSex;
+    private TextInputLayout etPetBreed;
+    private TextInputLayout etPetAge;
+    private TextInputLayout etPetDate;
+    private TextInputEditText etPetDateIn;
+    private TextInputLayout etPetHeight;
+    private TextInputLayout etPetWeight;
+    private TextInputLayout etPetImage;
     private Button btnNext;
     private ProgressDialog pDialog;
-    ImageView imgPet;
+    private ImageView imgPet;
+
+    final Calendar myCalendar = Calendar.getInstance();
+
+    String[] typeOptions = new String[]{"cat", "dog", "bird", "rabbit", "hamster", "terrapin"};
+    String[] sexOptions = new String[]{"female", "male"};
 
     public static String pet, name, sex, breed, age, dateofadoption, height, weight, image, username;
 
     private static String url_create_pet = Login.ipBaseAddress + "/create_petJson.php";
 
-    private static final String TAG_SUCCESS = "success";
     private static final String TAG_NAME = "name";
     private static final String TAG_SEX = "sex";
     private static final String TAG_BREED = "breed";
@@ -92,16 +85,12 @@ public class RegisterPetDetails extends AppCompatActivity {
     private static final String TAG_PET = "pet";
     private static final String TAG_USERNAME = "username";
 
-    private Uri imageUri;
     static String urlPhp = "http://vetmdad.atspace.cc/upload-image-to-server.php";
     String timeStamp;
     String imageFileName;
-    File file;
-    EditText imageName;
     Bitmap fixBitmap;
     String ImageTag = "image_tag";
     String ImageName = "image_data";
-    ProgressDialog progressDialog;
     ByteArrayOutputStream byteArrayOutputStream;
     byte[] byteArray;
     String ConvertImage;
@@ -124,153 +113,145 @@ public class RegisterPetDetails extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
         Log.i("nric", username);
-
         Log.i("Ip address CREATE ", url_create_pet);
 
-        textView5 = (TextView) findViewById(R.id.textView5);
-        textView = (TextView) findViewById(R.id.textView);
-        txtName = (EditText) findViewById(R.id.txtName);
-        textView2 = (TextView) findViewById(R.id.textView2);
-        final ToggleButton btnSex = (ToggleButton) findViewById(R.id.btnSex);
-        textView3 = (TextView) findViewById(R.id.textView3);
-        txtBreed = (EditText) findViewById(R.id.txtLastName);
-        textView4 = (TextView) findViewById(R.id.textView4);
-        txtAge = (EditText) findViewById(R.id.txtAge);
-        textView6 = (TextView) findViewById(R.id.textView6);
-        txtAdoptionDate = (DatePicker) findViewById(R.id.txtAdoptionDate);
-        textView7 = (TextView) findViewById(R.id.textView7);
-        txtHeight = (EditText) findViewById(R.id.txtHeight);
-        textView8 = (TextView) findViewById(R.id.textView8);
-        txtWeight = (EditText) findViewById(R.id.txtWeight);
-        textView9 = (TextView) findViewById(R.id.textView9);
-        btnImage = (Button) findViewById(R.id.btnImage);
+        etPetType = (TextInputLayout) findViewById(R.id.etPetType);
+        etPetName = (TextInputLayout) findViewById(R.id.etPetName);
+        etPetSex = (TextInputLayout) findViewById(R.id.etPetSex);
+        etPetBreed = (TextInputLayout) findViewById(R.id.etPetBreed);
+        etPetAge = (TextInputLayout) findViewById(R.id.etPetAge);
+        etPetDate = (TextInputLayout) findViewById(R.id.etPetDate);
+        etPetDateIn = (TextInputEditText) findViewById(R.id.etPetDateIn);
+        etPetHeight = (TextInputLayout) findViewById(R.id.etPetHeight);
+        etPetWeight = (TextInputLayout) findViewById(R.id.etPetWeight);
+        etPetImage = (TextInputLayout) findViewById(R.id.etPetImage);
         btnNext = (Button) findViewById(R.id.btnNext);
-        imageName = (EditText) findViewById(R.id.txtImage);
         imgPet = (ImageView) findViewById(R.id.imgPet);
 
-        imageName.setEnabled(false);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
 
-        getSupportActionBar().hide();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dropdown_menu_popup_item, sexOptions);
+        AutoCompleteTextView editTextFilledExposedDropdown = findViewById(R.id.filled_exposed_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
 
-        btnImage.setOnClickListener(new View.OnClickListener() {
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, R.layout.dropdown_menu_popup_item, typeOptions);
+        AutoCompleteTextView editTextFilledExposedDropdown2 = findViewById(R.id.filled_exposed_dropdown_2);
+        editTextFilledExposedDropdown2.setAdapter(adapter2);
+
+        etPetImage.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                getFileUri();
-//                i.putExtra(MediaStore.EXTRA_OUTPUT,file_uri);
-//                startActivityForResult(i, 10);
                 byteArrayOutputStream = new ByteArrayOutputStream();
                 showPictureDialog();
             }
-
-
         });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                if(name.isEmpty())
-//                {
-//                    txtName.setError(getString(R.string.error_field_required));
-//                }
-//                else if(breed.isEmpty())
-//                {
-//                    txtBreed.setError(getString(R.string.error_field_required));
-//                }
-//                else if(age.isEmpty())
-//                {
-//                    txtAge.setError(getString(R.string.error_field_required));
-//                }
-//                else if(height.isEmpty())
-//                {
-//                    txtHeight.setError(getString(R.string.error_field_required));
-//                }
-//                else if(weight.isEmpty())
-//                {
-//                    txtWeight.setError(getString(R.string.error_field_required));
-//                }
-//                else
-//                {
+                pet = etPetType.getEditText().getText().toString().toUpperCase();
+                name = etPetName.getEditText().getText().toString().toUpperCase();
+                sex = etPetSex.getEditText().getText().toString().toUpperCase();
+                breed = etPetBreed.getEditText().getText().toString().toUpperCase();
+                age = etPetAge.getEditText().getText().toString().toUpperCase();
+                dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
+                height = etPetHeight.getEditText().getText().toString().toUpperCase();
+                weight = etPetWeight.getEditText().getText().toString().toUpperCase();
+                GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
 
-//                image = txtZipcode.getText().toString().toUpperCase();
-//
-//
-//                }
+                if (pet.isEmpty()) {
+                    etPetType.setError(getString(R.string.error_field_required));
+                } else if (name.isEmpty()) {
+                    etPetName.setError(getString(R.string.error_field_required));
+                } else if (sex.isEmpty()) {
+                    etPetSex.setError(getString(R.string.error_field_required));
+                } else if (breed.isEmpty()) {
+                    etPetBreed.setError(getString(R.string.error_field_required));
+                } else if (age.isEmpty()) {
+                    etPetAge.setError(getString(R.string.error_field_required));
+                } else if (dateofadoption.isEmpty()) {
+                    etPetDate.setError(getString(R.string.error_field_required));
+                } else if (height.isEmpty()) {
+                    etPetHeight.setError(getString(R.string.error_field_required));
+                } else if (weight.isEmpty()) {
+                    etPetWeight.setError(getString(R.string.error_field_required));
+                } else if (GetImageNameFromEditText.isEmpty()) {
+                    etPetImage.setError(getString(R.string.error_field_required));
+                } else {
 
-                pet = RegisterChoosePet.pet;
-                name = txtName.getText().toString().toUpperCase();
-                sex = btnSex.getText().toString().toUpperCase();
-                breed = txtBreed.getText().toString().toUpperCase();
-                age = txtAge.getText().toString().toUpperCase();
+                    fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+                    byteArray = byteArrayOutputStream.toByteArray();
+                    ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                //get date from datepicker
-                int day = txtAdoptionDate.getDayOfMonth();
-                int month = txtAdoptionDate.getMonth();
-                int year = txtAdoptionDate.getYear();
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-                dateofadoption = sdf.format(calendar.getTime());
-                //
+                    pDialog = new ProgressDialog(RegisterPetDetails.this);
+                    pDialog.setMessage("Welcome to the bark side..");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(true);
+                    pDialog.show();
 
-                height = txtHeight.getText().toString().toUpperCase();
-                weight = txtWeight.getText().toString().toUpperCase();
-                image = "image";
+                    Log.i("name", pet);
+                    Log.i("name", name);
+                    Log.i("name", sex);
+                    Log.i("name", breed);
+                    Log.i("name", age);
+                    Log.i("name", dateofadoption);
+                    Log.i("name", height);
+                    Log.i("name", weight);
+                    Log.i("name", username);
+                    Log.i("name", GetImageNameFromEditText);
+                    Log.i("name", ConvertImage);
 
-                fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-                byteArray = byteArrayOutputStream.toByteArray();
-                ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    UploadImageToServer();
+                }
 
-                pDialog = new ProgressDialog(RegisterPetDetails.this);
-                pDialog.setMessage("Welcome to the bark side..");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
-
-                GetImageNameFromEditText = imageName.getText().toString();
-
-                Log.i("name", RegisterChoosePet.pet);
-                Log.i("name", name);
-                Log.i("name", sex);
-                Log.i("name", breed);
-                Log.i("name", age);
-                Log.i("name", dateofadoption);
-                Log.i("name", height);
-                Log.i("name", weight);
-                Log.i("name", username);
-                Log.i("name", GetImageNameFromEditText);
-                Log.i("name", ConvertImage);
-
-                UploadImageToServer();
-//                ImageProcessClass imageProcessClass = new ImageProcessClass();
-//                HashMap<String, String> HashMapParams = new HashMap<String, String>();
-//                HashMapParams.put(ImageTag, GetImageNameFromEditText);
-//                HashMapParams.put(ImageName, ConvertImage);
-//                String FinalData = imageProcessClass.ImageHttpRequest(urlPhp, HashMapParams);
-
-//                upload();
-//                JSONObject dataJson = new JSONObject();
-//                try {
-//                    dataJson.put(TAG_NAME, name);
-//                    dataJson.put(TAG_SEX, sex);
-//                    dataJson.put(TAG_BREED, breed);
-//                    dataJson.put(TAG_AGE, age);
-//                    dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
-//                    dataJson.put(TAG_HEIGHT, height);
-//                    dataJson.put(TAG_WEIGHT, weight);
-//                    dataJson.put(TAG_PET, pet);
-//                    dataJson.put(TAG_USERNAME, username);
-//                    dataJson.put(ImageTag, GetImageNameFromEditText);
-//                    dataJson.put(ImageName, ConvertImage);
-//
-//                } catch (JSONException e) {
-//
-//                }
-//
-//                postData(urlPhp, dataJson, 1);
             }
         });
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        etPetDateIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterPetDetails.this, R.style.CustomDatePickerDialogTheme, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH)
+                        , myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd MMMM yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+
+        etPetDate.getEditText().setText(sdf.format(myCalendar.getTime()));
     }
 
     private void showPictureDialog() {
@@ -299,18 +280,12 @@ public class RegisterPetDetails extends AppCompatActivity {
     public void choosePhotoFromGallary() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
         startActivityForResult(galleryIntent, GALLERY);
     }
 
     private void takePhotoFromCamera() {
-
-//        UploadImageOnServerButton.setVisibility(View.VISIBLE);
-
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        //  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(cameraIntent, CAMERA);
-
     }
 
     @Override
@@ -318,8 +293,7 @@ public class RegisterPetDetails extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         imageFileName = "JPEG_" + timeStamp;
-        name = txtName.getText().toString().toUpperCase();
-        imageName.setText(imageFileName);
+        etPetImage.getEditText().setText(imageFileName);
         if (resultCode == this.RESULT_CANCELED) {
             return;
         }
@@ -328,10 +302,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 Uri contentURI = data.getData();
                 try {
                     fixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    // String path = saveImage(bitmap);
-                    //Toast.makeText(MainActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     imgPet.setImageBitmap(fixBitmap);
-//                    UploadImageOnServerButton.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(RegisterPetDetails.this, "Failed!", Toast.LENGTH_SHORT).show();
@@ -341,56 +312,9 @@ public class RegisterPetDetails extends AppCompatActivity {
             fixBitmap = (Bitmap) data.getExtras().get("data");
             imgPet.setImageBitmap(fixBitmap);
         }
-    }
-
-    public void postData(String url, final JSONObject json, final int option) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        JsonObjectRequest json_obj_req = new JsonObjectRequest(
-                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-
-                switch (option) {
-                    case 1:
-                        checkResponseCreate_Pet(response);
-                        break;
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-//                String alert_message;
-//                alert_message = error.toString();
-//                showAlertDialogue("Error", alert_message);
-            }
-
-        });
-        requestQueue.add(json_obj_req);
-    }
-
-    public void checkResponseCreate_Pet(JSONObject response) {
-        Log.i("----Response", response + " ");
-        try {
-            if (response.getInt(TAG_SUCCESS) == 1) {
-                finish();
-                Intent i = new Intent(this, Login.class);
-                startActivity(i);
-                // dismiss the dialog once product uupdated
-                pDialog.dismiss();
-
-            } else {
-                // product with pid not found
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
+        imgPet.setClipToOutline(true);
+        imgPet.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imgPet.setBackgroundResource(R.drawable.roundcorners);
     }
 
     public void UploadImageToServer() {
@@ -401,19 +325,14 @@ public class RegisterPetDetails extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-//                progressDialog = ProgressDialog.show(RegisterPetDetails.this, "Image is Uploading", "Please Wait", false, false);
             }
 
             @Override
             protected void onPostExecute(String string1) {
                 super.onPostExecute(string1);
-//                progressDialog.dismiss();
                 Intent i = new Intent(RegisterPetDetails.this, Login.class);
                 startActivity(i);
                 pDialog.dismiss();
-
-//                Toast.makeText(RegisterPetDetails.this, "Face to Face", Toast.LENGTH_LONG).show();
-//                UploadImageOnServerButton.setVisibility(View.INVISIBLE);
             }
 
             @Override

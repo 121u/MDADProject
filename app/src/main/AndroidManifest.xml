@@ -39,8 +39,10 @@
         <activity
             android:name=".UserBookAppointment"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RegisterPetDetails" />
-        <activity android:name=".RegisterChoosePet" />
+        <activity
+            android:name=".RegisterPetDetails"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".RegisterUserPass"
             android:theme="@style/AppTheme.NoActionBar"

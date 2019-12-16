@@ -1,278 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".RegisterDetails">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:text="pet details"
-            android:textColor="#00F5BB"
-            android:textSize="40sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="name"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtName"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:lines="1"
-            android:maxLength="9"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:hint="optional"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="sex"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <ToggleButton
-            android:id="@+id/btnSex"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textOn="male"
-            android:textOff="female"
-            android:textAllCaps="false"
-            android:background="@drawable/button_shadow"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="breed"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtLastName"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:lines="1"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="age"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtAge"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:ems="10"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLength="8"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme" />
+            android:orientation="vertical"
+            android:paddingBottom="140dp">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="date of adoption"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="pet details"
+                android:textColor="@color/colorAccent"
+                android:textSize="32sp" />
 
-        <DatePicker
-            android:id="@+id/txtAdoptionDate"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetType"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:hint="type">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filled_exposed_dropdown_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="9"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetSex"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:hint="sex">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filled_exposed_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetBreed"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="breed">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="8"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetDate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="date of adoption"
+                android:focusable="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPetDateIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:focusable="false"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPetAge"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:hint="age">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etPetHeight"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:hint="height"
+                    app:helperText="in metres">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etPetWeight"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="end"
+                    android:hint="weight"
+                    app:helperText="in kg">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/imgPet"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/roundcorners">
+                </ImageView>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etPetImage"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="240dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:hint="image"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_add_a_photo_black_18dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:singleLine="true"
+                        android:editable="false"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar3"
             android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="12dp"
-            android:datePickerMode="spinner"
-            android:calendarViewShown="false"/>
+            android:background="@drawable/line"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="height"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtHeight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:ems="10"
-            android:hint="in cm"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="weight"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtWeight"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="30dp"
-            android:ems="10"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLength="6"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme"
-            android:hint="in kg"/>
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="image"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <Button
-            android:id="@+id/btnImage"
-            android:text="upload image"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textAllCaps="false"
-            android:background="@drawable/button_shadow"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp" />
-
-        <EditText
-            android:id="@+id/txtImage"
-            android:layout_width="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="30dp"
-            android:ems="10"
-            android:lines="1"
-            android:maxLines="1"
-            android:theme="@style/EditTextTheme"/>
-
-        <ImageView
-            android:id="@+id/imgPet"
-            android:layout_width="match_parent"
-            android:layout_height="330sp"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="0dp"
-            android:scaleType="centerCrop"
-            android:padding="0dp"/>
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
-            android:text=">"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/round_button"/>
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:text="add" />
+    </RelativeLayout>
 
-    </LinearLayout>
 
-</ScrollView>
-
+</androidx.constraintlayout.widget.ConstraintLayout>

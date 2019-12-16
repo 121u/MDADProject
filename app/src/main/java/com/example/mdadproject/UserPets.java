@@ -81,7 +81,7 @@ public class UserPets extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
-                intent = new Intent(getApplicationContext(), RegisterChoosePet.class);
+                intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
                 intent.putExtra(TAG_USERNAME,username);
                 startActivityForResult(intent,100);
             }

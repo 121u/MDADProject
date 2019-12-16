@@ -334,7 +334,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_profile:
-                intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent = new Intent(getApplicationContext(), RegisterDetails.class);
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_pet:
