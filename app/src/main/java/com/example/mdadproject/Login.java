@@ -35,7 +35,7 @@ public class Login extends AppCompatActivity {
     // url to update product
 
 
-    private static final String url_login = ipBaseAddress+"/login.php";
+    private static final String url_login = ipBaseAddress + "/login.php";
     // JSON Node names
 
     private static final String TAG_SUCCESS = "success";
@@ -69,21 +69,16 @@ public class Login extends AppCompatActivity {
 
 //                String pw= etPassword.getText().toString();
                 String pw = etPassword.getEditText().getText().toString();
-                String uName= etUsername.getEditText().getText().toString();
+                String uName = etUsername.getEditText().getText().toString();
 
-                if(pw.isEmpty())
-                {
+                if (pw.isEmpty()) {
                     etPassword.setErrorEnabled(false);
                     etPassword.setError(getString(R.string.error_field_required));
-                }else
-
-                if(uName.isEmpty())
-                {
+                } else if (uName.isEmpty()) {
                     etUsername.setErrorEnabled(false);
                     etUsername.setError(getString(R.string.error_field_required));
 
-                }else
-                {
+                } else {
                     pDialog = new ProgressDialog(Login.this);
                     pDialog.setMessage("This purr-obably won't take long..");
                     pDialog.setIndeterminate(false);
@@ -91,26 +86,26 @@ public class Login extends AppCompatActivity {
                     pDialog.show();
 
                     JSONObject dataJson = new JSONObject();
-                    try{
+                    try {
                         dataJson.put(TAG_USERNAME, uName);
                         dataJson.put(TAG_PASSWORD, pw);
 
 
-                    }catch(JSONException e){
+                    } catch (JSONException e) {
 
                     }
 
-                    postData(url_login,dataJson,1 );
+                    postData(url_login, dataJson, 1);
 
                 }
             }
         });
     }
 
-    public void postData(String url, final JSONObject json, final int option){
+    public void postData(String url, final JSONObject json, final int option) {
 
 
-        Log.i("=======", url   );
+        Log.i("=======", url);
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -120,8 +115,10 @@ public class Login extends AppCompatActivity {
             public void onResponse(JSONObject response) {
 
 
-                switch (option){
-                    case 1:checkResponseLogin(response); break;
+                switch (option) {
+                    case 1:
+                        checkResponseLogin(response);
+                        break;
 
                 }
 
@@ -140,22 +137,17 @@ public class Login extends AppCompatActivity {
         requestQueue.add(json_obj_req);
     }
 
-    public void checkResponseLogin(JSONObject response)
-    {
-        Log.i("----Response", response+" "+url_login);
+    public void checkResponseLogin(JSONObject response) {
+        Log.i("----Response", response + " " + url_login);
         try {
-            if(response.getInt(TAG_SUCCESS)==1){
-
-                // finish();
-//                Intent i = new Intent(this, UserBookAppointment.class);
-//                startActivity(i);
+            if (response.getInt(TAG_SUCCESS) == 1) {
                 String username = etUsername.getEditText().getText().toString();
                 Intent intent = new Intent(getApplicationContext(), UserBookAppointment.class);
-                intent.putExtra(TAG_USERNAME,username);
+                intent.putExtra(TAG_USERNAME, username);
                 startActivityForResult(intent, 100);
-                Log.i("page1",username);
+                Log.i("page1", username);
                 pDialog.dismiss();
-            }else{
+            } else {
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {

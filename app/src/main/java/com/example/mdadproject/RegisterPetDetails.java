@@ -73,8 +73,6 @@ public class RegisterPetDetails extends AppCompatActivity {
 
     public static String pet, name, sex, breed, age, dateofadoption, height, weight, image, username;
 
-    private static String url_create_pet = Login.ipBaseAddress + "/create_petJson.php";
-
     private static final String TAG_NAME = "name";
     private static final String TAG_SEX = "sex";
     private static final String TAG_BREED = "breed";
@@ -112,8 +110,6 @@ public class RegisterPetDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
-        Log.i("nric", username);
-        Log.i("Ip address CREATE ", url_create_pet);
 
         etPetType = (TextInputLayout) findViewById(R.id.etPetType);
         etPetName = (TextInputLayout) findViewById(R.id.etPetName);

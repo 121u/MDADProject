@@ -30,7 +30,7 @@ public class RegisterUserPass extends AppCompatActivity {
     private Button btnNext;
     private ProgressDialog pDialog;
 
-    public static String username, password;
+    public static String username, password, staff;
 
     private static String url_create_owner = Login.ipBaseAddress + "/create_ownerJson.php";
 
@@ -43,7 +43,7 @@ public class RegisterUserPass extends AppCompatActivity {
     private static final String TAG_ZIPCODE = "zipcode";
     private static final String TAG_USERNAME = "username";
     private static final String TAG_PASSWORD = "password";
-
+    private static final String TAG_STAFF = "staff";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +97,7 @@ public class RegisterUserPass extends AppCompatActivity {
                         dataJson.put(TAG_ZIPCODE, RegisterDetails.zipcode);
                         dataJson.put(TAG_USERNAME, username);
                         dataJson.put(TAG_PASSWORD, password);
+                        dataJson.put(TAG_STAFF, staff);
 
                     } catch (JSONException e) {
 

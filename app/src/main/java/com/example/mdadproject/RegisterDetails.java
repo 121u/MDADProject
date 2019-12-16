@@ -40,7 +40,7 @@ public class RegisterDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, username;
+    public static String nric, name, mobilenumber, email, address, zipcode, staff, username, username0;
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
 
     private static final String TAG_SUCCESS = "success";
@@ -51,12 +51,15 @@ public class RegisterDetails extends AppCompatActivity {
     private static final String TAG_EMAIL = "email";
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_ZIPCODE = "zipcode";
+    private static final String TAG_STAFF = "staff";
     private static final String TAG_USERNAME = "username";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_details);
+
+//        Log.i("page1", username);
 
         txtView = (TextView) findViewById(R.id.txtView);
         etNric = (TextInputLayout) findViewById(R.id.etNric);
@@ -70,6 +73,9 @@ public class RegisterDetails extends AppCompatActivity {
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
 
+        btnUpdate.setVisibility(View.GONE);
+        btnDelete.setVisibility(View.GONE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -82,31 +88,13 @@ public class RegisterDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
+        JSONObject dataJson = new JSONObject();
+        try {
+            dataJson.put("username", username);
+        } catch (JSONException e) {
 
-        if (username != null && username.equals("staff")) {
-            btnUpdate.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
-        } else if (username != null) {
-            txtView.setText("your profile");
-            txtView.setTextColor(Color.BLACK);
-            etNric.getEditText().setEnabled(false);
-            etName.getEditText().setEnabled(false);
-            etMobileNumber.getEditText().setEnabled(false);
-            etEmail.getEditText().setEnabled(false);
-            etAddress.getEditText().setEnabled(false);
-            etZipcode.getEditText().setEnabled(false);
-            btmToolbar.setVisibility(View.GONE);
-            JSONObject dataJson = new JSONObject();
-            try {
-                dataJson.put("username", username);
-            } catch (JSONException e) {
-
-            }
-            postData(url_owner, dataJson, 1);
-        } else {
-            btnUpdate.setVisibility(View.GONE);
-            btnDelete.setVisibility(View.GONE);
         }
+        postData(url_owner, dataJson, 1);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,17 +170,31 @@ public class RegisterDetails extends AppCompatActivity {
                 email = owner.getString(TAG_EMAIL);
                 address = owner.getString(TAG_ADDRESS);
                 zipcode = owner.getString(TAG_ZIPCODE);
+                staff = owner.getString(TAG_STAFF);
+                Log.i("nric", staff);
 
-                etNric.getEditText().setText(nric);
-                etName.getEditText().setText(name);
-                etMobileNumber.getEditText().setText(mobilenumber);
-                etEmail.getEditText().setText(email);
-                etAddress.getEditText().setText(address);
-                etZipcode.getEditText().setText(zipcode);
+                if (username != null && username.equals("staff") && staff!=null && staff.equals("yes")) {
+                    btnUpdate.setVisibility(View.VISIBLE);
+                    btnDelete.setVisibility(View.VISIBLE);
+                } else if (username != null) {
+                    txtView.setText("your profile");
+                    txtView.setTextColor(Color.BLACK);
+                    etNric.getEditText().setEnabled(false);
+                    etName.getEditText().setEnabled(false);
+                    etMobileNumber.getEditText().setEnabled(false);
+                    etEmail.getEditText().setEnabled(false);
+                    etAddress.getEditText().setEnabled(false);
+                    etZipcode.getEditText().setEnabled(false);
+                    btmToolbar.setVisibility(View.GONE);
 
-//                pDialog.dismiss();
+                    etNric.getEditText().setText(nric);
+                    etName.getEditText().setText(name);
+                    etMobileNumber.getEditText().setText(mobilenumber);
+                    etEmail.getEditText().setText(email);
+                    etAddress.getEditText().setText(address);
+                    etZipcode.getEditText().setText(zipcode);
+                }
             } else {
-                Log.i("nric", "oops");
             }
 
         } catch (JSONException e) {

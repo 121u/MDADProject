@@ -34,9 +34,6 @@
             android:name=".UserPets"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UserProfile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".UserBookAppointment"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

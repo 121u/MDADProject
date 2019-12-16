@@ -145,7 +145,7 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        if (username.equals("effertz")){
+        if (username.equals("staff")){
             nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
         }
         else {
@@ -350,4 +350,6 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
