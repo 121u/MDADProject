@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,12 +27,14 @@ import org.json.JSONObject;
 
 public class RegisterUserPass extends AppCompatActivity {
 
-    private TextInputLayout etUsername;
-    private TextInputLayout etPassword;
-    private Button btnNext;
+    private TextView textView;
+    public TextInputLayout etUsername;
+    public TextInputLayout etPassword;
+    private RelativeLayout btmToolbar;
+    private Button btnSignUp;
     private ProgressDialog pDialog;
 
-    public static String username, password;
+    public static String username, password, qr;
 
     private static String url_create_owner = Login.ipBaseAddress + "/create_ownerJson.php";
 
@@ -48,6 +52,11 @@ public class RegisterUserPass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user_pass);
 
+        Intent intent = getIntent();
+        username = intent.getStringExtra(TAG_USERNAME);
+        qr = intent.getStringExtra("qr");
+        password = intent.getStringExtra(TAG_PASSWORD);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if(toolbar != null) {
             setSupportActionBar(toolbar);
@@ -60,11 +69,23 @@ public class RegisterUserPass extends AppCompatActivity {
 
         Log.i("Ip address CREATE ", url_create_owner);
 
+        textView = (TextView) findViewById(R.id.textView);
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
-        btnNext = (Button) findViewById(R.id.btnNext);
+        btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            textView.setVisibility(View.GONE);
+            btmToolbar.setVisibility(View.GONE);
+            etUsername.getEditText().setText(qr);
+            etPassword.getEditText().setText(password);
+
+        } else {
+            btmToolbar.setVisibility(View.VISIBLE);
+        }
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -117,26 +138,18 @@ public class RegisterUserPass extends AppCompatActivity {
                 Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-
                 switch (option) {
                     case 1:
                         checkResponseCreate_Owner(response);
                         break;
-
                 }
-
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//                String alert_message;
-//                alert_message = error.toString();
-//                showAlertDialogue("Error", alert_message);
             }
-
         });
         requestQueue.add(json_obj_req);
     }

@@ -31,7 +31,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
@@ -44,7 +43,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -100,8 +98,8 @@ public class RegisterPetDetails extends AppCompatActivity {
     private static final String TAG_PET = "pet";
     private static final String TAG_USERNAME = "username";
 
-    static String urlPhp = "http://vetmdad.atspace.cc/upload-image-to-server.php";
-    public static String url_pet = Login.ipBaseAddress + "/get_pet_detailsJson.php";
+    public static String url_create_pet = Login.ipBaseAddress + "/create_petJson.php";
+    public static String url_get_pet = Login.ipBaseAddress + "/get_pet_detailsJson.php";
     String timeStamp;
     String imageFileName;
     Bitmap fixBitmap;
@@ -164,6 +162,9 @@ public class RegisterPetDetails extends AppCompatActivity {
         Intent intent = getIntent();
         pid = intent.getStringExtra(TAG_PID);
 
+        Intent intent1 = getIntent();
+        username = intent1.getStringExtra(TAG_USERNAME);
+
         JSONObject dataJson = new JSONObject();
         try {
             dataJson.put(TAG_PID, pid);
@@ -174,8 +175,9 @@ public class RegisterPetDetails extends AppCompatActivity {
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
-        } else if (pid != null) {
-            postData(url_pet, dataJson, 1);
+
+            postData(url_get_pet, dataJson, 1);
+        } else if (username != null && pid != null) {
             btmToolbar.setVisibility(View.GONE);
             etPetType.getEditText().setEnabled(false);
             etPetName.getEditText().setEnabled(false);
@@ -187,6 +189,8 @@ public class RegisterPetDetails extends AppCompatActivity {
             etPetWeight.getEditText().setEnabled(false);
             etPetImage.getEditText().setEnabled(false);
             etPetImage.setEndIconVisible(false);
+
+            postData(url_get_pet, dataJson, 1);
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
@@ -337,11 +341,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 dateofadoption = petObj.getString(TAG_DATEOFADOPTION).toLowerCase();
                 height = petObj.getString(TAG_HEIGHT).toLowerCase();
                 weight = petObj.getString(TAG_WEIGHT).toLowerCase();
-//                image = pet.getStr
 
-//                ImageLoader imageLoader;
-//                imageLoader = CustomVolleyRequest.getInstance(mContext).getImageLoader();
-//                pet.setImageUrl(tempPet.getImagepath(), imageLoader);
                 etPetType.getEditText().setText(pet);
                 etPetName.getEditText().setText(name);
                 etPetSex.getEditText().setText(sex);
@@ -352,7 +352,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 etPetWeight.getEditText().setText(weight);
 
             } else {
-                Log.i("nric", "oops");
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -462,7 +462,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 HashMapParams.put(TAG_USERNAME, username);
                 HashMapParams.put(ImageTag, GetImageNameFromEditText);
                 HashMapParams.put(ImageName, ConvertImage);
-                String FinalData = imageProcessClass.ImageHttpRequest(urlPhp, HashMapParams);
+                String FinalData = imageProcessClass.ImageHttpRequest(url_create_pet, HashMapParams);
 
                 return FinalData;
             }

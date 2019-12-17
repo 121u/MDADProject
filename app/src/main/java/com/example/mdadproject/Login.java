@@ -35,7 +35,6 @@ public class Login extends AppCompatActivity {
     private ProgressDialog pDialog;
     // url to update product
 
-
     private static final String url_login = ipBaseAddress + "/login.php";
     // JSON Node names
 

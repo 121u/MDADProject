@@ -39,12 +39,12 @@ public class RegisterDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password;
+    public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password, editedPassword;
 
     private ProgressDialog pDialog;
     public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
-    private static final String url_delete = Login.ipBaseAddress + "/Delete.php";
-    private static final String url_update_details = Login.ipBaseAddress + "/updateDetails.php";
+    private static final String url_delete = Login.ipBaseAddress + "/delete_owner_detailsJson.php";
+    private static final String url_update_details = Login.ipBaseAddress + "/update_owner_detailsJson.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_OWNERS = "owner";
     private static final String TAG_NRIC = "nric";
@@ -104,7 +104,6 @@ public class RegisterDetails extends AppCompatActivity {
 
         }
 
-
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
@@ -125,7 +124,6 @@ public class RegisterDetails extends AppCompatActivity {
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
-
         }
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -145,10 +143,8 @@ public class RegisterDetails extends AppCompatActivity {
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-
                 JSONObject dataJson = new JSONObject();
                 try {
-
                     dataJson.put(TAG_NAME, name);
                     dataJson.put(TAG_NRIC, nric);
                     dataJson.put(TAG_MOBILENUMBER, mobilenumber);
@@ -157,15 +153,9 @@ public class RegisterDetails extends AppCompatActivity {
                     dataJson.put(TAG_EMAIL, email);
                     dataJson.put(TAG_USERNAME, qr);
                     dataJson.put(TAG_PASSWORD, password);
-
-
                 } catch (JSONException e) {
-
                 }
-
                 postData(url_update_details, dataJson, 2);
-
-
             }
         });
 
@@ -174,13 +164,11 @@ public class RegisterDetails extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 pDialog = new ProgressDialog(RegisterDetails.this);
-                pDialog.setMessage("Deleting product ...");
+                pDialog.setMessage("Deleting owner ...");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
-
                 // deleting product in background thread
-
                 JSONObject dataJson = new JSONObject();
                 try {
                     dataJson.put("username", qr);
@@ -191,33 +179,41 @@ public class RegisterDetails extends AppCompatActivity {
             }
         });
 
-
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                nric = etNric.getEditText().getText().toString().toUpperCase();
-                name = etName.getEditText().getText().toString().toUpperCase();
-                mobilenumber = etMobileNumber.getEditText().getText().toString().toUpperCase();
-                email = etEmail.getEditText().getText().toString().toUpperCase();
-                address = etAddress.getEditText().getText().toString().toUpperCase();
-                zipcode = etZipcode.getEditText().getText().toString().toUpperCase();
-
-                if (nric.isEmpty()) {
-                    etNric.setError(getString(R.string.error_field_required));
-                } else if (name.isEmpty()) {
-                    etName.setError(getString(R.string.error_field_required));
-                } else if (mobilenumber.isEmpty()) {
-                    etMobileNumber.setError(getString(R.string.error_field_required));
-                } else if (email.isEmpty()) {
-                    etEmail.setError(getString(R.string.error_field_required));
-                } else if (address.isEmpty()) {
-                    etAddress.setError(getString(R.string.error_field_required));
-                } else if (zipcode.isEmpty()) {
-                    etZipcode.setError(getString(R.string.error_field_required));
-                } else {
+                if (username != null) {
                     Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                    i.putExtra(TAG_USERNAME, username);
+                    i.putExtra(TAG_PASSWORD, password);
+                    i.putExtra("qr",qr);
                     startActivity(i);
+                }
+                else {
+                    nric = etNric.getEditText().getText().toString().toUpperCase();
+                    name = etName.getEditText().getText().toString().toUpperCase();
+                    mobilenumber = etMobileNumber.getEditText().getText().toString().toUpperCase();
+                    email = etEmail.getEditText().getText().toString().toUpperCase();
+                    address = etAddress.getEditText().getText().toString().toUpperCase();
+                    zipcode = etZipcode.getEditText().getText().toString().toUpperCase();
+
+                    if (nric.isEmpty()) {
+                        etNric.setError(getString(R.string.error_field_required));
+                    } else if (name.isEmpty()) {
+                        etName.setError(getString(R.string.error_field_required));
+                    } else if (mobilenumber.isEmpty()) {
+                        etMobileNumber.setError(getString(R.string.error_field_required));
+                    } else if (email.isEmpty()) {
+                        etEmail.setError(getString(R.string.error_field_required));
+                    } else if (address.isEmpty()) {
+                        etAddress.setError(getString(R.string.error_field_required));
+                    } else if (zipcode.isEmpty()) {
+                        etZipcode.setError(getString(R.string.error_field_required));
+                    } else {
+                        Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                        startActivity(i);
+                    }
                 }
             }
         });
@@ -237,15 +233,14 @@ public class RegisterDetails extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 switch (option) {
                     case 1:
-                        checkResponseRead(response, json);
+                        checkResponseReadOwner(response, json);
                         break;
                     case 2:
-                        checkResponseEditProduct(response);
+                        checkResponseEditOwner(response);
                         break;
                     case 3:
-                        checkResponseSave_delete_Product(response);
+                        checkResponseDeleteOwner(response);
                         break;
-
                 }
             }
         }, new Response.ErrorListener() {
@@ -258,7 +253,7 @@ public class RegisterDetails extends AppCompatActivity {
         requestQueue.add(json_obj_req);
     }
 
-    private void checkResponseRead(JSONObject response, JSONObject creds) {
+    private void checkResponseReadOwner(JSONObject response, JSONObject creds) {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
@@ -287,10 +282,9 @@ public class RegisterDetails extends AppCompatActivity {
         }
     }
 
-    public void checkResponseSave_delete_Product(JSONObject response) {
+    public void checkResponseDeleteOwner(JSONObject response) {
 
         try {
-
             // dismiss the dialog once product updated
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
@@ -303,21 +297,16 @@ public class RegisterDetails extends AppCompatActivity {
             } else {
                 // product with pid not found
             }
-
         } catch (JSONException e) {
-
             e.printStackTrace();
-
         }
-
-
     }
 
-    public void checkResponseEditProduct(JSONObject response) {
+    public void checkResponseEditOwner(JSONObject response) {
         try {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
-                // successfully received product details
+
                 JSONArray ownerObj = response.getJSONArray(TAG_OWNERS);
 
                 JSONObject owner = ownerObj.getJSONObject(0);
@@ -329,12 +318,6 @@ public class RegisterDetails extends AppCompatActivity {
                 zipcode = owner.getString(TAG_ZIPCODE);
                 password = owner.getString(TAG_PASSWORD);
 
-//                Log.i("---Prod details",prodName+"  "+prodPrice+"  "+prodDesc);
-//                txtName = (EditText) findViewById(R.id.inputName);
-//                txtPrice = (EditText) findViewById(R.id.inputPrice);
-//                txtDesc = (EditText) findViewById(R.id.inputDesc);
-//
-//                // display product data in EditText
                 etNric.getEditText().setText(nric);
                 etName.getEditText().setText(name);
                 etMobileNumber.getEditText().setText(mobilenumber);
@@ -342,15 +325,10 @@ public class RegisterDetails extends AppCompatActivity {
                 etAddress.getEditText().setText(address);
                 etZipcode.getEditText().setText(zipcode);
             } else {
-                // product with pid not found
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
-
         }
-
-
     }
 
 }

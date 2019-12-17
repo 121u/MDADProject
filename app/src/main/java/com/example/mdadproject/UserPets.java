@@ -33,8 +33,7 @@ public class UserPets extends AppCompatActivity {
     ArrayList<Pet> petsList = new ArrayList();
     JSONArray pets = null;
     ListView listView;
-    String username;
-    String pid;
+    String username, pid, qr;
     ProgressDialog pDialog;
     FloatingActionButton fab;
 
@@ -82,30 +81,44 @@ public class UserPets extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = null;
                 intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
-                intent.putExtra(TAG_USERNAME,username);
-                startActivityForResult(intent,100);
+                intent.putExtra(TAG_USERNAME, username);
+                startActivityForResult(intent, 100);
             }
         });
 
         Intent intent = getIntent();
-
+        qr = intent.getStringExtra("qr");
         username = intent.getStringExtra(TAG_USERNAME);
 
         JSONObject dataJson = new JSONObject();
         try {
-            dataJson.put("username", username);
+            dataJson.put(TAG_USERNAME, username);
         } catch (JSONException e) {
 
         }
-        postData(url_pet, dataJson);
+
+        JSONObject dataJson2 = new JSONObject();
+        try {
+            dataJson2.put(TAG_USERNAME, qr);
+        } catch (JSONException e) {
+
+        }
+
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            postData(url_pet, dataJson2);
+            Log.i("here", "here");
+        } else {
+            postData(url_pet, dataJson);
+            Log.i("there", "there");
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                String pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
+                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
                 Intent in = new Intent(getApplicationContext(), RegisterPetDetails.class);
                 in.putExtra(TAG_PID, pid);
+                in.putExtra(TAG_USERNAME, username);
                 startActivityForResult(in, 100);
             }
         });
@@ -117,7 +130,7 @@ public class UserPets extends AppCompatActivity {
         return true;
     }
 
-    public void postData(String url, final JSONObject json){
+    public void postData(String url, final JSONObject json) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         JsonObjectRequest json_obj_req = new JsonObjectRequest(
@@ -125,34 +138,21 @@ public class UserPets extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 checkResponse(response, json);
-
-//                String alert_message;
-//                alert_message = response.toString();
-
-//                showAlertDialogue("Response", alert_message);
-
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-
-//                String alert_message;
-//                alert_message = error.toString();
-
-//                showAlertDialogue("Error", alert_message);
-
             }
-
         });
 
         requestQueue.add(json_obj_req);
     }
 
-    private void checkResponse(JSONObject response, JSONObject creds){
+    private void checkResponse(JSONObject response, JSONObject creds) {
         try {
-            if(response.getInt(TAG_SUCCESS)==1){
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
                 pets = response.getJSONArray(TAG_PETS);
 
@@ -181,8 +181,7 @@ public class UserPets extends AppCompatActivity {
                 CustomAdapter myCustomAdapter = new CustomAdapter(UserPets.this, petsList);
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
-            }
-            else{
+            } else {
                 pDialog.dismiss();
             }
 
