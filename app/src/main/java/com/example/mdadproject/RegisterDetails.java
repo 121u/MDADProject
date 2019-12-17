@@ -80,6 +80,7 @@ public class RegisterDetails extends AppCompatActivity {
                     PorterDuff.Mode.SRC_ATOP);
         }
 
+
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
 
