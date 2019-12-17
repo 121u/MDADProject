@@ -3,14 +3,13 @@ package com.example.mdadproject;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,9 +39,12 @@ public class RegisterDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, username, qr;
-    public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
+    public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password;
 
+    private ProgressDialog pDialog;
+    public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
+    private static final String url_delete = Login.ipBaseAddress + "/Delete.php";
+    private static final String url_update_details = Login.ipBaseAddress + "/updateDetails.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_OWNERS = "owner";
     private static final String TAG_NRIC = "nric";
@@ -52,6 +54,7 @@ public class RegisterDetails extends AppCompatActivity {
     private static final String TAG_ADDRESS = "address";
     private static final String TAG_ZIPCODE = "zipcode";
     private static final String TAG_USERNAME = "username";
+    private static final String TAG_PASSWORD = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +128,70 @@ public class RegisterDetails extends AppCompatActivity {
 
         }
 
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                nric = etNric.getEditText().getText().toString().toUpperCase();
+                name = etName.getEditText().getText().toString().toUpperCase();
+                mobilenumber = etMobileNumber.getEditText().getText().toString().toUpperCase();
+                email = etEmail.getEditText().getText().toString().toUpperCase();
+                address = etAddress.getEditText().getText().toString().toUpperCase();
+                zipcode = etZipcode.getEditText().getText().toString().toUpperCase();
+
+                pDialog = new ProgressDialog(RegisterDetails.this);
+                pDialog.setMessage("Saving details ...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+
+
+                JSONObject dataJson = new JSONObject();
+                try {
+
+                    dataJson.put(TAG_NAME, name);
+                    dataJson.put(TAG_NRIC, nric);
+                    dataJson.put(TAG_MOBILENUMBER, mobilenumber);
+                    dataJson.put(TAG_ZIPCODE, zipcode);
+                    dataJson.put(TAG_ADDRESS, address);
+                    dataJson.put(TAG_EMAIL, email);
+                    dataJson.put(TAG_USERNAME, qr);
+                    dataJson.put(TAG_PASSWORD, password);
+
+
+                } catch (JSONException e) {
+
+                }
+
+                postData(url_update_details, dataJson, 2);
+
+
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                pDialog = new ProgressDialog(RegisterDetails.this);
+                pDialog.setMessage("Deleting product ...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+
+                // deleting product in background thread
+
+                JSONObject dataJson = new JSONObject();
+                try {
+                    dataJson.put("username", qr);
+                } catch (JSONException e) {
+
+                }
+                postData(url_delete, dataJson, 3);
+            }
+        });
+
+
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,8 +239,13 @@ public class RegisterDetails extends AppCompatActivity {
                     case 1:
                         checkResponseRead(response, json);
                         break;
-//                    case 2:checkResponseSave_delete_Product(response); break;
-//                    case 3:
+                    case 2:
+                        checkResponseEditProduct(response);
+                        break;
+                    case 3:
+                        checkResponseSave_delete_Product(response);
+                        break;
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -199,6 +271,7 @@ public class RegisterDetails extends AppCompatActivity {
                 email = owner.getString(TAG_EMAIL);
                 address = owner.getString(TAG_ADDRESS);
                 zipcode = owner.getString(TAG_ZIPCODE);
+                password = owner.getString(TAG_PASSWORD);
 
                 etNric.getEditText().setText(nric);
                 etName.getEditText().setText(name);
@@ -213,4 +286,71 @@ public class RegisterDetails extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void checkResponseSave_delete_Product(JSONObject response) {
+
+        try {
+
+            // dismiss the dialog once product updated
+            pDialog.dismiss();
+            if (response.getInt("success") == 1) {
+                // successfully updated
+                Intent i = getIntent();
+                // send result code 100 to notify about product update
+                setResult(100, i);
+                finish();
+
+            } else {
+                // product with pid not found
+            }
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+    public void checkResponseEditProduct(JSONObject response) {
+        try {
+            pDialog.dismiss();
+            if (response.getInt("success") == 1) {
+                // successfully received product details
+                JSONArray ownerObj = response.getJSONArray(TAG_OWNERS);
+
+                JSONObject owner = ownerObj.getJSONObject(0);
+                nric = owner.getString(TAG_NRIC);
+                name = owner.getString(TAG_NAME);
+                mobilenumber = owner.getString(TAG_MOBILENUMBER);
+                email = owner.getString(TAG_EMAIL);
+                address = owner.getString(TAG_ADDRESS);
+                zipcode = owner.getString(TAG_ZIPCODE);
+                password = owner.getString(TAG_PASSWORD);
+
+//                Log.i("---Prod details",prodName+"  "+prodPrice+"  "+prodDesc);
+//                txtName = (EditText) findViewById(R.id.inputName);
+//                txtPrice = (EditText) findViewById(R.id.inputPrice);
+//                txtDesc = (EditText) findViewById(R.id.inputDesc);
+//
+//                // display product data in EditText
+                etNric.getEditText().setText(nric);
+                etName.getEditText().setText(name);
+                etMobileNumber.getEditText().setText(mobilenumber);
+                etEmail.getEditText().setText(email);
+                etAddress.getEditText().setText(address);
+                etZipcode.getEditText().setText(zipcode);
+            } else {
+                // product with pid not found
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+
+
+    }
+
 }
