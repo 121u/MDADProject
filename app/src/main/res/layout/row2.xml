@@ -1,60 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:orientation="horizontal"
+    android:layout_height="100dp"
     android:background="@drawable/my_selecter">
 
-    <RelativeLayout
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="45dp">
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="pid"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/id"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="pid"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/sourcecodepro_regular"
-            android:gravity="center_vertical"
-            android:text="Main Title"
-            android:textColor="#000"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/imgPet"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:src="@mipmap/ic_launcher" />
-    </RelativeLayout>
-
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/imgPic"
+    <TextView
+        android:id="@+id/txtName"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/name"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp"/>
+        android:fontFamily="@font/sourcecodepro_regular"
+        android:text="Pet Name"
+        android:textColor="#000"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imgPet"
+        app:layout_constraintTop_toTopOf="@+id/imgPet" />
 
+    <TextView
+        android:id="@+id/txtBreed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/sourcecodepro_regular"
+        android:text="Pet Breed"
+        android:textColor="#000"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imgPet"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/imgPet"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="30dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,10 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +37,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class UserBookAppointment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -335,11 +332,11 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         Intent intent = null;
         switch (item.getItemId()) {
             case R.id.nav_qr_scanner:
-                intent = new Intent(getApplicationContext(), ZxingScannerActivity.class);
+                intent = new Intent(getApplicationContext(), StaffQrScanner.class);
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_profile:
-                intent = new Intent(getApplicationContext(), RegisterDetails.class);
+                intent = new Intent(getApplicationContext(), UserDetails.class);
                 intent.putExtra(TAG_USERNAME, username);
                 intent.putExtra("qr",qr);
                 break;
