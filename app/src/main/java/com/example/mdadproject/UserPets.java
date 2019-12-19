@@ -125,6 +125,24 @@ public class UserPets extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // if result code 100 means Continue
+        //https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+
+        if (resultCode == 100) {
+            // if result code 100 is received
+            // means user edited/deleted product
+            // reload this screen again
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+
+    }
+
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
