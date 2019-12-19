@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RegisterUserPass extends AppCompatActivity {
+public class UserPass extends AppCompatActivity {
 
     private TextView textView;
     public TextInputLayout etUsername;
@@ -100,7 +99,7 @@ public class RegisterUserPass extends AppCompatActivity {
 
                 } else {
 
-                    pDialog = new ProgressDialog(RegisterUserPass.this);
+                    pDialog = new ProgressDialog(UserPass.this);
                     pDialog.setMessage("Welcome to the bark side..");
                     pDialog.setIndeterminate(false);
                     pDialog.setCancelable(true);
@@ -109,12 +108,12 @@ public class RegisterUserPass extends AppCompatActivity {
                     JSONObject dataJson = new JSONObject();
                     try {
 
-                        dataJson.put(TAG_NRIC, RegisterDetails.nric);
-                        dataJson.put(TAG_NAME, RegisterDetails.name);
-                        dataJson.put(TAG_MOBILENUMBER, RegisterDetails.mobilenumber);
-                        dataJson.put(TAG_EMAIL, RegisterDetails.email);
-                        dataJson.put(TAG_ADDRESS, RegisterDetails.address);
-                        dataJson.put(TAG_ZIPCODE, RegisterDetails.zipcode);
+                        dataJson.put(TAG_NRIC, UserDetails.nric);
+                        dataJson.put(TAG_NAME, UserDetails.name);
+                        dataJson.put(TAG_MOBILENUMBER, UserDetails.mobilenumber);
+                        dataJson.put(TAG_EMAIL, UserDetails.email);
+                        dataJson.put(TAG_ADDRESS, UserDetails.address);
+                        dataJson.put(TAG_ZIPCODE, UserDetails.zipcode);
                         dataJson.put(TAG_USERNAME, username);
                         dataJson.put(TAG_PASSWORD, password);
 

@@ -51,17 +51,15 @@ public class CustomAdapter extends BaseAdapter {
 
         TextView tvId = (TextView)convertView.findViewById(R.id.id);
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
+        TextView tvBreed = (TextView)convertView.findViewById(R.id.txtBreed);
         ImageView imgPet = (ImageView)convertView.findViewById(R.id.imgPet);
-        NetworkImageView imgPic = (NetworkImageView)convertView.findViewById(R.id.imgPic);
-
-        imageLoader = CustomVolleyRequest.getInstance(mContext).getImageLoader();
-//        imageLoader.get(tempPet.getImagepath(), ImageLoader.getImageListener(imgPic,0,android.R.drawable.ic_dialog_alert));
-        imgPic.setImageUrl(tempPet.getImagepath(), imageLoader);
+//        NetworkImageView imgPic = (NetworkImageView)convertView.findViewById(R.id.imgPic);
 
         tvId.setText(tempPet.getPid());
         tvName.setText(tempPet.getName());
+        tvBreed.setText(tempPet.getBreed());
         String iconSrc = tempPet.getPet();
-        imgPet.setImageResource(mContext.getResources().getIdentifier(iconSrc,"drawable",mContext.getPackageName()));
+//        imgPet.setImageResource(mContext.getResources().getIdentifier(iconSrc,"drawable",mContext.getPackageName()));
 
         return convertView;
     }

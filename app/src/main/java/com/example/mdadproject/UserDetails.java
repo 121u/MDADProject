@@ -25,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RegisterDetails extends AppCompatActivity {
+public class UserDetails extends AppCompatActivity {
 
     private TextView txtView;
     private TextInputLayout etNric;
@@ -137,7 +137,7 @@ public class RegisterDetails extends AppCompatActivity {
                 address = etAddress.getEditText().getText().toString().toUpperCase();
                 zipcode = etZipcode.getEditText().getText().toString().toUpperCase();
 
-                pDialog = new ProgressDialog(RegisterDetails.this);
+                pDialog = new ProgressDialog(UserDetails.this);
                 pDialog.setMessage("Saving details ...");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
@@ -163,7 +163,7 @@ public class RegisterDetails extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-                pDialog = new ProgressDialog(RegisterDetails.this);
+                pDialog = new ProgressDialog(UserDetails.this);
                 pDialog.setMessage("Deleting owner ...");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
@@ -184,7 +184,7 @@ public class RegisterDetails extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (username != null) {
-                    Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                    Intent i = new Intent(v.getContext(), UserPass.class);
                     i.putExtra(TAG_USERNAME, username);
                     i.putExtra(TAG_PASSWORD, password);
                     i.putExtra("qr",qr);
@@ -211,7 +211,7 @@ public class RegisterDetails extends AppCompatActivity {
                     } else if (zipcode.isEmpty()) {
                         etZipcode.setError(getString(R.string.error_field_required));
                     } else {
-                        Intent i = new Intent(v.getContext(), RegisterUserPass.class);
+                        Intent i = new Intent(v.getContext(), UserPass.class);
                         startActivity(i);
                     }
                 }

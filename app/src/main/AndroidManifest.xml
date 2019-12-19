@@ -23,12 +23,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ZxingScannerActivity"></activity>
-        <activity android:name=".StaffQrScanner" />
+        <activity android:name=".StaffQrScanner"></activity>
         <activity android:name=".UserQrCode" />
-        <activity
-            android:name=".Playground"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserPetDetails" />
         <activity
             android:name=".UserPets"
@@ -41,11 +37,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".RegisterUserPass"
+            android:name=".UserPass"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".RegisterDetails"
+            android:name=".UserDetails"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Login">
