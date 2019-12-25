@@ -1,0 +1,4 @@
+<resources>
+    <item name="fab_new_pet" type="id" />
+    <item name="fab_new_appointment" type="id" />
+</resources>

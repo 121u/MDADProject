@@ -96,7 +96,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         Toast.makeText(this, "Contents = " + result.getText() +
                 ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
-        Intent i = new Intent(this,UserBookAppointment.class);
+        Intent i = new Intent(this,UserPets.class);
         i.putExtra("qr",result.getText());
         i.putExtra("username", username);
         startActivity(i);

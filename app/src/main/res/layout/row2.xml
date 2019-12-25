@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/my_selecter">
 
     <TextView
@@ -18,12 +18,11 @@
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/sourcecodepro_regular"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/sourcecodepro_semibold"
         android:text="Pet Name"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/imgPet"
         app:layout_constraintTop_toTopOf="@+id/imgPet" />
 
@@ -31,23 +30,57 @@
         android:id="@+id/txtBreed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:fontFamily="@font/sourcecodepro_regular"
         android:text="Pet Breed"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imgPet"
+        android:textColor="#808080"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/txtName"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <ImageView
         android:id="@+id/imgPet"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDetails"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="details"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgPet"
+        app:layout_constraintTop_toBottomOf="@+id/txtBreed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAppointments"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="appointments"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnDetails"
+        app:layout_constraintTop_toTopOf="@id/btnDetails" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

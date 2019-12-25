@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                 if (username.equals("staff")) {
                     Constants.IS_STAFF = "yes";
                 }
-                Intent intent = new Intent(getApplicationContext(), UserBookAppointment.class);
+                Intent intent = new Intent(getApplicationContext(), UserPets.class);
                 intent.putExtra(TAG_USERNAME, username);
                 startActivityForResult(intent, 100);
                 Log.i("page1", username);

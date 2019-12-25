@@ -1,8 +1,10 @@
 package com.example.mdadproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -45,10 +47,25 @@ public class UserQrCode extends AppCompatActivity {
         String qrInputText = username;
         Log.v(LOG_TAG, qrInputText);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
+
 
         Bitmap bitmap = generateQRCode(qrInputText);
         ImageView myImage = (ImageView) findViewById(R.id.imageView1);
         myImage.setImageBitmap(bitmap);
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 //    public void onClick(View v) {

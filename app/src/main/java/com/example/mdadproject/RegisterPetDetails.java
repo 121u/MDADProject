@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -84,7 +85,7 @@ public class RegisterPetDetails extends AppCompatActivity {
     String[] typeOptions = new String[]{"cat", "dog", "bird", "rabbit", "hamster", "terrapin"};
     String[] sexOptions = new String[]{"female", "male"};
 
-    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, image, username, qr;
+    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, username, qr;
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
@@ -97,7 +98,6 @@ public class RegisterPetDetails extends AppCompatActivity {
     private static final String TAG_WEIGHT = "weight";
     private static final String TAG_PET = "pet";
     private static final String TAG_USERNAME = "username";
-
 
     public static String url_create_pet = Login.ipBaseAddress + "/create_petJson.php";
     private static final String url_update_pets = Login.ipBaseAddress + "/update_pet_detailsJson.php";
@@ -164,9 +164,8 @@ public class RegisterPetDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         pid = intent.getStringExtra(TAG_PID);
-
-        Intent intent1 = getIntent();
-        username = intent1.getStringExtra(TAG_USERNAME);
+        username = intent.getStringExtra(TAG_USERNAME);
+        qr = intent.getStringExtra("qr");
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -178,6 +177,7 @@ public class RegisterPetDetails extends AppCompatActivity {
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
+            btnNext.setVisibility(View.GONE);
 
             postData(url_get_pet, dataJson, 1);
         } else if (username != null && pid != null) {
@@ -202,14 +202,6 @@ public class RegisterPetDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                pet = etPetType.getEditText().getText().toString().toUpperCase();
-//                name = etPetName.getEditText().getText().toString().toUpperCase();
-//                sex = etPetSex.getEditText().getText().toString().toUpperCase();
-//                breed = etPetBreed.getEditText().getText().toString().toUpperCase();
-//                age = etPetAge.getEditText().getText().toString().toUpperCase();
-//                dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
-//                height = etPetHeight.getEditText().getText().toString().toUpperCase();
-//                weight = etPetWeight.getEditText().getText().toString().toUpperCase();
                 pet = etPetType.getEditText().getText().toString().toUpperCase();
                 name = etPetName.getEditText().getText().toString().toUpperCase();
                 sex = etPetSex.getEditText().getText().toString().toUpperCase();
@@ -218,8 +210,6 @@ public class RegisterPetDetails extends AppCompatActivity {
                 dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
                 height = etPetHeight.getEditText().getText().toString().toUpperCase();
                 weight = etPetWeight.getEditText().getText().toString().toUpperCase();
-                GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
-
 
                 pDialog = new ProgressDialog(RegisterPetDetails.this);
                 pDialog.setMessage("Saving details ...");
@@ -229,6 +219,7 @@ public class RegisterPetDetails extends AppCompatActivity {
 
                 JSONObject dataJson = new JSONObject();
                 try {
+                    dataJson.put(TAG_PID, pid);
                     dataJson.put(TAG_PET, pet);
                     dataJson.put(TAG_NAME, name);
                     dataJson.put(TAG_SEX, sex);
@@ -242,7 +233,7 @@ public class RegisterPetDetails extends AppCompatActivity {
                 } catch (JSONException e) {
                 }
                 postData(url_update_pets, dataJson, 2);
-//                UploadImageToServerUpdate();
+
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -280,50 +271,50 @@ public class RegisterPetDetails extends AppCompatActivity {
                 weight = etPetWeight.getEditText().getText().toString().toUpperCase();
                 GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
 
-                if (pet.isEmpty()) {
-                    etPetType.setError(getString(R.string.error_field_required));
-                } else if (name.isEmpty()) {
-                    etPetName.setError(getString(R.string.error_field_required));
-                } else if (sex.isEmpty()) {
-                    etPetSex.setError(getString(R.string.error_field_required));
-                } else if (breed.isEmpty()) {
-                    etPetBreed.setError(getString(R.string.error_field_required));
-                } else if (age.isEmpty()) {
-                    etPetAge.setError(getString(R.string.error_field_required));
-                } else if (dateofadoption.isEmpty()) {
-                    etPetDate.setError(getString(R.string.error_field_required));
-                } else if (height.isEmpty()) {
-                    etPetHeight.setError(getString(R.string.error_field_required));
-                } else if (weight.isEmpty()) {
-                    etPetWeight.setError(getString(R.string.error_field_required));
-                } else if (GetImageNameFromEditText.isEmpty()) {
-                    etPetImage.setError(getString(R.string.error_field_required));
-                } else {
+//                if (pet.isEmpty()) {
+//                    etPetType.setError(getString(R.string.error_field_required));
+//                } else if (name.isEmpty()) {
+//                    etPetName.setError(getString(R.string.error_field_required));
+//                } else if (sex.isEmpty()) {
+//                    etPetSex.setError(getString(R.string.error_field_required));
+//                } else if (breed.isEmpty()) {
+//                    etPetBreed.setError(getString(R.string.error_field_required));
+//                } else if (age.isEmpty()) {
+//                    etPetAge.setError(getString(R.string.error_field_required));
+//                } else if (dateofadoption.isEmpty()) {
+//                    etPetDate.setError(getString(R.string.error_field_required));
+//                } else if (height.isEmpty()) {
+//                    etPetHeight.setError(getString(R.string.error_field_required));
+//                } else if (weight.isEmpty()) {
+//                    etPetWeight.setError(getString(R.string.error_field_required));
+//                } else if (GetImageNameFromEditText.isEmpty()) {
+//                    etPetImage.setError(getString(R.string.error_field_required));
+//                } else {
 
-                    fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-                    byteArray = byteArrayOutputStream.toByteArray();
-                    ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+//                fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+//                byteArray = byteArrayOutputStream.toByteArray();
+//                ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                    pDialog = new ProgressDialog(RegisterPetDetails.this);
-                    pDialog.setMessage("Welcome to the bark side..");
-                    pDialog.setIndeterminate(false);
-                    pDialog.setCancelable(true);
-                    pDialog.show();
+                pDialog = new ProgressDialog(RegisterPetDetails.this);
+                pDialog.setMessage("Welcome to the bark side..");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
 
-                    Log.i("name", pet);
-                    Log.i("name", name);
-                    Log.i("name", sex);
-                    Log.i("name", breed);
-                    Log.i("name", age);
-                    Log.i("name", dateofadoption);
-                    Log.i("name", height);
-                    Log.i("name", weight);
-                    Log.i("name", username);
-                    Log.i("name", GetImageNameFromEditText);
-                    Log.i("name", ConvertImage);
+//                    Log.i("name", pet);
+//                    Log.i("name", name);
+//                    Log.i("name", sex);
+//                    Log.i("name", breed);
+//                    Log.i("name", age);
+//                    Log.i("name", dateofadoption);
+//                    Log.i("name", height);
+//                    Log.i("name", weight);
+//                    Log.i("name", username);
+//                    Log.i("name", GetImageNameFromEditText);
+//                    Log.i("name", ConvertImage);
 
-                    UploadImageToServer();
-                }
+                UploadImageToServer();
+//                }
 
             }
         });
@@ -356,6 +347,7 @@ public class RegisterPetDetails extends AppCompatActivity {
         etPetImage.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                byteArrayOutputStream = new ByteArrayOutputStream();
                 showPictureDialog();
             }
         });
@@ -376,10 +368,10 @@ public class RegisterPetDetails extends AppCompatActivity {
 
                 switch (option) {
                     case 1:
-                        checkResponseRead(response, json);
+                        checkResponseReadPet(response, json);
                         break;
                     case 2:
-                        checkResponseEditPETS(response);
+                        checkResponseEditPet(response);
                         break;
                     case 3:
                         checkResponseDeletePet(response);
@@ -398,7 +390,7 @@ public class RegisterPetDetails extends AppCompatActivity {
         requestQueue.add(json_obj_req);
     }
 
-    private void checkResponseRead(JSONObject response, JSONObject creds) {
+    private void checkResponseReadPet(JSONObject response, JSONObject creds) {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
@@ -452,30 +444,33 @@ public class RegisterPetDetails extends AppCompatActivity {
     }
 
 
-    public void checkResponseEditPETS(JSONObject response) {
+    public void checkResponseEditPet(JSONObject response) {
         try {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
 
                 JSONArray petObj = response.getJSONArray(TAG_PET);
-
-                JSONObject pets = petObj.getJSONObject(0);
-                pet = pets.getString(TAG_PET);
-                name = pets.getString(TAG_NAME);
-                sex = pets.getString(TAG_SEX);
-                breed = pets.getString(TAG_BREED);
-                dateofadoption = pets.getString(TAG_DATEOFADOPTION);
-                height = pets.getString(TAG_HEIGHT);
-                weight = pets.getString(TAG_WEIGHT);
-                GetImageNameFromEditText = pets.getString(ImageTag);
-
-                etPetType.getEditText().setText(pet);
-                etPetName.getEditText().setText(name);
-                etPetSex.getEditText().setText(sex);
-                etPetBreed.getEditText().setText(breed);
-                etPetDate.getEditText().setText(dateofadoption);
-                etPetHeight.getEditText().setText(height);
-                etPetWeight.getEditText().setText(weight);
+                Intent i = getIntent();
+                // send result code 100 to notify about product update
+                setResult(100, i);
+                finish();
+//                JSONObject pets = petObj.getJSONObject(0);
+//                pet = pets.getString(TAG_PET);
+//                name = pets.getString(TAG_NAME);
+//                sex = pets.getString(TAG_SEX);
+//                breed = pets.getString(TAG_BREED);
+//                dateofadoption = pets.getString(TAG_DATEOFADOPTION);
+//                height = pets.getString(TAG_HEIGHT);
+//                weight = pets.getString(TAG_WEIGHT);
+////                GetImageNameFromEditText = pets.getString(ImageTag);
+//
+//                etPetType.getEditText().setText(pet);
+//                etPetName.getEditText().setText(name);
+//                etPetSex.getEditText().setText(sex);
+//                etPetBreed.getEditText().setText(breed);
+//                etPetDate.getEditText().setText(dateofadoption);
+//                etPetHeight.getEditText().setText(height);
+//                etPetWeight.getEditText().setText(weight);
 
             } else {
             }
@@ -485,7 +480,7 @@ public class RegisterPetDetails extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "dd MMMM yyyy"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
 
         etPetDate.getEditText().setText(sdf.format(myCalendar.getTime()));
@@ -554,49 +549,6 @@ public class RegisterPetDetails extends AppCompatActivity {
         imgPet.setBackgroundResource(R.drawable.roundcorners);
     }
 
-    public void UploadImageToServerUpdate() {
-//        fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-//        byteArray = byteArrayOutputStream.toByteArray();
-//        ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String string1) {
-                super.onPostExecute(string1);
-                Intent i = new Intent(RegisterPetDetails.this, Login.class);
-                startActivity(i);
-                pDialog.dismiss();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                ImageProcessClass imageProcessClass = new ImageProcessClass();
-                HashMap<String, String> HashMapParams = new HashMap<String, String>();
-                HashMapParams.put(TAG_NAME, name);
-                HashMapParams.put(TAG_PET, pet);
-                HashMapParams.put(TAG_SEX, sex);
-                HashMapParams.put(TAG_BREED, breed);
-                HashMapParams.put(TAG_AGE, age);
-                HashMapParams.put(TAG_DATEOFADOPTION, dateofadoption);
-                HashMapParams.put(TAG_HEIGHT, height);
-                HashMapParams.put(TAG_WEIGHT, weight);
-                HashMapParams.put(TAG_USERNAME, username);
-                HashMapParams.put(ImageTag, GetImageNameFromEditText);
-//                HashMapParams.put(ImageName, ConvertImage);
-                String FinalData = imageProcessClass.ImageHttpRequest(url_update_pets, HashMapParams);
-                pDialog.dismiss();
-
-                return FinalData;
-            }
-        }
-        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-        AsyncTaskUploadClassOBJ.execute();
-    }
-
     public void UploadImageToServer() {
         fixBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
         byteArray = byteArrayOutputStream.toByteArray();
@@ -610,7 +562,7 @@ public class RegisterPetDetails extends AppCompatActivity {
             @Override
             protected void onPostExecute(String string1) {
                 super.onPostExecute(string1);
-                Intent i = new Intent(RegisterPetDetails.this, Login.class);
+                Intent i = new Intent(RegisterPetDetails.this, UserPets.class);
                 startActivity(i);
                 pDialog.dismiss();
             }
@@ -701,7 +653,5 @@ public class RegisterPetDetails extends AppCompatActivity {
             }
         }
     }
-
-
 
 }

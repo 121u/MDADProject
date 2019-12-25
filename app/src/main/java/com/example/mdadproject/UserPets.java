@@ -1,13 +1,19 @@
 package com.example.mdadproject;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,6 +27,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,14 +37,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class UserPets extends AppCompatActivity {
+public class UserPets extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     ArrayList<Pet> petsList = new ArrayList();
     JSONArray pets = null;
     ListView listView;
-    String username, pid, qr;
+    String username, pid;
+    public String qr;
     ProgressDialog pDialog;
     FloatingActionButton fab;
+    private DrawerLayout drawer;
+    private TextView txtGreeting;
 
     public static String url_pet = Login.ipBaseAddress + "/get_all_petsJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -60,35 +72,11 @@ public class UserPets extends AppCompatActivity {
 
         Log.i("url", url_pet);
 
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("We're giving it whatevfur we'ge got..");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(true);
-        pDialog.show();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
-                PorterDuff.Mode.SRC_ATOP);
-
-        listView = (ListView) findViewById(R.id.listView);
-        fab = (FloatingActionButton) findViewById(R.id.btnAdd);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = null;
-                intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
-                intent.putExtra(TAG_USERNAME, username);
-                startActivityForResult(intent, 100);
-            }
-        });
-
         Intent intent = getIntent();
-        qr = intent.getStringExtra("qr");
         username = intent.getStringExtra(TAG_USERNAME);
+
+        Intent intent2 = getIntent();
+        qr = intent2.getStringExtra("qr");
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -112,16 +100,84 @@ public class UserPets extends AppCompatActivity {
             Log.i("there", "there");
         }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("We're giving it whatevfur we'ge got..");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+//                PorterDuff.Mode.SRC_ATOP);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
+        txtGreeting.setText("Hello, " + username + "!");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
+                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        if (username != null && username.equals("staff")) {
+            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
+        } else {
+            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
+        }
+        listView = (ListView) findViewById(R.id.listView);
+        SpeedDialView sdv = (SpeedDialView) findViewById(R.id.speedDial);
+        sdv.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_new_pet, R.drawable.dog)
+                .setLabel("new pet")
+                .create());
+        sdv.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_new_appointment, R.drawable.ic_date_range_black_24dp)
+                .setLabel("new appointment")
+                .create());
+        sdv.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
-                Intent in = new Intent(getApplicationContext(), RegisterPetDetails.class);
-                in.putExtra(TAG_PID, pid);
-                in.putExtra(TAG_USERNAME, username);
-                startActivityForResult(in, 100);
+            public boolean onActionSelected(SpeedDialActionItem speedDialActionItem) {
+                switch (speedDialActionItem.getId()) {
+                    case R.id.fab_new_pet:
+                        Intent intent = null;
+                        intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
+                        intent.putExtra(TAG_USERNAME, username);
+                        intent.putExtra("qr", qr);
+                        startActivityForResult(intent, 100);
+                        drawer.closeDrawer(GravityCompat.START);
+                        return false; // true to keep the Speed Dial open
+                    case R.id.fab_new_appointment:
+                        Intent intent2 = null;
+                        intent2 = new Intent(getApplicationContext(), UserBookAppointment.class);
+                        intent2.putExtra(TAG_USERNAME, username);
+                        intent2.putExtra("qr", qr);
+                        startActivityForResult(intent2, 100);
+                        drawer.closeDrawer(GravityCompat.START);
+                        return false; // true to keep the Speed Dial open
+                    default:
+                        return false;
+                }
             }
         });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
+//                Intent in = new Intent(getApplicationContext(), RegisterPetDetails.class);
+//                in.putExtra(TAG_PID, pid);
+//                in.putExtra(TAG_USERNAME, username);
+//                in.putExtra("qr", qr);
+//                startActivityForResult(in, 100);
+//            }
+//        });
 
     }
 
@@ -130,8 +186,6 @@ public class UserPets extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // if result code 100 means Continue
         //https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-
-
         if (resultCode == 100) {
             // if result code 100 is received
             // means user edited/deleted product
@@ -208,5 +262,28 @@ public class UserPets extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent = null;
+        switch (item.getItemId()) {
+            case R.id.nav_qr_scanner:
+                intent = new Intent(getApplicationContext(), StaffQrScanner.class);
+                intent.putExtra(TAG_USERNAME, username);
+                break;
+            case R.id.nav_profile:
+                intent = new Intent(getApplicationContext(), UserDetails.class);
+                intent.putExtra(TAG_USERNAME, username);
+                intent.putExtra("qr", qr);
+                break;
+            case R.id.nav_qr:
+                intent = new Intent(getApplicationContext(), UserQrCode.class);
+                intent.putExtra(TAG_USERNAME, username);
+                break;
+        }
+        startActivityForResult(intent, 100);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

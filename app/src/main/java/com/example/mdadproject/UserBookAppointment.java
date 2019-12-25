@@ -7,16 +7,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +36,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,19 +47,24 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class UserBookAppointment extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class UserBookAppointment extends AppCompatActivity {
     private ProgressDialog pDialog;
     private DrawerLayout drawer;
     private TextView txtGreeting;
-    private TextView textView5;
-    private CalendarView calendarView;
-    private TextView textView6;
-    private Spinner spinner;
-    private FloatingActionButton button;
-    private Spinner spinner2;
+    private TextInputLayout etAptDate;
+    private TextInputEditText etAptDateIn;
+    private TextInputLayout etAptTime;
+    private TextInputLayout etAptPet;
+    private RelativeLayout btmToolbar;
+    private Button btnNext;
+    private Button btnUpdate;
+    private Button btnDelete;
+    final Calendar myCalendar = Calendar.getInstance();
 
     String username;
 
@@ -56,6 +72,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     public static String url_get_PetList = Login.ipBaseAddress + "/get_all_petsJson.php";
 
     private static final String TAG_SUCCESS = "success";
+    private static final String TAG_APPOINTMENT = "appointment";
+    private static final String TAG_ID = "id";
     private static final String TAG_DATE = "date";
     private static final String TAG_STARTTIME = "starttime";
     private static final String TAG_ENDTIME = "endtime";
@@ -81,6 +99,9 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
     boolean disabled;
 
     private static String ownFirstName = "";
+    String[] timeOptions = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
+    AutoCompleteTextView editTextFilledExposedDropdown2;
+    ArrayAdapter<Pet> adapter2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +119,8 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
         Intent intent1 = getIntent();
         qr = intent.getStringExtra("qr");
-        if (qr != null){
-            Log.i("qr",qr);
+        if (qr != null) {
+            Log.i("qr", qr);
         }
 
         JSONObject dataJson = new JSONObject();
@@ -108,121 +129,141 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
         } catch (JSONException e) {
 
         }
+
         postData(url_get_PetList, dataJson, 2);
 
-        textView5 = (TextView) findViewById(R.id.textView5);
-        calendarView = (CalendarView) findViewById(R.id.calendarView);
-        textView6 = (TextView) findViewById(R.id.textView6);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner2 = (Spinner) findViewById(R.id.spinner2);
-        button = (FloatingActionButton) findViewById(R.id.btnBook);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        etAptDate = (TextInputLayout) findViewById(R.id.etAptDate);
+        etAptDateIn = (TextInputEditText) findViewById(R.id.etAptDateIn);
+        etAptTime = (TextInputLayout) findViewById(R.id.etAptTime);
+        etAptPet = (TextInputLayout) findViewById(R.id.etAptPet);
+        btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
+        btnNext = (Button) findViewById(R.id.btnNext);
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        View header = navigationView.getHeaderView(0);
-        txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-        ;
-        txtGreeting.setText("Hello, " + username + "!");
-
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                PorterDuff.Mode.SRC_ATOP);
 
-        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                    new AppointmentFragment()).commit();
-//            navigationView.setCheckedItem(R.id.nav_appointment);
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+            btnNext.setVisibility(View.GONE);
+
+//            postData(url_get_pet, dataJson, 1);
+        } else if (username != null) {
+            btnUpdate.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
+
+//            postData(url_get_pet, dataJson, 1);
+        } else {
+            btnUpdate.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
         }
 
-        String[] items = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spinner.setAdapter(adapter);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dropdown_menu_popup_item, timeOptions);
+        AutoCompleteTextView editTextFilledExposedDropdown = findViewById(R.id.filled_exposed_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        if (username!= null && username.equals("staff")){
-            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
-        }
-        else {
-            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
-        }
-
-//        if (spinner2.getCount() == 0) {
-//            disabled = true;
-//            button.setBackgroundTintList(getResources().getColorStateList(R.color.disabled));
-//        }
-//        else {
-//            disabled = false;
-//            button.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
-//        }
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        final DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
 
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month,
-                                            int dayOfMonth) {
-                int d = dayOfMonth;
-                int m = month + 1;
-                int y = year;
-                date = (d + "-" + m + "-" + y);
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        etAptDateIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                DatePickerDialog datePickerDialog = new DatePickerDialog(UserBookAppointment.this, date1, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        editTextFilledExposedDropdown2 = findViewById(R.id.filled_exposed_dropdown_2);
+        adapter2 = new ArrayAdapter<Pet>(this, R.layout.dropdown_menu_popup_item, petList);
+        editTextFilledExposedDropdown2.setAdapter(adapter2);
+        editTextFilledExposedDropdown2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                    long id) {
+                Pet pet = (Pet) adapter2.getItem(pos);
+                getPetPid(pet);
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Toast.makeText(UserBookAppointment.this, "You have no pets yet! Go to the pet(s) page to add one!", Toast.LENGTH_SHORT).show();
 
-                    if (TextUtils.isEmpty(date)) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                        String selectedDate = sdf.format(new Date(calendarView.getDate()));
-                        date = selectedDate;
-                    }
-                    starttime = spinner.getSelectedItem().toString();
-                    String start1 = starttime.replaceAll("[^\\d]", "");
-                    int start2 = Integer.parseInt(start1) + 100;
-                    endttime = Integer.toString(start2);
-                    status = "pending";
-                    getSelectedPet();
+                date = etAptDate.getEditText().getText().toString();
+                starttime = etAptTime.getEditText().getText().toString();
+                String start1 = starttime.replaceAll("[^\\d]", "");
+                int start2 = Integer.parseInt(start1) + 100;
+                endttime = Integer.toString(start2);
+                status = "pending";
+//                getSelectedPet();
 
-                    Log.i("yeet", date);
-                    Log.i("yeet", starttime);
-                    Log.i("yeet", endttime);
-                    Log.i("yeet", status);
-                    Log.i("yeet", pid);
+                Log.i("yeet", date);
+                Log.i("yeet", starttime);
+                Log.i("yeet", endttime);
+                Log.i("yeet", status);
+                Log.i("yeet", pid);
 
-                    pDialog = new ProgressDialog(UserBookAppointment.this);
-                    pDialog.setMessage("Creating your a-pet-ment..");
-                    pDialog.setIndeterminate(false);
-                    pDialog.setCancelable(true);
-                    pDialog.show();
+                pDialog = new ProgressDialog(UserBookAppointment.this);
+                pDialog.setMessage("Creating your a-pet-ment..");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
 
-                    JSONObject dataJson = new JSONObject();
-                    try {
-                        dataJson.put(TAG_DATE, date);
-                        dataJson.put(TAG_STARTTIME, starttime);
-                        dataJson.put(TAG_ENDTIME, endttime);
-                        dataJson.put(TAG_STATUS, status);
-                        dataJson.put(TAG_PID, pid);
+                JSONObject dataJson = new JSONObject();
+                try {
+                    dataJson.put(TAG_DATE, date);
+                    dataJson.put(TAG_STARTTIME, starttime);
+                    dataJson.put(TAG_ENDTIME, endttime);
+                    dataJson.put(TAG_STATUS, status);
+                    dataJson.put(TAG_PID, pid);
 
-                    } catch (JSONException e) {
+                } catch (JSONException e) {
 
-                    }
-                    postData(url_create_appointment, dataJson, 1);
+                }
+                postData(url_create_appointment, dataJson, 1);
 
             }
         });
     }
 
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+
+        etAptDate.getEditText().setText(sdf.format(myCalendar.getTime()));
+    }
+
     public void getSelectedPet() {
-        Pet pet = (Pet) spinner2.getSelectedItem();
+//        Pet pet = (Pet) spinner2.getSelectedItem();
+        Pet pet = (Pet) editTextFilledExposedDropdown2.getOnItemSelectedListener();
         getPetPid(pet);
     }
 
@@ -311,9 +352,10 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
                     p = new Pet(pid, name, pet, sex, breed, age, dateofadoption, height, weight, username, imagepath, imagename);
                     petList.add(p);
                 }
-                ArrayAdapter<Pet> adapter = new ArrayAdapter<Pet>(this, android.R.layout.simple_spinner_item, petList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner2.setAdapter(adapter);
+//                ArrayAdapter<Pet> adapter = new ArrayAdapter<Pet>(this, android.R.layout.simple_spinner_item, petList);
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                spinner2.setAdapter(adapter);
+
                 pDialog.dismiss();
 
             } else {
@@ -327,33 +369,47 @@ public class UserBookAppointment extends AppCompatActivity implements Navigation
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Intent intent = null;
-        switch (item.getItemId()) {
-            case R.id.nav_qr_scanner:
-                intent = new Intent(getApplicationContext(), StaffQrScanner.class);
-                intent.putExtra(TAG_USERNAME, username);
-                break;
-            case R.id.nav_profile:
-                intent = new Intent(getApplicationContext(), UserDetails.class);
-                intent.putExtra(TAG_USERNAME, username);
-                intent.putExtra("qr",qr);
-                break;
-            case R.id.nav_pet:
-                intent = new Intent(getApplicationContext(), UserPets.class);
-                intent.putExtra(TAG_USERNAME, username);
-                intent.putExtra("qr",qr);
-                break;
-            case R.id.nav_qr:
-                intent = new Intent(getApplicationContext(), UserQrCode.class);
-                intent.putExtra(TAG_USERNAME, username);
-                break;
-        }
-        startActivityForResult(intent, 100);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+    private void checkResponse2(JSONObject response, JSONObject creds) {
+        try {
+            if (response.getInt(TAG_SUCCESS) == 1) {
 
+//                appointments = response.getJSONArray(TAG_APPOINTMENT);
+//
+//                // looping through All Products
+//                for (int i = 0; i < appointments.length(); i++) {
+//                    JSONObject c = appointments.getJSONObject(i);
+//
+//                    Appointment a = new Appointment();
+//                    // Storing each json item in variable
+//                    String id = c.getString(TAG_ID);
+//                    String date = c.getString(TAG_DATE);
+//                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+//                    try {
+//                        Date parsedDate = simpleDateFormat2.parse(date);
+//                        simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
+//                        newFormattedDate = simpleDateFormat2.format(parsedDate);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    String startime = c.getString(TAG_STARTTIME);
+//                    String endtime = c.getString(TAG_ENDTIME);
+//                    String status = c.getString(TAG_STATUS);
+//                    String pid = c.getString(TAG_PID);
+//
+//                    a = new Appointment(id, newFormattedDate, startime, endtime, status, pid);
+//                    AppointmentList.add(a);
+//                }
+
+//                pDialog.dismiss();
+            } else {
+//                pDialog.dismiss();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+
+    }
 
 }

@@ -24,8 +24,12 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".StaffQrScanner"></activity>
-        <activity android:name=".UserQrCode" />
-        <activity android:name=".UserPetDetails" />
+        <activity
+            android:name=".UserQrCode"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PetAppointments"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UserPets"
             android:theme="@style/AppTheme.NoActionBar" />
