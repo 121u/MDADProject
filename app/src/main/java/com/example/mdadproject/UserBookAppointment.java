@@ -70,6 +70,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
     public static String url_create_appointment = Login.ipBaseAddress + "/create_appointmentJson.php";
     public static String url_get_PetList = Login.ipBaseAddress + "/get_all_petsJson.php";
+    public static String url_get_appintmentDetails = Login.ipBaseAddress + "/get_appointment_detailsJson.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_APPOINTMENT = "appointment";
@@ -95,13 +96,15 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String date, starttime, endttime, status, pid, qr;
+    String name, aid, date, starttime, endttime, status, pid, qr;
     boolean disabled;
 
     private static String ownFirstName = "";
     String[] timeOptions = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
     AutoCompleteTextView editTextFilledExposedDropdown2;
     ArrayAdapter<Pet> adapter2;
+    JSONArray appointments = null;
+    String newFormattedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
+        name = intent.getStringExtra("name");
 
         Intent intent1 = getIntent();
         qr = intent.getStringExtra("qr");
@@ -131,6 +135,19 @@ public class UserBookAppointment extends AppCompatActivity {
         }
 
         postData(url_get_PetList, dataJson, 2);
+
+        Intent intent2 = getIntent();
+
+        aid = intent2.getStringExtra(TAG_ID);
+
+        JSONObject dataJson2 = new JSONObject();
+        try {
+            dataJson2.put(TAG_ID, aid);
+        } catch (JSONException e) {
+
+        }
+
+        postData(url_get_appintmentDetails, dataJson2, 3);
 
         etAptDate = (TextInputLayout) findViewById(R.id.etAptDate);
         etAptDateIn = (TextInputEditText) findViewById(R.id.etAptDateIn);
@@ -154,12 +171,6 @@ public class UserBookAppointment extends AppCompatActivity {
             btnDelete.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
 
-//            postData(url_get_pet, dataJson, 1);
-        } else if (username != null) {
-            btnUpdate.setVisibility(View.GONE);
-            btnDelete.setVisibility(View.GONE);
-
-//            postData(url_get_pet, dataJson, 1);
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
@@ -286,6 +297,8 @@ public class UserBookAppointment extends AppCompatActivity {
                     case 2:
                         checkResponse(response, json);
                         break;
+                    case 3:
+                        checkResponse2(response, json);
                 }
 
             }
@@ -373,36 +386,44 @@ public class UserBookAppointment extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
-//                appointments = response.getJSONArray(TAG_APPOINTMENT);
-//
-//                // looping through All Products
-//                for (int i = 0; i < appointments.length(); i++) {
-//                    JSONObject c = appointments.getJSONObject(i);
-//
-//                    Appointment a = new Appointment();
-//                    // Storing each json item in variable
-//                    String id = c.getString(TAG_ID);
-//                    String date = c.getString(TAG_DATE);
-//                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
-//                    try {
-//                        Date parsedDate = simpleDateFormat2.parse(date);
-//                        simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
-//                        newFormattedDate = simpleDateFormat2.format(parsedDate);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    String startime = c.getString(TAG_STARTTIME);
-//                    String endtime = c.getString(TAG_ENDTIME);
-//                    String status = c.getString(TAG_STATUS);
-//                    String pid = c.getString(TAG_PID);
-//
+                appointments = response.getJSONArray(TAG_APPOINTMENT);
+
+                // looping through All Products
+                for (int i = 0; i < appointments.length(); i++) {
+                    JSONObject c = appointments.getJSONObject(i);
+
+                    Appointment a = new Appointment();
+                    // Storing each json item in variable
+                    String id = c.getString(TAG_ID);
+                    String date = c.getString(TAG_DATE);
+                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+                    try {
+                        Date parsedDate = simpleDateFormat2.parse(date);
+                        simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
+                        newFormattedDate = simpleDateFormat2.format(parsedDate);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String startime = c.getString(TAG_STARTTIME);
+                    String endtime = c.getString(TAG_ENDTIME);
+                    String status = c.getString(TAG_STATUS);
+                    String pid = c.getString(TAG_PID);
+
+                    etAptDate.getEditText().setText(newFormattedDate);
+                    etAptTime.getEditText().setText(startime);
+                    etAptPet.getEditText().setText(name);
+
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dropdown_menu_popup_item, timeOptions);
+                    AutoCompleteTextView editTextFilledExposedDropdown = findViewById(R.id.filled_exposed_dropdown);
+                    editTextFilledExposedDropdown.setAdapter(adapter);
+
 //                    a = new Appointment(id, newFormattedDate, startime, endtime, status, pid);
 //                    AppointmentList.add(a);
-//                }
+                }
 
-//                pDialog.dismiss();
+                pDialog.dismiss();
             } else {
-//                pDialog.dismiss();
+                pDialog.dismiss();
             }
 
         } catch (JSONException e) {

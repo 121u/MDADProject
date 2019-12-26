@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -44,7 +45,7 @@ public class PetAppointments extends AppCompatActivity {
     private static final String TAG_USERNAME = "username";
 
     JSONObject json = null;
-    String pid;
+    String username, qr, aid, pid, name;
     String newFormattedDate;
     JSONArray appointments = null;
     ArrayList<Appointment> AppointmentList = new ArrayList();
@@ -72,6 +73,9 @@ public class PetAppointments extends AppCompatActivity {
         Intent intent = getIntent();
 
         pid = intent.getStringExtra(TAG_PID);
+        name = intent.getStringExtra("name");
+        username = intent.getStringExtra("username");
+        qr = intent.getStringExtra("qr");
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -82,13 +86,24 @@ public class PetAppointments extends AppCompatActivity {
 
         postData(url_appointment, dataJson, 1);
 
+        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+            listView.setEnabled(true);
+
+        } else if (username != null) {
+            listView.setEnabled(false);
+
+        }
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
                 Intent in = new Intent(getApplicationContext(), UserBookAppointment.class);
+                in.putExtra(TAG_USERNAME, username);
+                in.putExtra("name", name);
                 in.putExtra(TAG_PID, pid);
-                in.putExtra(TAG_ID, id);
+                in.putExtra(TAG_ID, aid);
+                Log.i("mad", aid);
 //                in.putExtra(TAG_USERNAME, username);
 //                in.putExtra("qr", qr);
                 startActivityForResult(in, 100);
@@ -144,7 +159,7 @@ public class PetAppointments extends AppCompatActivity {
 
                     Appointment a = new Appointment();
                     // Storing each json item in variable
-                    String id = c.getString(TAG_ID);
+                    aid = c.getString(TAG_ID);
                     String date = c.getString(TAG_DATE);
                     SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
                     try {
@@ -159,7 +174,7 @@ public class PetAppointments extends AppCompatActivity {
                     String status = c.getString(TAG_STATUS);
                     String pid = c.getString(TAG_PID);
 
-                    a = new Appointment(id, newFormattedDate, startime, endtime, status, pid);
+                    a = new Appointment(aid, newFormattedDate, startime, endtime, status, pid);
                     AppointmentList.add(a);
                 }
 

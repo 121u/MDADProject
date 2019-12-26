@@ -86,6 +86,7 @@ public class CustomAdapter extends BaseAdapter {
                     in.putExtra("pid", tempPet.getPid());
                     in.putExtra("username", tempPet.getUsername());
                     in.putExtra("qr", ((UserPets)mContext).qr);
+                    in.putExtra("name",tempPet.getName());
                     mContext.startActivity(in);
                 }
             }
