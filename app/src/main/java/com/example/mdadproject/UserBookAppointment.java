@@ -38,8 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.leinardi.android.speeddial.SpeedDialActionItem;
-import com.leinardi.android.speeddial.SpeedDialView;
+//import com.leinardi.android.speeddial.SpeedDialActionItem;
+//import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,6 +71,8 @@ public class UserBookAppointment extends AppCompatActivity {
     public static String url_create_appointment = Login.ipBaseAddress + "/create_appointmentJson.php";
     public static String url_get_PetList = Login.ipBaseAddress + "/get_all_petsJson.php";
     public static String url_get_appintmentDetails = Login.ipBaseAddress + "/get_appointment_detailsJson.php";
+    private static final String url_update_apt = Login.ipBaseAddress + "/update_appointment_detailsJson.php";
+    private static final String url_delete_apt = Login.ipBaseAddress + "/delete_apt.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_APPOINTMENT = "appointment";
@@ -96,7 +98,7 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String name, aid, date, starttime, endttime, status, pid, qr;
+    String name, aid, date, starttime, endttime, status, pid, qr, pet, id;
     boolean disabled;
 
     private static String ownFirstName = "";
@@ -218,6 +220,59 @@ public class UserBookAppointment extends AppCompatActivity {
                 getPetPid(pet);
             }
         });
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                date = etAptDate.getEditText().getText().toString();
+                starttime = etAptTime.getEditText().getText().toString();
+                String start1 = starttime.replaceAll("[^\\d]", "");
+                int start2 = Integer.parseInt(start1) + 100;
+                endttime = Integer.toString(start2);
+                status = "pending";
+
+                pDialog = new ProgressDialog(UserBookAppointment.this);
+                pDialog.setMessage("Saving details ...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+
+                JSONObject dataJson = new JSONObject();
+                try {
+                    dataJson.put(TAG_DATE, date);
+                    dataJson.put(TAG_STARTTIME, starttime);
+                    dataJson.put(TAG_ENDTIME, endttime);
+                    dataJson.put(TAG_ID, aid);
+
+
+
+
+                } catch (JSONException e) {
+                }
+                postData(url_update_apt, dataJson, 4);
+
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                pDialog = new ProgressDialog(UserBookAppointment.this);
+                pDialog.setMessage("Deleting appointment ...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+                // deleting product in background thread
+                JSONObject dataJson = new JSONObject();
+                try {
+                    dataJson.put(TAG_ID, aid);
+                } catch (JSONException e) {
+
+                }
+                postData(url_delete_apt, dataJson, 5);
+            }
+        });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,6 +354,13 @@ public class UserBookAppointment extends AppCompatActivity {
                         break;
                     case 3:
                         checkResponse2(response, json);
+                        break;
+                    case 4:
+                        checkResponseEditApt (response);
+                        break;
+                    case 5:
+                        checkResponseDeleteApt (response);
+                        break;
                 }
 
             }
@@ -425,12 +487,56 @@ public class UserBookAppointment extends AppCompatActivity {
             } else {
                 pDialog.dismiss();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    public void checkResponseDeleteApt(JSONObject response) {
+
+        try {
+            // dismiss the dialog once product updated
+            pDialog.dismiss();
+            if (response.getInt("success") == 1) {
+                // successfully updated
+                Intent i = getIntent();
+                // send result code 100 to notify about product update
+                setResult(100, i);
+                finish();
+
+            } else {
+                // product with pid not found
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void checkResponseEditApt(JSONObject response) {
+        try {
+            pDialog.dismiss();
+            if (response.getInt("success") == 1) {
+
+                JSONArray aptObj = response.getJSONArray(TAG_APPOINTMENT);
+
+                JSONObject apt = aptObj.getJSONObject(0);
+                date = apt.getString(TAG_DATE);
+                starttime = apt.getString(TAG_STARTTIME);
+                aid = apt.getString(TAG_ID);
+
+
+                etAptDate.getEditText().setText(date);
+                etAptTime.getEditText().setText(starttime);
+
+            } else {
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
 
         }
-
     }
-
 }
+
