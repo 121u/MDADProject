@@ -22,6 +22,9 @@ class Pet {
         this.weight = weight;
         this.username = username;
         this.imagepath = imagepath;
+        if (imagename.trim().equals("")) {
+            imagename = "No Name";
+        }
         this.imagename = imagename;
     }
 

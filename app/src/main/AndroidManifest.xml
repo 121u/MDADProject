@@ -37,7 +37,7 @@
             android:name=".UserBookAppointment"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegisterPetDetails"
+            android:name=".PetDetails"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity

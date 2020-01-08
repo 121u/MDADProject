@@ -2,6 +2,8 @@ package com.example.mdadproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomAdapter extends BaseAdapter {
 
@@ -53,10 +59,13 @@ public class CustomAdapter extends BaseAdapter {
         TextView tvId = (TextView)convertView.findViewById(R.id.id);
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         TextView tvBreed = (TextView)convertView.findViewById(R.id.txtBreed);
-        ImageView imgPet = (ImageView)convertView.findViewById(R.id.imgPet);
+        ImageView imgPet = (CircleImageView)convertView.findViewById(R.id.imgPet);
 //        NetworkImageView imgPic = (NetworkImageView)convertView.findViewById(R.id.imgPic);
         Button btnDetails = (Button)convertView.findViewById(R.id.btnDetails);
         Button btnAppointments = (Button)convertView.findViewById(R.id.btnAppointments);
+
+        String url = tempPet.getImagepath();
+        Picasso.get().load(url).resize(50, 50).centerCrop().into(imgPet);
 
         tvId.setText(tempPet.getPid());
         tvName.setText(tempPet.getName());
@@ -68,7 +77,7 @@ public class CustomAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (mContext instanceof UserPets) {
 //                    ((UserPets)mContext).getDetails(tempPet.getPid());
-                    Intent in = new Intent(mContext, RegisterPetDetails.class);
+                    Intent in = new Intent(mContext, PetDetails.class);
                     in.putExtra("pid", tempPet.getPid());
                     in.putExtra("username", tempPet.getUsername());
                     in.putExtra("qr", ((UserPets)mContext).qr);

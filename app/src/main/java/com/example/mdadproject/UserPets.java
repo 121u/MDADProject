@@ -9,13 +9,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -135,6 +132,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
             nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
         }
         listView = (ListView) findViewById(R.id.listView);
+        listView.setEnabled(false);
         SpeedDialView sdv = (SpeedDialView) findViewById(R.id.speedDial);
         sdv.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_new_pet, R.drawable.dog)
                 .setLabel("new pet")
@@ -148,7 +146,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 switch (speedDialActionItem.getId()) {
                     case R.id.fab_new_pet:
                         Intent intent = null;
-                        intent = new Intent(getApplicationContext(), RegisterPetDetails.class);
+                        intent = new Intent(getApplicationContext(), PetDetails.class);
                         intent.putExtra(TAG_USERNAME, username);
                         intent.putExtra("qr", qr);
                         startActivityForResult(intent, 100);
@@ -171,7 +169,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
-//                Intent in = new Intent(getApplicationContext(), RegisterPetDetails.class);
+//                Intent in = new Intent(getApplicationContext(), PetDetails.class);
 //                in.putExtra(TAG_PID, pid);
 //                in.putExtra(TAG_USERNAME, username);
 //                in.putExtra("qr", qr);
@@ -280,6 +278,10 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_qr:
                 intent = new Intent(getApplicationContext(), UserQrCode.class);
                 intent.putExtra(TAG_USERNAME, username);
+                break;
+            case R.id.nav_logout:
+                intent = new Intent(getApplicationContext(), Login.class);
+                finish();
                 break;
         }
         startActivityForResult(intent, 100);

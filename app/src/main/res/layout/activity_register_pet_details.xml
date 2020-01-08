@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".RegisterPetDetails">
+    tools:context=".PetDetails">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -190,14 +190,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgPet"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="10dp">
-                </ImageView>
+                </de.hdodenhof.circleimageview.CircleImageView>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/etPetImage"

@@ -244,9 +244,6 @@ public class UserBookAppointment extends AppCompatActivity {
                     dataJson.put(TAG_ENDTIME, endttime);
                     dataJson.put(TAG_ID, aid);
 
-
-
-
                 } catch (JSONException e) {
                 }
                 postData(url_update_apt, dataJson, 4);
@@ -356,10 +353,10 @@ public class UserBookAppointment extends AppCompatActivity {
                         checkResponse2(response, json);
                         break;
                     case 4:
-                        checkResponseEditApt (response);
+                        checkResponseEditApt(response);
                         break;
                     case 5:
-                        checkResponseDeleteApt (response);
+                        checkResponseDeleteApt(response);
                         break;
                 }
 
