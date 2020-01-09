@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -42,9 +43,9 @@ public class UserDetails extends AppCompatActivity {
     public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password, editedPassword;
 
     private ProgressDialog pDialog;
-    public static String url_owner = Login.ipBaseAddress + "/get_owner_detailsJson.php";
-    private static final String url_delete = Login.ipBaseAddress + "/delete_owner_detailsJson.php";
-    private static final String url_update_details = Login.ipBaseAddress + "/update_owner_detailsJson.php";
+    public static String url_owner = UserLogin.ipBaseAddress + "/get_owner_detailsJson.php";
+    private static final String url_delete = UserLogin.ipBaseAddress + "/delete_owner_detailsJson.php";
+    private static final String url_update_details = UserLogin.ipBaseAddress + "/update_owner_detailsJson.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_OWNERS = "owner";
     private static final String TAG_NRIC = "nric";
@@ -59,7 +60,7 @@ public class UserDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_details);
+        setContentView(R.layout.activity_user_details);
 
         txtView = (TextView) findViewById(R.id.txtView);
         etNric = (TextInputLayout) findViewById(R.id.etNric);
@@ -104,6 +105,12 @@ public class UserDetails extends AppCompatActivity {
 
         }
 
+        pDialog = new ProgressDialog(UserDetails.this);
+        pDialog.setMessage("loading your profile ...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
@@ -124,6 +131,7 @@ public class UserDetails extends AppCompatActivity {
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
+            pDialog.dismiss();
         }
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -274,6 +282,8 @@ public class UserDetails extends AppCompatActivity {
                 etEmail.getEditText().setText(email);
                 etAddress.getEditText().setText(address);
                 etZipcode.getEditText().setText(zipcode);
+
+                pDialog.dismiss();
             } else {
             }
 

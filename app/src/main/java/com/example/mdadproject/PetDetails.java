@@ -14,11 +14,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -26,18 +23,18 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 //import com.android.volley.Request;
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Models.Upload;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -58,23 +55,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -118,27 +105,13 @@ public class PetDetails extends AppCompatActivity {
     private static final String TAG_IMAGEPATH = "image_path";
     private static final String TAG_IMAGENAME = "image_name";
 
-    public static String url_create_pet = Login.ipBaseAddress + "/create_petJson2.php";
-    private static final String url_update_pets = Login.ipBaseAddress + "/update_pet_detailsJson.php";
-    private static final String url_delete_pets = Login.ipBaseAddress + "/delete_pets.php";
-    public static String url_get_pet = Login.ipBaseAddress + "/get_pet_detailsJson.php";
+    public static String url_create_pet = UserLogin.ipBaseAddress + "/create_petJson2.php";
+    private static final String url_update_pets = UserLogin.ipBaseAddress + "/update_pet_detailsJson.php";
+    private static final String url_delete_pets = UserLogin.ipBaseAddress + "/delete_pets.php";
+    public static String url_get_pet = UserLogin.ipBaseAddress + "/get_pet_detailsJson.php";
     String timeStamp;
     String imageFileName;
-    Bitmap fixBitmap;
-    String ImageTag = "image_tag";
-    String ImageName = "image_data";
-    ByteArrayOutputStream byteArrayOutputStream;
-    byte[] byteArray;
-    String ConvertImage;
     String GetImageNameFromEditText;
-    HttpURLConnection httpURLConnection;
-    URL url;
-    OutputStream outputStream;
-    BufferedWriter bufferedWriter;
-    int RC;
-    BufferedReader bufferedReader;
-    StringBuilder stringBuilder;
-    boolean check = true;
     private int GALLERY = 1, CAMERA = 2;
 
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -154,7 +127,7 @@ public class PetDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_pet_details);
+        setContentView(R.layout.activity_pet_details);
 
         etPetType = (TextInputLayout) findViewById(R.id.etPetType);
         etPetType = (TextInputLayout) findViewById(R.id.etPetType);
@@ -206,6 +179,12 @@ public class PetDetails extends AppCompatActivity {
 
         }
 
+        pDialog = new ProgressDialog(PetDetails.this);
+        pDialog.setMessage("loading your pet ...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
@@ -229,6 +208,7 @@ public class PetDetails extends AppCompatActivity {
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
+            pDialog.dismiss();
         }
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -557,6 +537,8 @@ public class PetDetails extends AppCompatActivity {
                 etPetWeight.getEditText().setText(weight);
                 Picasso.get().load(image_path).resize(50, 50).centerCrop().into(imgPet);
                 etPetImage.getEditText().setText(image_name);
+
+                pDialog.dismiss();
 
             } else {
 

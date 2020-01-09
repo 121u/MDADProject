@@ -23,6 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Adapters.PetListAdapter;
+import com.example.mdadproject.Models.Pet;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -46,7 +49,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout drawer;
     private TextView txtGreeting;
 
-    public static String url_pet = Login.ipBaseAddress + "/get_all_petsJson.php";
+    public static String url_pet = UserLogin.ipBaseAddress + "/get_all_petsJson.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_USERNAME = "username";
     private static final String TAG_PETS = "pets";
@@ -248,7 +251,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                     petsList.add(p);
                 }
 
-                CustomAdapter myCustomAdapter = new CustomAdapter(UserPets.this, petsList);
+                PetListAdapter myCustomAdapter = new PetListAdapter(UserPets.this, petsList);
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
             } else {
@@ -280,7 +283,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
-                intent = new Intent(getApplicationContext(), Login.class);
+                intent = new Intent(getApplicationContext(), UserLogin.class);
                 finish();
                 break;
         }

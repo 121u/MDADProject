@@ -1,9 +1,7 @@
-package com.example.mdadproject;
+package com.example.mdadproject.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +10,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
+import com.example.mdadproject.Models.Pet;
+import com.example.mdadproject.PetAppointments;
+import com.example.mdadproject.PetDetails;
+import com.example.mdadproject.R;
+import com.example.mdadproject.UserPets;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CustomAdapter extends BaseAdapter {
+public class PetListAdapter extends BaseAdapter {
 
-    ImageLoader imageLoader;
     Context mContext;
     ArrayList<Pet> pets = new ArrayList<>();
 
-    public CustomAdapter(Context context, ArrayList<Pet> pets) {
+    public PetListAdapter(Context context, ArrayList<Pet> pets) {
         mContext = context;
         this.pets = pets;
     }
@@ -60,7 +60,6 @@ public class CustomAdapter extends BaseAdapter {
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         TextView tvBreed = (TextView)convertView.findViewById(R.id.txtBreed);
         ImageView imgPet = (CircleImageView)convertView.findViewById(R.id.imgPet);
-//        NetworkImageView imgPic = (NetworkImageView)convertView.findViewById(R.id.imgPic);
         Button btnDetails = (Button)convertView.findViewById(R.id.btnDetails);
         Button btnAppointments = (Button)convertView.findViewById(R.id.btnAppointments);
 
@@ -100,7 +99,6 @@ public class CustomAdapter extends BaseAdapter {
                 }
             }
         });
-//        imgPet.setImageResource(mContext.getResources().getIdentifier(iconSrc,"drawable",mContext.getPackageName()));
 
         return convertView;
     }

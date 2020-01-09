@@ -1,4 +1,4 @@
-package com.example.mdadproject;
+package com.example.mdadproject.Models;
 
 public class Upload {
     private String mName;

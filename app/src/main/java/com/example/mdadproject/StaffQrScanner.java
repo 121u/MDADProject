@@ -25,7 +25,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zxing_scanner);
+        setContentView(R.layout.activity_staff_qr_scanner);
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");

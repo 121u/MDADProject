@@ -17,12 +17,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Login extends AppCompatActivity {
+public class UserLogin extends AppCompatActivity {
 
     public static String ipBaseAddress = "http://vetmdad.atspace.cc";
 
@@ -43,7 +44,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_user_login);
 
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
@@ -65,7 +66,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-//                String pw= etPassword.getText().toString();
                 String pw = etPassword.getEditText().getText().toString();
                 String uName = etUsername.getEditText().getText().toString();
 
@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity {
                     etUsername.setError(getString(R.string.error_field_required));
 
                 } else {
-                    pDialog = new ProgressDialog(Login.this);
+                    pDialog = new ProgressDialog(UserLogin.this);
                     pDialog.setMessage("This purr-obably won't take long..");
                     pDialog.setIndeterminate(false);
                     pDialog.setCancelable(true);

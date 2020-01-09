@@ -1,10 +1,8 @@
-package com.example.mdadproject;
-
-import android.app.Person;
+package com.example.mdadproject.Models;
 
 import androidx.annotation.NonNull;
 
-class Pet {
+public class Pet {
 
     public Pet() {
 

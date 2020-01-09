@@ -1,4 +1,4 @@
-package com.example.mdadproject;
+package com.example.mdadproject.Utils;
 
 import android.provider.ContactsContract;
 

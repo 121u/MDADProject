@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
@@ -35,7 +36,7 @@ public class UserPass extends AppCompatActivity {
 
     public static String username, password, qr;
 
-    private static String url_create_owner = Login.ipBaseAddress + "/create_ownerJson.php";
+    private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_NRIC = "nric";
@@ -49,7 +50,7 @@ public class UserPass extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_user_pass);
+        setContentView(R.layout.activity_user_pass);
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
@@ -159,7 +160,7 @@ public class UserPass extends AppCompatActivity {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
                 finish();
-                Intent i = new Intent(this, Login.class);
+                Intent i = new Intent(this, UserLogin.class);
                 startActivity(i);
                 // dismiss the dialog once product uupdated
                 pDialog.dismiss();

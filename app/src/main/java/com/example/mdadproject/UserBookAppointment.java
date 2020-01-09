@@ -1,10 +1,7 @@
 package com.example.mdadproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.DatePickerDialog;
@@ -12,21 +9,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,8 +25,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
+import com.example.mdadproject.Models.Appointment;
+import com.example.mdadproject.Models.Pet;
+import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 //import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -68,11 +60,11 @@ public class UserBookAppointment extends AppCompatActivity {
 
     String username;
 
-    public static String url_create_appointment = Login.ipBaseAddress + "/create_appointmentJson.php";
-    public static String url_get_PetList = Login.ipBaseAddress + "/get_all_petsJson.php";
-    public static String url_get_appintmentDetails = Login.ipBaseAddress + "/get_appointment_detailsJson.php";
-    private static final String url_update_apt = Login.ipBaseAddress + "/update_appointment_detailsJson.php";
-    private static final String url_delete_apt = Login.ipBaseAddress + "/delete_apt.php";
+    public static String url_create_appointment = UserLogin.ipBaseAddress + "/create_appointmentJson.php";
+    public static String url_get_PetList = UserLogin.ipBaseAddress + "/get_all_petsJson.php";
+    public static String url_get_appintmentDetails = UserLogin.ipBaseAddress + "/get_appointment_detailsJson.php";
+    private static final String url_update_apt = UserLogin.ipBaseAddress + "/update_appointment_detailsJson.php";
+    private static final String url_delete_apt = UserLogin.ipBaseAddress + "/delete_apt.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_APPOINTMENT = "appointment";

@@ -3,6 +3,7 @@ package com.example.mdadproject;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Adapters.AptListAdapter;
+import com.example.mdadproject.Models.Appointment;
+import com.example.mdadproject.Utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +35,12 @@ public class PetAppointments extends AppCompatActivity {
 
     private ListView listView;
     private ListView listView2;
+    private ProgressDialog pDialog;
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
 
-    public static String url_appointment = Login.ipBaseAddress + "/get_all_appointmentsJson.php";
+    public static String url_appointment = UserLogin.ipBaseAddress + "/get_all_appointmentsJson.php";
     private static final String TAG_APPOINTMENT = "appointment";
     private static final String TAG_ID = "id";
     private static final String TAG_DATE = "date";
@@ -55,7 +60,7 @@ public class PetAppointments extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_pet_details);
+        setContentView(R.layout.activity_pet_appointments);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
@@ -85,6 +90,12 @@ public class PetAppointments extends AppCompatActivity {
         }
 
         postData(url_appointment, dataJson, 1);
+
+        pDialog = new ProgressDialog(PetAppointments.this);
+        pDialog.setMessage("loading appointments ...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
 
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             listView.setEnabled(true);
@@ -186,14 +197,14 @@ public class PetAppointments extends AppCompatActivity {
                     }
                 }
 
-                CustomAdapter2 myCustomAdapter = new CustomAdapter2(PetAppointments.this, pendingList);
+                AptListAdapter myCustomAdapter = new AptListAdapter(PetAppointments.this, pendingList);
                 listView.setAdapter(myCustomAdapter);
 
-                CustomAdapter2 myCustomAdapter2 = new CustomAdapter2(PetAppointments.this, completedList);
+                AptListAdapter myCustomAdapter2 = new AptListAdapter(PetAppointments.this, completedList);
                 listView2.setAdapter(myCustomAdapter2);
-//                pDialog.dismiss();
+                pDialog.dismiss();
             } else {
-//                pDialog.dismiss();
+                pDialog.dismiss();
             }
 
         } catch (JSONException e) {

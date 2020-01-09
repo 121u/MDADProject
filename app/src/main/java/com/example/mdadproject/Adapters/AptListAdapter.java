@@ -1,4 +1,4 @@
-package com.example.mdadproject;
+package com.example.mdadproject.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.mdadproject.Models.Appointment;
+import com.example.mdadproject.R;
+
 import java.util.ArrayList;
 
-public class CustomAdapter2 extends BaseAdapter {
+public class AptListAdapter extends BaseAdapter {
 
     Context mContext;
     ArrayList<Appointment> appointments = new ArrayList<>();
 
-    public CustomAdapter2(Context context, ArrayList<Appointment> appointments) {
+    public AptListAdapter(Context context, ArrayList<Appointment> appointments) {
         mContext = context;
         this.appointments = appointments;
     }
