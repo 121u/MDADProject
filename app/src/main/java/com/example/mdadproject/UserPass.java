@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,7 +37,7 @@ public class UserPass extends AppCompatActivity {
 
     public static String username, password, qr;
 
-    private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson.php";
+    private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson2.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_NRIC = "nric";
@@ -162,16 +163,21 @@ public class UserPass extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(this, UserLogin.class);
                 startActivity(i);
-                // dismiss the dialog once product uupdated
+                // dismiss the dialog once product updated
                 pDialog.dismiss();
+                Log.i("here","here");
+            }
 
-            } else {
+            else {
                 // product with pid not found
+                pDialog.dismiss();
+                Log.i("here1","here1");
+                Toast.makeText(this, "Username is already in use. Please try again", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-
+            Log.i("here2","here2");
         }
 
     }
