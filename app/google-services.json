@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "550272105926",
+    "firebase_url": "https://mdad-project.firebaseio.com",
+    "project_id": "mdad-project",
+    "storage_bucket": "mdad-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550272105926:android:f562df70e09813f6b946c7",
+        "android_client_info": {
+          "package_name": "com.example.mdadproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550272105926-k7hobb1d9vfj8jef7onjddongg6t17rn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mdadproject",
+            "certificate_hash": "5f891fc78e3325aa3efd97bf7fc35bed1013b227"
+          }
+        },
+        {
+          "client_id": "550272105926-vnevqa77sb43qr64v948dblhg90e42oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKrFkZ9lnqRxVWpk0uM6vE3DgyAvH-Lhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550272105926-vnevqa77sb43qr64v948dblhg90e42oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
