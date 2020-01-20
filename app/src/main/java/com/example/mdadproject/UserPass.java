@@ -70,7 +70,6 @@ public class UserPass extends AppCompatActivity {
 
         Log.i("Ip address CREATE ", url_create_owner);
 
-        textView = (TextView) findViewById(R.id.textView);
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
@@ -83,6 +82,7 @@ public class UserPass extends AppCompatActivity {
             etPassword.getEditText().setText(password);
 
         } else {
+            getSupportActionBar().setTitle("Register");
             btmToolbar.setVisibility(View.VISIBLE);
         }
 
