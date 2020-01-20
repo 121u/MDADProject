@@ -104,7 +104,7 @@ public class UserBookAppointment extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_book_appointment);
-        setTitle("");
+
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("We're giving it whatevfur we'ge got..");
         pDialog.setIndeterminate(false);
@@ -154,7 +154,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle("Book An Appointment");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),

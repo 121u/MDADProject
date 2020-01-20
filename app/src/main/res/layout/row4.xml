@@ -11,62 +11,63 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="pid"
+        android:text="id"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/sourcecodepro_semibold"
-        android:text="Pet Name"
+        android:text="Name"
         android:textColor="#000"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/imgPet"
-        app:layout_constraintTop_toTopOf="@+id/imgPet" />
+        app:layout_constraintStart_toEndOf="@+id/txtQueueNo"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtBreed"
+        android:id="@+id/txtDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/sourcecodepro_regular"
-        android:text="Pet Breed"
+        android:text="Date Time"
         android:textColor="#808080"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/txtName"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imgPet"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/txtQueueNo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:text="NO"
+        android:textSize="18dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@android:color/white"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDetails"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="5dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Details"
+        android:text="details"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imgPet"
-        app:layout_constraintTop_toBottomOf="@+id/txtBreed" />
+        app:layout_constraintStart_toEndOf="@+id/txtQueueNo"
+        app:layout_constraintTop_toBottomOf="@+id/txtDateTime" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAppointments"
@@ -77,11 +78,10 @@
         android:layout_marginEnd="10dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Appointments"
+        android:text="pets"
         android:textAllCaps="false"
         android:backgroundTint="@color/colorPrimaryDark"
         android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnDetails"
         app:layout_constraintTop_toTopOf="@id/btnDetails" />
 

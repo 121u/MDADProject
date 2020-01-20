@@ -11,9 +11,9 @@
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/white"
+        android:background="@drawable/line"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:theme="@style/ToolBarStyle"
         app:layout_constraintBottom_toTopOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,14 +39,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="upcoming appointments"
+                android:layout_marginTop="10dp"
+                android:text="Upcoming Appointments"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
             <ListView
                 android:id="@+id/listView"
-                android:layout_width="330dp"
+                android:layout_width="360dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
                 android:divider="@android:color/transparent"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="previous appointments"
+                android:text="Previous Appointments"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 

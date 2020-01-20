@@ -9,6 +9,10 @@
             android:icon="@drawable/terrapin"
             android:title="qr scanner" />
         <item
+            android:id="@+id/nav_queue_list"
+            android:icon="@drawable/cat"
+            android:title="queue list" />
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/dog"
             android:title="profile" />

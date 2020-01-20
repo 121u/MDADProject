@@ -23,7 +23,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".StaffQrScanner"></activity>
+        <activity
+            android:name=".UserQueue"
+            android:theme="@style/AppTheme.NoActionBar"
+        />
+        <activity android:name=".StaffQrScanner" />
         <activity
             android:name=".UserQrCode"
             android:theme="@style/AppTheme.NoActionBar" />

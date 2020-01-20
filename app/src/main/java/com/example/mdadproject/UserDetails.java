@@ -43,7 +43,7 @@ public class UserDetails extends AppCompatActivity {
     public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password, editedPassword;
 
     private ProgressDialog pDialog;
-    public static String url_owner = UserLogin.ipBaseAddress + "/get_owner_detailsJson.php";
+    private static final String url_owner = UserLogin.ipBaseAddress + "/get_owner_detailsJson.php";
     private static final String url_delete = UserLogin.ipBaseAddress + "/delete_owner_detailsJson.php";
     private static final String url_update_details = UserLogin.ipBaseAddress + "/update_owner_detailsJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -62,7 +62,6 @@ public class UserDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
 
-        txtView = (TextView) findViewById(R.id.txtView);
         etNric = (TextInputLayout) findViewById(R.id.etNric);
         etName = (TextInputLayout) findViewById(R.id.etName);
         etMobileNumber = (TextInputLayout) findViewById(R.id.etMobileNumber);
@@ -77,7 +76,6 @@ public class UserDetails extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("");
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
@@ -117,8 +115,7 @@ public class UserDetails extends AppCompatActivity {
 
             postData(url_owner, dataJson2, 1);
         } else if (username != null) {
-            txtView.setText("your profile");
-            txtView.setTextColor(Color.BLACK);
+            setTitle("Your Profile");
             etNric.getEditText().setEnabled(false);
             etName.getEditText().setEnabled(false);
             etMobileNumber.getEditText().setEnabled(false);
@@ -129,6 +126,7 @@ public class UserDetails extends AppCompatActivity {
 
             postData(url_owner, dataJson, 1);
         } else {
+            getSupportActionBar().setTitle("Register");
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
             pDialog.dismiss();
@@ -241,7 +239,7 @@ public class UserDetails extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 switch (option) {
                     case 1:
-                        checkResponseReadOwner(response, json);
+                        checkResponseReadOwner(response);
                         break;
                     case 2:
                         checkResponseEditOwner(response);
@@ -261,7 +259,7 @@ public class UserDetails extends AppCompatActivity {
         requestQueue.add(json_obj_req);
     }
 
-    private void checkResponseReadOwner(JSONObject response, JSONObject creds) {
+    private void checkResponseReadOwner(JSONObject response) {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
@@ -285,6 +283,7 @@ public class UserDetails extends AppCompatActivity {
 
                 pDialog.dismiss();
             } else {
+                pDialog.dismiss();
             }
 
         } catch (JSONException e) {

@@ -113,6 +113,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 //        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
 //                PorterDuff.Mode.SRC_ATOP);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle("Your Pets");
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -131,8 +132,11 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         Menu nav_Menu = navigationView.getMenu();
         if (username != null && username.equals("staff")) {
             nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
+            nav_Menu.findItem(R.id.nav_profile).setVisible(false);
+            nav_Menu.findItem(R.id.nav_qr).setVisible(false);
         } else {
             nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
+            nav_Menu.findItem(R.id.nav_queue_list).setVisible(false);
         }
         listView = (ListView) findViewById(R.id.listView);
         listView.setEnabled(false);
@@ -271,6 +275,10 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         switch (item.getItemId()) {
             case R.id.nav_qr_scanner:
                 intent = new Intent(getApplicationContext(), StaffQrScanner.class);
+                intent.putExtra(TAG_USERNAME, username);
+                break;
+            case R.id.nav_queue_list:
+                intent = new Intent(getApplicationContext(), UserQueue.class);
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_profile:

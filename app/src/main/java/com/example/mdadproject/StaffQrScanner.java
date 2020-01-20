@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -12,7 +13,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Utils.Constants;
 import com.google.zxing.Result;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -20,7 +35,16 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
 
     private ZXingScannerView mScannerView;
     static final Integer CAMERA = 0x1;
-    String username;
+    String username, qr;
+    int qno = 0;
+
+    private static final String url_queue = UserLogin.ipBaseAddress + "/create_queueNoJson.php";
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_QUEUE = "queue";
+    private static final String TAG_QUEUE_NO = "queue_no";
+    private static final String TAG_USERNAME = "username";
+    private static final String TAG_QUEUE_DATE = "queue_date";
+    private static final String TAG_QUEUE_TIME = "queue_time";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +96,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
                     mScannerView.setResultHandler(this);
                     mScannerView.startCamera();
                     break;
-
-
             }
-
             Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
@@ -90,16 +111,74 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         mScannerView.stopCamera();
     }
 
+    public void postData(String url, final JSONObject json, final int option) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest json_obj_req = new JsonObjectRequest(
+                Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                switch (option) {
+                    case 1:
+                        checkResponseCreate_Queue(response);
+                        break;
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        requestQueue.add(json_obj_req);
+    }
+
+    private void checkResponseCreate_Queue(JSONObject response) {
+        Log.i("----Response", response + " ");
+        try {
+            if (response.getInt(TAG_SUCCESS) == 1) {
+                finish();
+//                Intent i = new Intent(this, UserLogin.class);
+//                startActivity(i);
+            } else {
+                // product with pid not found
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+    }
+
     @Override
     public void handleResult(Result result) {
+        Constants.qNum++;
+        qr = result.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        String currentTime = sdf2.format(new Date());
+        Log.i("kappa", "" + Constants.qNum);
+
+        JSONObject dataJson = new JSONObject();
+        try {
+            dataJson.put(TAG_QUEUE_NO, Constants.qNum);
+            dataJson.put(TAG_USERNAME, qr);
+            dataJson.put(TAG_QUEUE_DATE, currentDate);
+            dataJson.put(TAG_QUEUE_TIME, currentTime);
+        } catch (JSONException e) {
+
+        }
+        postData(url_queue, dataJson, 1);
 
         Toast.makeText(this, "Contents = " + result.getText() +
                 ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
-        Intent i = new Intent(this,UserPets.class);
-        i.putExtra("qr",result.getText());
+        Intent i = new Intent(this,UserQueue.class);
+        i.putExtra("qr",qr);
         i.putExtra("username", username);
         startActivity(i);
+        finish();
 
         // * Wait 3 seconds to resume the preview.
         Handler handler = new Handler();

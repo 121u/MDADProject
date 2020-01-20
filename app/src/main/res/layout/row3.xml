@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/my_selecter">
+    android:background="@drawable/roundcorners">
 
     <RelativeLayout
         android:id="@+id/name"

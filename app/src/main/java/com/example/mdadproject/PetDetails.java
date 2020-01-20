@@ -149,7 +149,7 @@ public class PetDetails extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("");
+            getSupportActionBar().setTitle("Pet Details");
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
@@ -192,6 +192,7 @@ public class PetDetails extends AppCompatActivity {
 
             postData(url_get_pet, dataJson, 1);
         } else if (username != null && pid != null) {
+
             btmToolbar.setVisibility(View.GONE);
             etPetType.getEditText().setEnabled(false);
             etPetName.getEditText().setEnabled(false);
