@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +32,12 @@ public class UserPass extends AppCompatActivity {
     private TextView textView;
     public TextInputLayout etUsername;
     public TextInputLayout etPassword;
+    EditText etAnswer;
     private RelativeLayout btmToolbar;
     private Button btnSignUp;
     private ProgressDialog pDialog;
 
-    public static String username, password, qr;
+    public static String username, password, qr, security;
 
     private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson2.php";
 
@@ -48,6 +50,7 @@ public class UserPass extends AppCompatActivity {
     private static final String TAG_ZIPCODE = "zipcode";
     private static final String TAG_USERNAME = "username";
     private static final String TAG_PASSWORD = "password";
+    private static final String TAG_SECURITY = "security";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +75,8 @@ public class UserPass extends AppCompatActivity {
 
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
+        etAnswer = (EditText)findViewById(R.id.etAnswer);
+
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
@@ -80,6 +85,7 @@ public class UserPass extends AppCompatActivity {
             btmToolbar.setVisibility(View.GONE);
             etUsername.getEditText().setText(qr);
             etPassword.getEditText().setText(password);
+
 
         } else {
             getSupportActionBar().setTitle("Register");
@@ -92,6 +98,7 @@ public class UserPass extends AppCompatActivity {
 
                 username = etUsername.getEditText().getText().toString();
                 password = etPassword.getEditText().getText().toString();
+                security = etAnswer.getText().toString();
 
                 if (username.isEmpty()) {
                     etUsername.setError(getString(R.string.error_field_required));
@@ -118,6 +125,7 @@ public class UserPass extends AppCompatActivity {
                         dataJson.put(TAG_ZIPCODE, UserDetails.zipcode);
                         dataJson.put(TAG_USERNAME, username);
                         dataJson.put(TAG_PASSWORD, password);
+                        dataJson.put(TAG_SECURITY, security);
 
                     } catch (JSONException e) {
 

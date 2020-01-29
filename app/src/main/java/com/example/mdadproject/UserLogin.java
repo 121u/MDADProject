@@ -31,7 +31,7 @@ public class UserLogin extends AppCompatActivity {
 
     private TextInputLayout etUsername;
     private TextInputLayout etPassword;
-    private Button btnLogin;
+    private Button btnLogin, btnForgetPassword;
     private TextView btnSignUp;
     private ProgressDialog pDialog;
     // url to update product
@@ -51,6 +51,7 @@ public class UserLogin extends AppCompatActivity {
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnForgetPassword = (Button)findViewById(R.id.btnForgetPassword);
         btnSignUp = (TextView) findViewById(R.id.btnSignUp);
 
         getSupportActionBar().hide();
@@ -59,6 +60,14 @@ public class UserLogin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(v.getContext(), UserDetails.class);
+                startActivity(i);
+            }
+        });
+
+        btnForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), ForgetPasswordActivity.class);
                 startActivity(i);
             }
         });

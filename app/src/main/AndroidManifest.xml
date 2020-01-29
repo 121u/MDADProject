@@ -23,10 +23,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ForgetPasswordActivity"></activity>
         <activity
             android:name=".UserQueue"
-            android:theme="@style/AppTheme.NoActionBar"
-        />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".StaffQrScanner" />
         <activity
             android:name=".UserQrCode"
