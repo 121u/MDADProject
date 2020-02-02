@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@android:color/white"
+    tools:context=".UserPets">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:background="@drawable/line"
+            android:theme="@style/ToolBarStyle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etDate"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="32dp"
+            android:focusable="false"
+            android:hint="choose a date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDateIn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txtChosenDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Appointments for: "
+            android:textSize="16dp"
+            app:layout_constraintStart_toStartOf="@id/etDate"
+            app:layout_constraintTop_toBottomOf="@id/btnNotifyAll">
+
+
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNotifyAll"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notify All"
+            android:textAllCaps="false"
+            android:layout_marginTop="16dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/etDate"
+            app:layout_constraintTop_toBottomOf="@id/etDate" />
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtChosenDate" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

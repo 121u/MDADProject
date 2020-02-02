@@ -48,10 +48,10 @@ public class PetAppointments extends AppCompatActivity {
     private static final String TAG_ENDTIME = "endtime";
     private static final String TAG_STATUS = "status";
     private static final String TAG_USERNAME = "username";
+    private static final String TAG_PETNAME = "petname";
 
     JSONObject json = null;
-    String username, qr, aid, pid, name;
-    String newFormattedDate;
+    String username, qr, aid, pid, name, newFormattedDate;
     JSONArray appointments = null;
     ArrayList<Appointment> AppointmentList = new ArrayList();
     ArrayList<Appointment> completedList = new ArrayList();
@@ -184,8 +184,10 @@ public class PetAppointments extends AppCompatActivity {
                     String endtime = c.getString(TAG_ENDTIME);
                     String status = c.getString(TAG_STATUS);
                     String pid = c.getString(TAG_PID);
+                    String username = c.getString(TAG_USERNAME);
+                    String petname = c.getString(TAG_PETNAME);
 
-                    a = new Appointment(aid, newFormattedDate, startime, endtime, status, pid);
+                    a = new Appointment(aid, newFormattedDate, startime, endtime, status, pid, username, petname);
                     AppointmentList.add(a);
                 }
 

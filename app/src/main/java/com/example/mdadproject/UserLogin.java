@@ -3,7 +3,9 @@ package com.example.mdadproject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,7 +22,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Utils.Constants;
+import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +52,28 @@ public class UserLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
 
+        if (SaveSharedPreference.getUserName(UserLogin.this).length() == 0) {
+            // call Login Activity
+//            Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
+//            intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
+//            startActivityForResult(intent, 100);
+//            finish();
+        } else {
+            // Stay at the current activity.
+            if (SaveSharedPreference.getUserName(UserLogin.this).equals("staff")) {
+                Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
+                intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
+                startActivityForResult(intent, 100);
+                finish();
+            }
+            else {
+                Intent intent = new Intent(getApplicationContext(), UserPets.class);
+                intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
+                startActivityForResult(intent, 100);
+                finish();
+            }
+        }
+
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -67,7 +93,7 @@ public class UserLogin extends AppCompatActivity {
         btnForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), ForgetPasswordActivity.class);
+                Intent i = new Intent(v.getContext(), UserPass.class);
                 startActivity(i);
             }
         });
@@ -77,7 +103,7 @@ public class UserLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                 String pw = etPassword.getEditText().getText().toString();
@@ -104,9 +130,9 @@ public class UserLogin extends AppCompatActivity {
                     } catch (JSONException e) {
 
                     }
-
+//                    FirebaseMessaging.getInstance().subscribeToTopic("" + uName);
                     postData(url_login, dataJson, 1);
-
+                    SaveSharedPreference.setUserName(UserLogin.this, uName);
                 }
             }
         });
@@ -154,14 +180,23 @@ public class UserLogin extends AppCompatActivity {
                 String username = etUsername.getEditText().getText().toString();
                 if (username.equals("staff")) {
                     Constants.IS_STAFF = "yes";
+                    Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
+                    intent.putExtra(TAG_USERNAME, username);
+                    startActivityForResult(intent, 100);
+                    finish();
+                    pDialog.dismiss();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), UserPets.class);
+                    intent.putExtra(TAG_USERNAME, username);
+                    startActivityForResult(intent, 100);
+                    Log.i("page1", username);
+                    finish();
+                    pDialog.dismiss();
                 }
-                Intent intent = new Intent(getApplicationContext(), UserPets.class);
-                intent.putExtra(TAG_USERNAME, username);
-                startActivityForResult(intent, 100);
-                Log.i("page1", username);
-                pDialog.dismiss();
+
             } else {
                 Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -30,9 +30,7 @@ import org.json.JSONObject;
 public class UserPass extends AppCompatActivity {
 
     private TextView textView;
-    public TextInputLayout etUsername;
-    public TextInputLayout etPassword;
-    EditText etAnswer;
+    public TextInputLayout etUsername, etPassword, etSecurity;
     private RelativeLayout btmToolbar;
     private Button btnSignUp;
     private ProgressDialog pDialog;
@@ -40,6 +38,7 @@ public class UserPass extends AppCompatActivity {
     public static String username, password, qr, security;
 
     private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson2.php";
+    private static final String url_update = UserLogin.ipBaseAddress + "/updatePassword.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_NRIC = "nric";
@@ -51,6 +50,7 @@ public class UserPass extends AppCompatActivity {
     private static final String TAG_USERNAME = "username";
     private static final String TAG_PASSWORD = "password";
     private static final String TAG_SECURITY = "security";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,7 @@ public class UserPass extends AppCompatActivity {
 
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
-        etAnswer = (EditText)findViewById(R.id.etAnswer);
+        etSecurity = (TextInputLayout)findViewById(R.id.etSecurity);
 
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
@@ -98,40 +98,77 @@ public class UserPass extends AppCompatActivity {
 
                 username = etUsername.getEditText().getText().toString();
                 password = etPassword.getEditText().getText().toString();
-                security = etAnswer.getText().toString();
+                security = etSecurity.getEditText().getText().toString();
 
-                if (username.isEmpty()) {
-                    etUsername.setError(getString(R.string.error_field_required));
+                if (UserDetails.nric != null) {
+                    if (username.isEmpty()) {
+                        etUsername.setError(getString(R.string.error_field_required));
 
-                } else if (password.isEmpty()) {
-                    etPassword.setError(getString(R.string.error_field_required));
+                    } else if (password.isEmpty()) {
+                        etPassword.setError(getString(R.string.error_field_required));
 
-                } else {
+                    } else if (security.isEmpty()) {
+                        etSecurity.setError(getString(R.string.error_field_required));
 
-                    pDialog = new ProgressDialog(UserPass.this);
-                    pDialog.setMessage("Welcome to the bark side..");
-                    pDialog.setIndeterminate(false);
-                    pDialog.setCancelable(true);
-                    pDialog.show();
+                    } else {
 
-                    JSONObject dataJson = new JSONObject();
-                    try {
+                        pDialog = new ProgressDialog(UserPass.this);
+                        pDialog.setMessage("Welcome to the bark side..");
+                        pDialog.setIndeterminate(false);
+                        pDialog.setCancelable(true);
+                        pDialog.show();
 
-                        dataJson.put(TAG_NRIC, UserDetails.nric);
-                        dataJson.put(TAG_NAME, UserDetails.name);
-                        dataJson.put(TAG_MOBILENUMBER, UserDetails.mobilenumber);
-                        dataJson.put(TAG_EMAIL, UserDetails.email);
-                        dataJson.put(TAG_ADDRESS, UserDetails.address);
-                        dataJson.put(TAG_ZIPCODE, UserDetails.zipcode);
-                        dataJson.put(TAG_USERNAME, username);
-                        dataJson.put(TAG_PASSWORD, password);
-                        dataJson.put(TAG_SECURITY, security);
+                        JSONObject dataJson = new JSONObject();
+                        try {
 
-                    } catch (JSONException e) {
+                            dataJson.put(TAG_NRIC, UserDetails.nric);
+                            dataJson.put(TAG_NAME, UserDetails.name);
+                            dataJson.put(TAG_MOBILENUMBER, UserDetails.mobilenumber);
+                            dataJson.put(TAG_EMAIL, UserDetails.email);
+                            dataJson.put(TAG_ADDRESS, UserDetails.address);
+                            dataJson.put(TAG_ZIPCODE, UserDetails.zipcode);
+                            dataJson.put(TAG_USERNAME, username);
+                            dataJson.put(TAG_PASSWORD, password);
+                            dataJson.put(TAG_SECURITY, security);
 
+                        } catch (JSONException e) {
+
+                        }
+                        postData(url_create_owner, dataJson, 1);
                     }
-                    postData(url_create_owner, dataJson, 1);
                 }
+                else {
+
+                    if (username.isEmpty()) {
+                        etUsername.setError(getString(R.string.error_field_required));
+
+                    } else if (password.isEmpty()) {
+                        etPassword.setError(getString(R.string.error_field_required));
+
+                    } else if (security.isEmpty()) {
+                        etSecurity.setError(getString(R.string.error_field_required));
+                    }
+                    else {
+                        pDialog = new ProgressDialog(UserPass.this);
+                        pDialog.setMessage("Welcome to the bark side..");
+                        pDialog.setIndeterminate(false);
+                        pDialog.setCancelable(true);
+                        pDialog.show();
+
+                        JSONObject dataJson = new JSONObject();
+                        try {
+
+                            dataJson.put(TAG_SECURITY, security);
+                            dataJson.put(TAG_USERNAME, username);
+                            dataJson.put(TAG_PASSWORD, password);
+
+                        } catch (JSONException e) {
+
+                        }
+                        postData(url_update, dataJson, 2);
+                    }
+                }
+
             }
         });
     }
@@ -150,6 +187,9 @@ public class UserPass extends AppCompatActivity {
                 switch (option) {
                     case 1:
                         checkResponseCreate_Owner(response);
+                        break;
+                    case 2:
+                        checkResponseUpdate_PW(response);
                         break;
                 }
             }
@@ -173,13 +213,11 @@ public class UserPass extends AppCompatActivity {
                 startActivity(i);
                 // dismiss the dialog once product updated
                 pDialog.dismiss();
-                Log.i("here","here");
             }
 
             else {
                 // product with pid not found
                 pDialog.dismiss();
-                Log.i("here1","here1");
                 Toast.makeText(this, "Username is already in use. Please try again", Toast.LENGTH_SHORT).show();
             }
 
@@ -187,7 +225,32 @@ public class UserPass extends AppCompatActivity {
             e.printStackTrace();
             Log.i("here2","here2");
         }
+    }
 
+    public void checkResponseUpdate_PW(JSONObject response) {
+        Log.i("----Response", response + " ");
+        try {
+            if (response.getInt(TAG_SUCCESS) == 1) {
+
+                finish();
+                Intent i = new Intent(this, UserLogin.class);
+                startActivity(i);
+                // dismiss the dialog once product updated
+                pDialog.dismiss();
+                Log.i("here","here");
+                Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+            }
+
+            else {
+                // product with pid not found
+                pDialog.dismiss();
+                Log.i("here1","here1");
+                Toast.makeText(this, "Username and security question do not match", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

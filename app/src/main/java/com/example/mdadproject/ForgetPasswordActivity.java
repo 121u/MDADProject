@@ -143,8 +143,6 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.i("here2","here2");
         }
-
     }
 }

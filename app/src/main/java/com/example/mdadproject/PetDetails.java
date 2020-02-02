@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Adapters.PetListAdapter;
 import com.example.mdadproject.Models.Upload;
 import com.example.mdadproject.Utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -255,7 +256,7 @@ public class PetDetails extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 pDialog = new ProgressDialog(PetDetails.this);
-                pDialog.setMessage("Deleting owner ...");
+                pDialog.setMessage("Deleting pet ...");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
@@ -273,6 +274,16 @@ public class PetDetails extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                pet = etPetType.getEditText().getText().toString().toUpperCase();
+                name = etPetName.getEditText().getText().toString().toUpperCase();
+                sex = etPetSex.getEditText().getText().toString().toUpperCase();
+                breed = etPetBreed.getEditText().getText().toString().toUpperCase();
+                age = etPetAge.getEditText().getText().toString().toUpperCase();
+                dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
+                height = etPetHeight.getEditText().getText().toString().toUpperCase();
+                weight = etPetWeight.getEditText().getText().toString().toUpperCase();
+                GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
 
                 if (pet.isEmpty()) {
                     etPetType.setError(getString(R.string.error_field_required));
@@ -296,40 +307,13 @@ public class PetDetails extends AppCompatActivity {
                     if (mUploadTask != null && mUploadTask.isInProgress()) {
                         Toast.makeText(PetDetails.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                     } else {
-
-                        pet = etPetType.getEditText().getText().toString().toUpperCase();
-                        name = etPetName.getEditText().getText().toString().toUpperCase();
-                        sex = etPetSex.getEditText().getText().toString().toUpperCase();
-                        breed = etPetBreed.getEditText().getText().toString().toUpperCase();
-                        age = etPetAge.getEditText().getText().toString().toUpperCase();
-                        dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
-                        height = etPetHeight.getEditText().getText().toString().toUpperCase();
-                        weight = etPetWeight.getEditText().getText().toString().toUpperCase();
-                        GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
-
                         uploadFile();
                     }
-
-//                pDialog = new ProgressDialog(PetDetails.this);
-//                pDialog.setMessage("Welcome to the bark side..");
-//                pDialog.setIndeterminate(false);
-//                pDialog.setCancelable(true);
-//                pDialog.show();
-
-//                    Log.i("name", pet);
-//                    Log.i("name", name);
-//                    Log.i("name", sex);
-//                    Log.i("name", breed);
-//                    Log.i("name", age);
-//                    Log.i("name", dateofadoption);
-//                    Log.i("name", height);
-//                    Log.i("name", weight);
-//                    Log.i("name", username);
-//                    Log.i("name", GetImageNameFromEditText);
-//                    Log.i("name", ConvertImage);
-
-//                checkResponseAddPet();
-//                }
+                    pDialog = new ProgressDialog(PetDetails.this);
+                    pDialog.setMessage("Adding new pet");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(true);
+                    pDialog.show();
                 }
             }
         });
@@ -374,12 +358,14 @@ public class PetDetails extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
+                Intent i = new Intent(this, UserPets.class);
+                i.putExtra(TAG_USERNAME, username);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 finish();
-//                Intent i = new Intent(this, AllProductsActivity.class);
-//                startActivity(i);
 
                 // dismiss the dialog once product uupdated
-//                pDialog.dismiss();
+                pDialog.dismiss();
 
             } else {
                 // product with pid not found
@@ -414,7 +400,7 @@ public class PetDetails extends AppCompatActivity {
 //                                    mProgressBar.setProgress(0);
                                 }
                             }, 500);
-                            Toast.makeText(PetDetails.this, "Upload successful", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(PetDetails.this, "Upload successful", Toast.LENGTH_LONG).show();
                             Upload upload = new Upload(etPetImage.getEditText().getText().toString().trim(),
                                     taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
                             imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
@@ -441,6 +427,7 @@ public class PetDetails extends AppCompatActivity {
                                     } catch (JSONException e) {
 
                                     }
+
                                     postData(url_create_pet, dataJson, 4);
                                 }
                             });
@@ -536,7 +523,15 @@ public class PetDetails extends AppCompatActivity {
                 etPetDate.getEditText().setText(dateofadoption);
                 etPetHeight.getEditText().setText(height);
                 etPetWeight.getEditText().setText(weight);
-                Picasso.get().load(image_path).resize(50, 50).centerCrop().into(imgPet);
+                if (image_path.isEmpty()) {
+                    String uri = "drawable/" + pet;
+                    int imageResource = this.getResources().getIdentifier(uri, null, this.getPackageName());
+
+                    imgPet.setImageResource(imageResource);
+                } else {
+                    Picasso.get().load(image_path).resize(50, 50).centerCrop().into(imgPet);
+                }
+//                Picasso.get().load(image_path).resize(50, 50).centerCrop().into(imgPet);
                 etPetImage.getEditText().setText(image_name);
 
                 pDialog.dismiss();

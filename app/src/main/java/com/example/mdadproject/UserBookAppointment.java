@@ -30,6 +30,7 @@ import com.example.mdadproject.Models.Pet;
 import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 //import com.leinardi.android.speeddial.SpeedDialActionItem;
 //import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -75,6 +76,7 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_STATUS = "status";
     private static final String TAG_PID = "pid";
     private static final String TAG_USERNAME = "username";
+    private static final String TAG_PETNAME = "petname";
 
     List<Pet> petList = new ArrayList<>();
     private static final String TAG_PETS = "pets";
@@ -90,7 +92,7 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String name, aid, date, starttime, endttime, status, pid, qr, pet, id;
+    String name, aid, date, starttime, endttime, status, pid, qr, petname, id;
     boolean disabled;
 
     private static String ownFirstName = "";
@@ -273,6 +275,7 @@ public class UserBookAppointment extends AppCompatActivity {
                 int start2 = Integer.parseInt(start1) + 100;
                 endttime = Integer.toString(start2);
                 status = "pending";
+                petname = etAptPet.getEditText().getText().toString();
 //                getSelectedPet();
 
                 Log.i("yeet", date);
@@ -294,11 +297,14 @@ public class UserBookAppointment extends AppCompatActivity {
                     dataJson.put(TAG_ENDTIME, endttime);
                     dataJson.put(TAG_STATUS, status);
                     dataJson.put(TAG_PID, pid);
+                    dataJson.put(TAG_USERNAME, username);
+                    dataJson.put(TAG_PETNAME, petname);
 
                 } catch (JSONException e) {
 
                 }
                 postData(url_create_appointment, dataJson, 1);
+                FirebaseMessaging.getInstance().subscribeToTopic(date + username + petname);
 
             }
         });
@@ -310,7 +316,7 @@ public class UserBookAppointment extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "dd-MM-yyyy"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
 
         etAptDate.getEditText().setText(sdf.format(myCalendar.getTime()));

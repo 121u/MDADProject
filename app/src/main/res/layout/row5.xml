@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="64dp"
     android:background="@drawable/roundcorners">
 
     <TextView
@@ -15,41 +15,29 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/txtName"
+        android:id="@+id/txtOwnerPet"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="28dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="0dp"
         android:fontFamily="@font/sourcecodepro_semibold"
-        android:text="Pet Name"
+        android:gravity="bottom"
+        android:text="Owner + Pet"
         android:textColor="#000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/imgPet"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtBreed"
+        android:id="@+id/txtTime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_height="20dp"
         android:fontFamily="@font/sourcecodepro_regular"
-        android:text="Pet Breed"
+        android:text="Time"
         android:textColor="#808080"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/txtName" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imgPet"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:src="@mipmap/ic_launcher"
-        app:civ_border_color="@android:color/white"
-        app:civ_border_width="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="@+id/txtOwnerPet"
+        app:layout_constraintTop_toBottomOf="@id/txtOwnerPet" />
 
     <ImageView
         android:id="@+id/imgDots"

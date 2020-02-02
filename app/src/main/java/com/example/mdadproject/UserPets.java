@@ -9,7 +9,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,8 +29,11 @@ import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Adapters.PetListAdapter;
 import com.example.mdadproject.Models.Pet;
 import com.example.mdadproject.Utils.Constants;
+import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -36,6 +42,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserPets extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -48,6 +56,9 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
     FloatingActionButton fab;
     private DrawerLayout drawer;
     private TextView txtGreeting;
+
+    private RequestQueue mRequestQue;
+    private String URL = "https://fcm.googleapis.com/fcm/send";
 
     public static String url_pet = UserLogin.ipBaseAddress + "/get_all_petsJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -69,6 +80,9 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_pets);
+
+        mRequestQue = Volley.newRequestQueue(this);
+        FirebaseMessaging.getInstance().subscribeToTopic(SaveSharedPreference.getUserName(UserPets.this));
 
         Log.i("url", url_pet);
 
@@ -199,7 +213,6 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
             finish();
             startActivity(intent);
         }
-
     }
 
     public boolean onSupportNavigateUp() {
@@ -256,6 +269,8 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 }
 
                 PetListAdapter myCustomAdapter = new PetListAdapter(UserPets.this, petsList);
+                myCustomAdapter.notifyDataSetChanged();
+
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
             } else {
@@ -291,8 +306,13 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
+//                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.remove(TAG_USERNAME);
+                SaveSharedPreference.clearUserName(UserPets.this);
                 intent = new Intent(getApplicationContext(), UserLogin.class);
                 finish();
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(username);
                 break;
         }
         startActivityForResult(intent, 100);

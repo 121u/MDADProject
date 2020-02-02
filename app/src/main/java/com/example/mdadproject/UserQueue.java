@@ -21,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Adapters.QueueListAdapter;
-import com.example.mdadproject.Models.Appointment;
 import com.example.mdadproject.Models.Queue;
 import com.example.mdadproject.Utils.Constants;
 
@@ -122,7 +121,6 @@ public class UserQueue extends AppCompatActivity {
                     JSONObject c = queues.getJSONObject(i);
 
                     Queue q = new Queue();
-//                    Pet p = new Pet();
 
                     queueId = c.getString(TAG_QUEUE_ID).toLowerCase();
                     queueNo = c.getString(TAG_QUEUE_NO).toLowerCase();
@@ -152,7 +150,7 @@ public class UserQueue extends AppCompatActivity {
                     }
                 }
 
-                QueueListAdapter myCustomAdapter = new QueueListAdapter(UserQueue.this, todayQueueList);
+                QueueListAdapter myCustomAdapter = new QueueListAdapter(UserQueue.this, queueList);
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
             } else {
@@ -168,6 +166,10 @@ public class UserQueue extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dot_menu, menu);
+        menu.findItem(R.id.menu_apt).setVisible(false);
+        menu.findItem(R.id.menu_details).setVisible(false);
+        menu.findItem(R.id.menu_notify).setVisible(false);
+        menu.findItem(R.id.menu_profile).setVisible(false);
         return true;
     }
 

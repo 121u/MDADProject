@@ -4,6 +4,28 @@
     <item
         android:id="@+id/reset_queue"
         android:orderInCategory="100"
-        android:title="reset queue"
+        android:title="Reset queue"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_profile"
+        android:orderInCategory="100"
+        android:title="Owner Profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_apt"
+        android:orderInCategory="100"
+        android:title="Pet Appointments"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_details"
+        android:orderInCategory="100"
+        android:title="Pet Details"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_notify"
+        android:orderInCategory="100"
+        android:title="Notify"
         app:showAsAction="never" />
 </menu>
