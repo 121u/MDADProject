@@ -73,7 +73,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                 else {
 
                     pDialog = new ProgressDialog(ForgetPasswordActivity.this);
-                    pDialog.setMessage("Welcome to the bark side..");
+                    pDialog.setMessage("Updating password");
                     pDialog.setIndeterminate(false);
                     pDialog.setCancelable(true);
                     pDialog.show();
@@ -131,7 +131,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                 // dismiss the dialog once product updated
                 pDialog.dismiss();
                 Log.i("here","here");
-                Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
             }
 
             else {
