@@ -172,6 +172,7 @@ public class UserPass extends AppCompatActivity {
                 Intent i = new Intent(this, UserLogin.class);
                 startActivity(i);
                 // dismiss the dialog once product updated
+
                 pDialog.dismiss();
                 Log.i("here","here");
             }
