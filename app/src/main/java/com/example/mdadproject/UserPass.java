@@ -85,11 +85,14 @@ public class UserPass extends AppCompatActivity {
             btmToolbar.setVisibility(View.GONE);
             etUsername.getEditText().setText(qr);
             etPassword.getEditText().setText(password);
-
-
-        } else {
+        } else if (UserDetails.nric != null) {
             getSupportActionBar().setTitle("Register");
             btmToolbar.setVisibility(View.VISIBLE);
+        }
+
+        else {
+            getSupportActionBar().setTitle("Change Password");
+            btnSignUp.setText("Confirm");
         }
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
