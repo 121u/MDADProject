@@ -194,6 +194,8 @@ public class PetDetails extends AppCompatActivity {
             postData(url_get_pet, dataJson, 1);
         } else if (username != null && pid != null) {
 
+            btnNext.setVisibility(View.GONE);
+
 //            btmToolbar.setVisibility(View.GONE);
 //            etPetType.getEditText().setEnabled(false);
 //            etPetName.getEditText().setEnabled(false);

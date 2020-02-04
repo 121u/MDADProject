@@ -86,14 +86,15 @@ public class UserPass extends AppCompatActivity {
             etUsername.getEditText().setText(qr);
             etPassword.getEditText().setText(password);
 
-        } else if (UserDetails.nric != null) {
-            getSupportActionBar().setTitle("Register");
-            btmToolbar.setVisibility(View.VISIBLE);
+        } else if (Constants.PW_CHANGE.equals(true)) {
+            getSupportActionBar().setTitle("Change Password");
+            btnSignUp.setText("Confirm");
         }
 
         else {
-            getSupportActionBar().setTitle("Change Password");
-            btnSignUp.setText("Confirm");
+
+            getSupportActionBar().setTitle("Register");
+            btmToolbar.setVisibility(View.VISIBLE);
         }
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +105,7 @@ public class UserPass extends AppCompatActivity {
                 password = etPassword.getEditText().getText().toString();
                 security = etSecurity.getEditText().getText().toString();
 
-                if (UserDetails.nric != null) {
+                if (Constants.PW_CHANGE.equals(true)) {
                     if (username.isEmpty()) {
                         etUsername.setError(getString(R.string.error_field_required));
 
@@ -257,5 +258,9 @@ public class UserPass extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Constants.PW_CHANGE = false;
+    }
 }

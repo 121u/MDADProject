@@ -456,7 +456,7 @@ public class UserBookAppointment extends AppCompatActivity {
                     // Storing each json item in variable
                     String id = c.getString(TAG_ID);
                     String date = c.getString(TAG_DATE);
-                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                     try {
                         Date parsedDate = simpleDateFormat2.parse(date);
                         simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");

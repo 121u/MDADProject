@@ -89,6 +89,7 @@ public class UserLogin extends AppCompatActivity {
         btnForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Constants.PW_CHANGE = true;
                 Intent i = new Intent(v.getContext(), UserPass.class);
                 startActivity(i);
             }
