@@ -93,9 +93,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
     JSONArray pets = null;
     String name, aid, date, starttime, endttime, status, pid, qr, petname, id;
-    boolean disabled;
 
-    private static String ownFirstName = "";
     String[] timeOptions = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
     AutoCompleteTextView editTextFilledExposedDropdown2;
     ArrayAdapter<Pet> adapter2;
@@ -167,7 +165,12 @@ public class UserBookAppointment extends AppCompatActivity {
             btnDelete.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
 
-        } else {
+        } else if (aid != null) {
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+            btnNext.setVisibility(View.GONE);
+        }
+        else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
         }

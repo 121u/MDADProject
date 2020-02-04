@@ -97,13 +97,13 @@ public class PetAppointments extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-            listView.setEnabled(true);
-
-        } else if (username != null) {
-            listView.setEnabled(false);
-
-        }
+//        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
+//            listView.setEnabled(true);
+//
+//        } else if (username != null) {
+//            listView.setEnabled(false);
+//
+//        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

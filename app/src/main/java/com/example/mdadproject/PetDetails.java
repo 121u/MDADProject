@@ -123,7 +123,7 @@ public class PetDetails extends AppCompatActivity {
 
     private StorageTask mUploadTask;
 
-    private String imageUrl;
+    String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,17 +194,17 @@ public class PetDetails extends AppCompatActivity {
             postData(url_get_pet, dataJson, 1);
         } else if (username != null && pid != null) {
 
-            btmToolbar.setVisibility(View.GONE);
-            etPetType.getEditText().setEnabled(false);
-            etPetName.getEditText().setEnabled(false);
-            etPetSex.getEditText().setEnabled(false);
-            etPetBreed.getEditText().setEnabled(false);
-            etPetDate.getEditText().setEnabled(false);
-            etPetAge.getEditText().setEnabled(false);
-            etPetHeight.getEditText().setEnabled(false);
-            etPetWeight.getEditText().setEnabled(false);
-            etPetImage.getEditText().setEnabled(false);
-            etPetImage.setEndIconVisible(false);
+//            btmToolbar.setVisibility(View.GONE);
+//            etPetType.getEditText().setEnabled(false);
+//            etPetName.getEditText().setEnabled(false);
+//            etPetSex.getEditText().setEnabled(false);
+//            etPetBreed.getEditText().setEnabled(false);
+//            etPetDate.getEditText().setEnabled(false);
+//            etPetAge.getEditText().setEnabled(false);
+//            etPetHeight.getEditText().setEnabled(false);
+//            etPetWeight.getEditText().setEnabled(false);
+//            etPetImage.getEditText().setEnabled(false);
+//            etPetImage.setEndIconVisible(false);
 
             postData(url_get_pet, dataJson, 1);
         } else {
@@ -212,6 +212,7 @@ public class PetDetails extends AppCompatActivity {
             btnDelete.setVisibility(View.GONE);
             pDialog.dismiss();
         }
+
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,7 +243,7 @@ public class PetDetails extends AppCompatActivity {
                     dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
                     dataJson.put(TAG_HEIGHT, height);
                     dataJson.put(TAG_WEIGHT, weight);
-                    dataJson.put(TAG_USERNAME, qr);
+                    dataJson.put(TAG_USERNAME, username);
 
                 } catch (JSONException e) {
                 }
@@ -570,7 +571,7 @@ public class PetDetails extends AppCompatActivity {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
 
-                JSONArray petObj = response.getJSONArray(TAG_PET);
+//                JSONArray petObj = response.getJSONArray(TAG_PET);
                 Intent i = getIntent();
                 // send result code 100 to notify about product update
                 setResult(100, i);

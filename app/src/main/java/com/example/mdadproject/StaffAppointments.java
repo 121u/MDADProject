@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Adapters.AptListAdapter;
 import com.example.mdadproject.Adapters.StaffAptListAdapter;
 import com.example.mdadproject.Models.Appointment;
+import com.example.mdadproject.Utils.Constants;
 import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -62,7 +63,6 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
     private RequestQueue mRequestQue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
 
-
     private static final String TAG_USERNAME = "username";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
@@ -85,6 +85,9 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_appointments);
         mRequestQue = Volley.newRequestQueue(this);
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra(TAG_USERNAME);
 
         pDialog = new ProgressDialog(StaffAppointments.this);
         pDialog.setMessage("loading appointments ...");
@@ -260,6 +263,7 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
+                Constants.IS_STAFF = false;
                 intent = new Intent(getApplicationContext(), UserLogin.class);
                 SaveSharedPreference.clearUserName(StaffAppointments.this);
                 finish();

@@ -4,8 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#00F5BB</color>
     <color name="disabled">#d3d3d3</color>
-    <color name="disabled_background_color">#10181818</color>
     <color name="disabled_text_color">#aaa</color>
-    <drawable name="unselected_colour">#00F5BB</drawable>
-    <drawable name="selected_colour">#49b89e</drawable>
 </resources>

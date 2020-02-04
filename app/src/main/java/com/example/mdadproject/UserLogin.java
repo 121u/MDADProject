@@ -38,10 +38,8 @@ public class UserLogin extends AppCompatActivity {
     private Button btnLogin, btnForgetPassword;
     private TextView btnSignUp;
     private ProgressDialog pDialog;
-    // url to update product
 
     private static final String url_login = ipBaseAddress + "/login.php";
-    // JSON Node names
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_USERNAME = "username";
@@ -54,22 +52,19 @@ public class UserLogin extends AppCompatActivity {
 
         if (SaveSharedPreference.getUserName(UserLogin.this).length() == 0) {
             // call Login Activity
-//            Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
-//            intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
-//            startActivityForResult(intent, 100);
-//            finish();
+
         } else {
             // Stay at the current activity.
             if (SaveSharedPreference.getUserName(UserLogin.this).equals("staff")) {
                 Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
                 intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
-                startActivityForResult(intent, 100);
+                startActivity(intent);
                 finish();
             }
             else {
                 Intent intent = new Intent(getApplicationContext(), UserPets.class);
                 intent.putExtra(TAG_USERNAME, SaveSharedPreference.getUserName(UserLogin.this));
-                startActivityForResult(intent, 100);
+                startActivity(intent);
                 finish();
             }
         }
@@ -80,6 +75,7 @@ public class UserLogin extends AppCompatActivity {
         btnForgetPassword = (Button)findViewById(R.id.btnForgetPassword);
         btnSignUp = (TextView) findViewById(R.id.btnSignUp);
 
+        //hide toolbar
         getSupportActionBar().hide();
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -103,22 +99,24 @@ public class UserLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //hide keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                 String pw = etPassword.getEditText().getText().toString();
                 String uName = etUsername.getEditText().getText().toString();
 
-                if (pw.isEmpty()) {
-                    etPassword.setErrorEnabled(false);
-                    etPassword.setError(getString(R.string.error_field_required));
-                } else if (uName.isEmpty()) {
+                if (uName.isEmpty()) {
                     etUsername.setErrorEnabled(false);
                     etUsername.setError(getString(R.string.error_field_required));
 
+                } else if (uName.isEmpty()) {
+                    etPassword.setErrorEnabled(false);
+                    etPassword.setError(getString(R.string.error_field_required));
+
                 } else {
                     pDialog = new ProgressDialog(UserLogin.this);
-                    pDialog.setMessage("This purr-obably won't take long..");
+                    pDialog.setMessage("Logging in");
                     pDialog.setIndeterminate(false);
                     pDialog.setCancelable(true);
                     pDialog.show();
@@ -132,7 +130,7 @@ public class UserLogin extends AppCompatActivity {
                     }
 //                    FirebaseMessaging.getInstance().subscribeToTopic("" + uName);
                     postData(url_login, dataJson, 1);
-                    SaveSharedPreference.setUserName(UserLogin.this, uName);
+
                 }
             }
         });
@@ -140,16 +138,13 @@ public class UserLogin extends AppCompatActivity {
 
     public void postData(String url, final JSONObject json, final int option) {
 
-
         Log.i("=======", url);
-
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest json_obj_req = new JsonObjectRequest(
                 Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
 
                 switch (option) {
                     case 1:
@@ -164,9 +159,6 @@ public class UserLogin extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-//                String alert_message;
-//                alert_message = error.toString();
-//                showAlertDialogue("Error", alert_message);
             }
 
         });
@@ -178,24 +170,28 @@ public class UserLogin extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
                 String username = etUsername.getEditText().getText().toString();
+
+                //save username to sharedPref
+                SaveSharedPreference.setUserName(UserLogin.this, username);
+
                 if (username.equals("staff")) {
-                    Constants.IS_STAFF = "yes";
+                    Constants.IS_STAFF = true;
                     Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
                     intent.putExtra(TAG_USERNAME, username);
-                    startActivityForResult(intent, 100);
+                    startActivity(intent);
                     finish();
                     pDialog.dismiss();
+
                 } else {
                     Intent intent = new Intent(getApplicationContext(), UserPets.class);
                     intent.putExtra(TAG_USERNAME, username);
-                    startActivityForResult(intent, 100);
-                    Log.i("page1", username);
+                    startActivity(intent);
                     finish();
                     pDialog.dismiss();
                 }
 
             } else {
-                Toast.makeText(this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Wrong Password/Username", Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
             }
         } catch (JSONException e) {

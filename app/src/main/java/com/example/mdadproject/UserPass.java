@@ -85,6 +85,7 @@ public class UserPass extends AppCompatActivity {
             btmToolbar.setVisibility(View.GONE);
             etUsername.getEditText().setText(qr);
             etPassword.getEditText().setText(password);
+
         } else if (UserDetails.nric != null) {
             getSupportActionBar().setTitle("Register");
             btmToolbar.setVisibility(View.VISIBLE);
@@ -227,7 +228,6 @@ public class UserPass extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.i("here2","here2");
         }
     }
 

@@ -27,6 +27,7 @@ import com.example.mdadproject.R;
 import com.example.mdadproject.StaffAppointments;
 import com.example.mdadproject.UserDetails;
 import com.example.mdadproject.UserPets;
+import com.example.mdadproject.Utils.SaveSharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -101,7 +102,8 @@ public class StaffAptListAdapter extends BaseAdapter {
                                             if (mContext instanceof StaffAppointments) {
                                                 Intent in = new Intent(mContext, UserDetails.class);
                                                 in.putExtra("pid", tempAppointment.getPid());
-                                                in.putExtra("username", tempAppointment.getUsername());
+                                                in.putExtra("owner_username", tempAppointment.getUsername());
+                                                in.putExtra("username", SaveSharedPreference.getUserName(mContext.getApplicationContext()));
 //                                                in.putExtra("qr", ((UserPets) mContext).qr);
                                                 mContext.startActivity(in);
                                             }

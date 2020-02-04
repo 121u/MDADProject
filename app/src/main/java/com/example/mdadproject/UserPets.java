@@ -82,12 +82,14 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_user_pets);
 
         mRequestQue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic(SaveSharedPreference.getUserName(UserPets.this));
+//        FirebaseMessaging.getInstance().subscribeToTopic(SaveSharedPreference.getUserName(UserPets.this));
+
 
         Log.i("url", url_pet);
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
+        FirebaseMessaging.getInstance().subscribeToTopic(username);
 
         Intent intent2 = getIntent();
         qr = intent2.getStringExtra("qr");
@@ -309,6 +311,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 //                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //                SharedPreferences.Editor editor = settings.edit();
 //                editor.remove(TAG_USERNAME);
+                Constants.IS_STAFF = false;
                 SaveSharedPreference.clearUserName(UserPets.this);
                 intent = new Intent(getApplicationContext(), UserLogin.class);
                 finish();
