@@ -113,7 +113,7 @@ public class PetDetails extends AppCompatActivity {
     String timeStamp;
     String imageFileName;
     String GetImageNameFromEditText;
-    private int GALLERY = 1, CAMERA = 2;
+    boolean addOrUpdate;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUri;
@@ -227,6 +227,7 @@ public class PetDetails extends AppCompatActivity {
                 dateofadoption = etPetDate.getEditText().getText().toString().toUpperCase();
                 height = etPetHeight.getEditText().getText().toString().toUpperCase();
                 weight = etPetWeight.getEditText().getText().toString().toUpperCase();
+                GetImageNameFromEditText = etPetImage.getEditText().getText().toString();
 
                 pDialog = new ProgressDialog(PetDetails.this);
                 pDialog.setMessage("Saving details ...");
@@ -234,22 +235,24 @@ public class PetDetails extends AppCompatActivity {
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-                JSONObject dataJson = new JSONObject();
-                try {
-                    dataJson.put(TAG_PID, pid);
-                    dataJson.put(TAG_PET, pet);
-                    dataJson.put(TAG_NAME, name);
-                    dataJson.put(TAG_SEX, sex);
-                    dataJson.put(TAG_BREED, breed);
-                    dataJson.put(TAG_AGE, age);
-                    dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
-                    dataJson.put(TAG_HEIGHT, height);
-                    dataJson.put(TAG_WEIGHT, weight);
-                    dataJson.put(TAG_USERNAME, username);
-
-                } catch (JSONException e) {
-                }
-                postData(url_update_pets, dataJson, 2);
+//                JSONObject dataJson = new JSONObject();
+//                try {
+//                    dataJson.put(TAG_PID, pid);
+//                    dataJson.put(TAG_PET, pet);
+//                    dataJson.put(TAG_NAME, name);
+//                    dataJson.put(TAG_SEX, sex);
+//                    dataJson.put(TAG_BREED, breed);
+//                    dataJson.put(TAG_AGE, age);
+//                    dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
+//                    dataJson.put(TAG_HEIGHT, height);
+//                    dataJson.put(TAG_WEIGHT, weight);
+//                    dataJson.put(TAG_USERNAME, username);
+//
+//                } catch (JSONException e) {
+//                }
+//                postData(url_update_pets, dataJson, 2);
+                addOrUpdate = false;
+                uploadFile();
 
             }
         });
@@ -310,6 +313,7 @@ public class PetDetails extends AppCompatActivity {
                     if (mUploadTask != null && mUploadTask.isInProgress()) {
                         Toast.makeText(PetDetails.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                     } else {
+                        addOrUpdate = true;
                         uploadFile();
                     }
                     pDialog = new ProgressDialog(PetDetails.this);
@@ -413,25 +417,30 @@ public class PetDetails extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUrl = uri;
-                                    JSONObject dataJson = new JSONObject();
-                                    try {
-                                        dataJson.put(TAG_NAME, name);
-                                        dataJson.put(TAG_PET, pet);
-                                        dataJson.put(TAG_SEX, sex);
-                                        dataJson.put(TAG_BREED, breed);
-                                        dataJson.put(TAG_AGE, age);
-                                        dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
-                                        dataJson.put(TAG_HEIGHT, height);
-                                        dataJson.put(TAG_WEIGHT, weight);
-                                        dataJson.put(TAG_USERNAME, username);
-                                        dataJson.put(TAG_IMAGEPATH, downloadUrl.toString());
-                                        dataJson.put(TAG_IMAGENAME, GetImageNameFromEditText);
 
-                                    } catch (JSONException e) {
+                                    if (addOrUpdate==true) {
+                                        JSONObject dataJson = new JSONObject();
+                                        try {
+                                            dataJson.put(TAG_NAME, name);
+                                            dataJson.put(TAG_PET, pet);
+                                            dataJson.put(TAG_SEX, sex);
+                                            dataJson.put(TAG_BREED, breed);
+                                            dataJson.put(TAG_AGE, age);
+                                            dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
+                                            dataJson.put(TAG_HEIGHT, height);
+                                            dataJson.put(TAG_WEIGHT, weight);
+                                            dataJson.put(TAG_USERNAME, username);
+                                            dataJson.put(TAG_IMAGEPATH, downloadUrl.toString());
+                                            dataJson.put(TAG_IMAGENAME, GetImageNameFromEditText);
 
+                                        } catch (JSONException e) {
+
+                                        }
+                                        postData(url_create_pet, dataJson, 4);
                                     }
-
-                                    postData(url_create_pet, dataJson, 4);
+                                    else {
+                                        updatePet();
+                                    }
                                 }
                             });
 
@@ -451,8 +460,30 @@ public class PetDetails extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+              updatePet();
         }
+    }
+
+    private void updatePet() {
+        JSONObject dataJson = new JSONObject();
+        try {
+            dataJson.put(TAG_PID, pid);
+            dataJson.put(TAG_PET, pet);
+            dataJson.put(TAG_NAME, name);
+            dataJson.put(TAG_SEX, sex);
+            dataJson.put(TAG_BREED, breed);
+            dataJson.put(TAG_AGE, age);
+            dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
+            dataJson.put(TAG_HEIGHT, height);
+            dataJson.put(TAG_WEIGHT, weight);
+            dataJson.put(TAG_USERNAME, username);
+            dataJson.put(TAG_IMAGEPATH, image_path);
+            dataJson.put(TAG_IMAGENAME, GetImageNameFromEditText);
+
+        } catch (JSONException e) {
+        }
+        postData(url_update_pets, dataJson, 2);
     }
 
     private void openFileChooser() {
@@ -570,14 +601,15 @@ public class PetDetails extends AppCompatActivity {
 
     public void checkResponseEditPet(JSONObject response) {
         try {
-            pDialog.dismiss();
-            if (response.getInt("success") == 1) {
 
+            if (response.getInt("success") == 1) {
+                pDialog.dismiss();
 //                JSONArray petObj = response.getJSONArray(TAG_PET);
                 Intent i = getIntent();
                 // send result code 100 to notify about product update
                 setResult(100, i);
                 finish();
+                Toast.makeText(PetDetails.this, "Details successfully updated!", Toast.LENGTH_SHORT).show();
 //                JSONObject pets = petObj.getJSONObject(0);
 //                pet = pets.getString(TAG_PET);
 //                name = pets.getString(TAG_NAME);
@@ -609,40 +641,6 @@ public class PetDetails extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
 
         etPetDate.getEditText().setText(sdf.format(myCalendar.getTime()));
-    }
-
-    private void showPictureDialog() {
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-        pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {
-                "Photo Gallery",
-                "Camera"};
-        pictureDialog.setItems(pictureDialogItems,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                choosePhotoFromGallary();
-                                break;
-                            case 1:
-                                takePhotoFromCamera();
-                                break;
-                        }
-                    }
-                });
-        pictureDialog.show();
-    }
-
-    public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA);
     }
 
     @Override

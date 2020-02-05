@@ -114,6 +114,36 @@ public class UserPass extends AppCompatActivity {
 
                     } else if (security.isEmpty()) {
                         etSecurity.setError(getString(R.string.error_field_required));
+                    }
+                    else {
+                        pDialog = new ProgressDialog(UserPass.this);
+                        pDialog.setMessage("Welcome to the bark side..");
+                        pDialog.setIndeterminate(false);
+                        pDialog.setCancelable(true);
+                        pDialog.show();
+
+                        JSONObject dataJson = new JSONObject();
+                        try {
+
+                            dataJson.put(TAG_SECURITY, security);
+                            dataJson.put(TAG_USERNAME, username);
+                            dataJson.put(TAG_PASSWORD, password);
+
+                        } catch (JSONException e) {
+
+                        }
+                        postData(url_update, dataJson, 2);
+                    }
+                }
+                else {
+                    if (username.isEmpty()) {
+                        etUsername.setError(getString(R.string.error_field_required));
+
+                    } else if (password.isEmpty()) {
+                        etPassword.setError(getString(R.string.error_field_required));
+
+                    } else if (security.isEmpty()) {
+                        etSecurity.setError(getString(R.string.error_field_required));
 
                     } else {
 
@@ -141,37 +171,7 @@ public class UserPass extends AppCompatActivity {
                         }
                         postData(url_create_owner, dataJson, 1);
                     }
-                }
-                else {
 
-                    if (username.isEmpty()) {
-                        etUsername.setError(getString(R.string.error_field_required));
-
-                    } else if (password.isEmpty()) {
-                        etPassword.setError(getString(R.string.error_field_required));
-
-                    } else if (security.isEmpty()) {
-                        etSecurity.setError(getString(R.string.error_field_required));
-                    }
-                    else {
-                        pDialog = new ProgressDialog(UserPass.this);
-                        pDialog.setMessage("Welcome to the bark side..");
-                        pDialog.setIndeterminate(false);
-                        pDialog.setCancelable(true);
-                        pDialog.show();
-
-                        JSONObject dataJson = new JSONObject();
-                        try {
-
-                            dataJson.put(TAG_SECURITY, security);
-                            dataJson.put(TAG_USERNAME, username);
-                            dataJson.put(TAG_PASSWORD, password);
-
-                        } catch (JSONException e) {
-
-                        }
-                        postData(url_update, dataJson, 2);
-                    }
                 }
 
             }

@@ -3,11 +3,13 @@ package com.example.mdadproject.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.mdadproject.Models.Pet;
@@ -63,35 +65,54 @@ public class QueueListAdapter extends BaseAdapter {
         TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
         TextView tvDateTime = (TextView)convertView.findViewById(R.id.txtDateTime);
         TextView tvQueueNo = (TextView)convertView.findViewById(R.id.txtQueueNo);
-        Button btnDetails = (Button)convertView.findViewById(R.id.btnDetails);
-        Button btnAppointments = (Button)convertView.findViewById(R.id.btnAppointments);
+        ImageView imgDots = (ImageView) convertView.findViewById(R.id.imgDots);
 
         tvId.setText(tempQ.getQueue_id());
         tvName.setText(tempQ.getUsername());
         tvDateTime.setText(tempQ.getQueue_date() + " - " + tempQ.getQueue_time());
         tvQueueNo.setText(tempQ.getQueue_no());
 
-        btnDetails.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof UserQueue) {
-                    Intent in = new Intent(mContext, UserDetails.class);
-                    in.putExtra("username", tempQ.getUsername());
-                    mContext.startActivity(in);
-                }
-            }
-        });
+        try {
+            imgDots.setOnClickListener(new View.OnClickListener() {
 
-        btnAppointments.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof UserQueue) {
-                    Intent in = new Intent(mContext, UserPets.class);
-                    in.putExtra("username", tempQ.getUsername());
-                    mContext.startActivity(in);
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.imgDots:
+                            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
+                            popup.getMenuInflater().inflate(R.menu.dot_menu, popup.getMenu());
+                            popup.getMenu().findItem(R.id.reset_queue).setVisible(false);
+                            popup.getMenu().findItem(R.id.menu_notify).setVisible(false);
+                            popup.getMenu().findItem(R.id.menu_details).setVisible(false);
+                            popup.getMenu().findItem(R.id.menu_apt).setVisible(false);
+                            popup.show();
+                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    switch (item.getItemId()) {
+                                        case R.id.menu_profile:
+                                            if (mContext instanceof UserQueue) {
+                                                Intent in = new Intent(mContext, UserDetails.class);
+                                                in.putExtra("username", "staff");
+                                                in.putExtra("owner_username", tempQ.getUsername());
+                                                mContext.startActivity(in);
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            });
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }

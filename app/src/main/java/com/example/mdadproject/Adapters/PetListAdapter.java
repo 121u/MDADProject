@@ -83,33 +83,6 @@ public class PetListAdapter extends BaseAdapter {
         tvName.setText(tempPet.getName());
         tvBreed.setText(tempPet.getBreed());
 
-//        btnDetails.setOnClickListener(new Button.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mContext instanceof UserPets) {
-//                    Intent in = new Intent(mContext, PetDetails.class);
-//                    in.putExtra("pid", tempPet.getPid());
-//                    in.putExtra("username", tempPet.getUsername());
-//                    in.putExtra("qr", ((UserPets) mContext).qr);
-//                    mContext.startActivity(in);
-//                }
-//            }
-//        });
-//
-//        btnAppointments.setOnClickListener(new Button.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mContext instanceof UserPets) {
-//                    Intent in = new Intent(mContext, PetAppointments.class);
-//                    in.putExtra("pid", tempPet.getPid());
-//                    in.putExtra("username", tempPet.getUsername());
-//                    in.putExtra("qr", ((UserPets) mContext).qr);
-//                    in.putExtra("name", tempPet.getName());
-//                    mContext.startActivity(in);
-//                }
-//            }
-//        });
-
         try {
             imgDots.setOnClickListener(new View.OnClickListener() {
 

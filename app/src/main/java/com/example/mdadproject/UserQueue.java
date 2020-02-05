@@ -150,7 +150,7 @@ public class UserQueue extends AppCompatActivity {
                     }
                 }
 
-                QueueListAdapter myCustomAdapter = new QueueListAdapter(UserQueue.this, queueList);
+                QueueListAdapter myCustomAdapter = new QueueListAdapter(UserQueue.this, todayQueueList);
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
             } else {
@@ -179,6 +179,7 @@ public class UserQueue extends AppCompatActivity {
         if (id == R.id.reset_queue) {
             Constants.qNum = 0;
             Toast.makeText(this, "Queue number has been reset to " + Constants.qNum, Toast.LENGTH_SHORT).show();
+            currentQueueNo.setText("Latest queue number is " + Constants.qNum);
         }
         return super.onOptionsItemSelected(item);
     }

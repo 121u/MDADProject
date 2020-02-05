@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +28,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -37,6 +40,8 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     static final Integer CAMERA = 0x1;
     String username, qr;
     int qno = 0;
+    private RequestQueue mRequestQue;
+    private String URL = "https://fcm.googleapis.com/fcm/send";
 
     private static final String url_queue = UserLogin.ipBaseAddress + "/create_queueNoJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -50,6 +55,8 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_qr_scanner);
+
+        mRequestQue = Volley.newRequestQueue(this);
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
@@ -138,10 +145,13 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
                 finish();
+                Toast.makeText(this, qr + " has been added to queue!", Toast.LENGTH_SHORT).show();
+                sendNotification();
 //                Intent i = new Intent(this, UserLogin.class);
 //                startActivity(i);
             } else {
                 // product with pid not found
+                Toast.makeText(this, "This owner is already here!", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -171,8 +181,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         }
         postData(url_queue, dataJson, 1);
 
-        Toast.makeText(this, "Contents = " + result.getText() +
-                ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Contents = " + result.getText() + ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
         Intent i = new Intent(this,UserQueue.class);
         i.putExtra("qr",qr);
@@ -189,5 +198,53 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
             }
         }, 3000);
 
+    }
+
+    private void sendNotification() {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("to","/topics/"+ qr);
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title","Welcome to MDAD Vet!");
+            notificationObj.put("body","Your queue number is " + Constants.qNum + "!");
+
+//            JSONObject extraData = new JSONObject();
+//            extraData.put("brandId","puma");
+//            extraData.put("category","Shoes");
+
+            json.put("notification",notificationObj);
+//            json.put("data",extraData);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
+                    json,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.d("MUR", "onResponse: ");
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MUR", "onError: "+error.networkResponse);
+                }
+            }
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String,String> header = new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyDVWUL1u4Ma98vKGNtlrO4d4_9QHlPTSq8");
+                    return header;
+                }
+            };
+            mRequestQue.add(request);
+        }
+        catch (JSONException e)
+
+        {
+            e.printStackTrace();
+        }
     }
 }

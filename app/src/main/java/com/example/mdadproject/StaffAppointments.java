@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
@@ -78,7 +79,9 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
     private TextInputLayout etDate;
     private TextInputEditText etDateIn;
     String username, chosenDate, newFormattedDate, startime, endtime, status, pid, petname;
-    final Calendar myCalendar = Calendar.getInstance();
+
+    TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
+    final Calendar myCalendar = Calendar.getInstance(timeZone1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +126,17 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
         btnNotifyAll = (Button) findViewById(R.id.btnNotifyAll);
 
         if (etDate.getEditText().getText().toString().trim().isEmpty()) {
-            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-            etDate.getEditText().setText(currentDate);
-            txtChosenDate.setText("Appointments for: " + currentDate);
+            String myFormat = "yyyy-MM-dd"; //In which you need put here
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+
+            sdf.setTimeZone(timeZone1);
+            chosenDate = sdf.format(myCalendar.getTime());
+            etDate.getEditText().setText(chosenDate);
+            txtChosenDate.setText("Appointments for: " + chosenDate);
             AppointmentList.clear();
             JSONObject dataJson = new JSONObject();
             try {
-                dataJson.put(TAG_DATE, currentDate);
+                dataJson.put(TAG_DATE, chosenDate);
             } catch (JSONException e) { }
             postData(url_appointment, dataJson, 1);
         }
@@ -162,7 +169,9 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
 
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+        TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
+        sdf.setTimeZone(timeZone1);
         chosenDate = sdf.format(myCalendar.getTime());
         etDate.getEditText().setText(chosenDate);
         txtChosenDate.setText("Appointments for: " + chosenDate);

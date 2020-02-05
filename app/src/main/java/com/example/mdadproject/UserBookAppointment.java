@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -325,12 +326,6 @@ public class UserBookAppointment extends AppCompatActivity {
         etAptDate.getEditText().setText(sdf.format(myCalendar.getTime()));
     }
 
-    public void getSelectedPet() {
-//        Pet pet = (Pet) spinner2.getSelectedItem();
-        Pet pet = (Pet) editTextFilledExposedDropdown2.getOnItemSelectedListener();
-        getPetPid(pet);
-    }
-
     private void getPetPid(Pet pet) {
         pid = pet.getPid();
     }
@@ -348,10 +343,10 @@ public class UserBookAppointment extends AppCompatActivity {
                         checkResponseCreate_Appointment(response);
                         break;
                     case 2:
-                        checkResponse(response, json);
+                        checkResponseGetPets(response, json);
                         break;
                     case 3:
-                        checkResponse2(response, json);
+                        checkResponseReadApt(response, json);
                         break;
                     case 4:
                         checkResponseEditApt(response);
@@ -387,9 +382,17 @@ public class UserBookAppointment extends AppCompatActivity {
 
                 // dismiss the dialog once product uupdated
                 pDialog.dismiss();
+                Toast.makeText(this, "Appointment successfully booked!", Toast.LENGTH_SHORT).show();
 
-            } else {
-                // product with pid not found
+
+            } else if (response.getInt(TAG_SUCCESS) == 2){
+                pDialog.dismiss();
+                Toast.makeText(this, "Sorry! Time slot is already taken please try another one.", Toast.LENGTH_SHORT).show();
+
+            }
+
+            else {
+
             }
 
         } catch (JSONException e) {
@@ -399,7 +402,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
     }
 
-    private void checkResponse(JSONObject response, JSONObject creds) {
+    private void checkResponseGetPets(JSONObject response, JSONObject creds) {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
@@ -442,7 +445,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
     }
 
-    private void checkResponse2(JSONObject response, JSONObject creds) {
+    private void checkResponseReadApt(JSONObject response, JSONObject creds) {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
@@ -469,7 +472,7 @@ public class UserBookAppointment extends AppCompatActivity {
                     String status = c.getString(TAG_STATUS);
                     String pid = c.getString(TAG_PID);
 
-                    etAptDate.getEditText().setText(newFormattedDate);
+                    etAptDate.getEditText().setText(date);
                     etAptTime.getEditText().setText(startime);
                     etAptPet.getEditText().setText(name);
 
@@ -498,6 +501,7 @@ public class UserBookAppointment extends AppCompatActivity {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
                 // successfully updated
+                Toast.makeText(this, "Appointment successfully deleted!", Toast.LENGTH_SHORT).show();
                 Intent i = getIntent();
                 // send result code 100 to notify about product update
                 setResult(100, i);
@@ -517,16 +521,18 @@ public class UserBookAppointment extends AppCompatActivity {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
 
-                JSONArray aptObj = response.getJSONArray(TAG_APPOINTMENT);
+                Toast.makeText(this, "Appointment successfully updated!", Toast.LENGTH_SHORT).show();
 
-                JSONObject apt = aptObj.getJSONObject(0);
-                date = apt.getString(TAG_DATE);
-                starttime = apt.getString(TAG_STARTTIME);
-                aid = apt.getString(TAG_ID);
-
-
-                etAptDate.getEditText().setText(date);
-                etAptTime.getEditText().setText(starttime);
+//                JSONArray aptObj = response.getJSONArray(TAG_APPOINTMENT);
+//
+//                JSONObject apt = aptObj.getJSONObject(0);
+//                date = apt.getString(TAG_DATE);
+//                starttime = apt.getString(TAG_STARTTIME);
+//                aid = apt.getString(TAG_ID);
+//
+//
+//                etAptDate.getEditText().setText(date);
+//                etAptTime.getEditText().setText(starttime);
 
             } else {
             }
