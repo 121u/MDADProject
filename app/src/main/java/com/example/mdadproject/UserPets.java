@@ -275,6 +275,8 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
+
+
             } else {
                 pDialog.dismiss();
             }

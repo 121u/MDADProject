@@ -585,11 +585,12 @@ public class PetDetails extends AppCompatActivity {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
                 // successfully updated
-                Intent i = getIntent();
-                // send result code 100 to notify about product update
-                setResult(100, i);
+//                Intent i = getIntent();
+                Intent i = new Intent(this, UserPets.class);
+                i.putExtra(TAG_USERNAME, username);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 finish();
-
             } else {
                 // product with pid not found
             }
@@ -608,8 +609,13 @@ public class PetDetails extends AppCompatActivity {
                 Intent i = getIntent();
                 // send result code 100 to notify about product update
                 setResult(100, i);
-                finish();
+
                 Toast.makeText(PetDetails.this, "Details successfully updated!", Toast.LENGTH_SHORT).show();
+                Intent q = new Intent(this, UserPets.class);
+                q.putExtra(TAG_USERNAME, username);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
+                finish();
 //                JSONObject pets = petObj.getJSONObject(0);
 //                pet = pets.getString(TAG_PET);
 //                name = pets.getString(TAG_NAME);

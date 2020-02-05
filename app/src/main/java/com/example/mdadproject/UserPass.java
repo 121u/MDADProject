@@ -80,6 +80,8 @@ public class UserPass extends AppCompatActivity {
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
+
+
         if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
             textView.setVisibility(View.GONE);
             btmToolbar.setVisibility(View.GONE);
