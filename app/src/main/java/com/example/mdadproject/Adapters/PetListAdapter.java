@@ -92,8 +92,6 @@ public class PetListAdapter extends BaseAdapter {
                         case R.id.imgDots:
                             PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
                             popup.getMenuInflater().inflate(R.menu.dot_menu, popup.getMenu());
-                            popup.getMenu().findItem(R.id.reset_queue).setVisible(false);
-                            popup.getMenu().findItem(R.id.menu_notify).setVisible(false);
                             popup.getMenu().findItem(R.id.menu_profile).setVisible(false);
                             popup.getMenu().findItem(R.id.menu_pets).setVisible(false);
                             popup.show();

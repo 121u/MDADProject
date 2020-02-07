@@ -275,6 +275,11 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
                 SaveSharedPreference.clearUserName(StaffAppointments.this);
                 finish();
                 break;
+
+            case R.id.nav_all_owner:
+                intent = new Intent(getApplicationContext(), StaffAllOwners.class);
+                finish();
+                break;
         }
         startActivityForResult(intent, 100);
         drawer.closeDrawer(GravityCompat.START);

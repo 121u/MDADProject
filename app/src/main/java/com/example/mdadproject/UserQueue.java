@@ -65,6 +65,7 @@ public class UserQueue extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         currentQueueNo = (TextView) findViewById(R.id.textView6);
 
+
         currentQueueNo.setText("Latest queue number is " + Constants.qNum);
 
         setSupportActionBar(toolbar);

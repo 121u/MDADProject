@@ -24,6 +24,10 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/terrapin"
             android:title="logout" />
+        <item
+            android:id="@+id/nav_all_owner"
+            android:icon="@drawable/hamster"
+            android:title="All owners" />
     </group>
 
 </menu>
