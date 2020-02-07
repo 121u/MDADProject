@@ -57,7 +57,6 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawer;
     private TextView txtGreeting, txtChosenDate;
     private ListView listView;
-    private Button btnNotifyAll;
     JSONArray appointments = null;
     ArrayList<Appointment> AppointmentList = new ArrayList();
     private ProgressDialog pDialog;
@@ -123,7 +122,6 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
         etDate = (TextInputLayout) findViewById(R.id.etDate);
         etDateIn = (TextInputEditText) findViewById(R.id.etDateIn);
         listView = (ListView) findViewById(R.id.listView);
-        btnNotifyAll = (Button) findViewById(R.id.btnNotifyAll);
 
         if (etDate.getEditText().getText().toString().trim().isEmpty()) {
             String myFormat = "yyyy-MM-dd"; //In which you need put here

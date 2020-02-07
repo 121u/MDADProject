@@ -93,7 +93,7 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String name, aid, date, starttime, endttime, status, pid, qr, petname, id;
+    String name, aid, date, starttime, endttime, status, pid, petname, id;
 
     String[] timeOptions = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
     AutoCompleteTextView editTextFilledExposedDropdown2;
@@ -115,12 +115,6 @@ public class UserBookAppointment extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
         name = intent.getStringExtra("name");
-
-        Intent intent1 = getIntent();
-        qr = intent.getStringExtra("qr");
-        if (qr != null) {
-            Log.i("qr", qr);
-        }
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -161,12 +155,7 @@ public class UserBookAppointment extends AppCompatActivity {
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
                 PorterDuff.Mode.SRC_ATOP);
 
-        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-            btnUpdate.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
-            btnNext.setVisibility(View.GONE);
-
-        } else if (aid != null) {
+        if (aid != null) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);

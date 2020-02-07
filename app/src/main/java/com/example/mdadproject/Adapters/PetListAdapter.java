@@ -95,6 +95,7 @@ public class PetListAdapter extends BaseAdapter {
                             popup.getMenu().findItem(R.id.reset_queue).setVisible(false);
                             popup.getMenu().findItem(R.id.menu_notify).setVisible(false);
                             popup.getMenu().findItem(R.id.menu_profile).setVisible(false);
+                            popup.getMenu().findItem(R.id.menu_pets).setVisible(false);
                             popup.show();
                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
@@ -105,7 +106,6 @@ public class PetListAdapter extends BaseAdapter {
                                                 Intent in = new Intent(mContext, PetDetails.class);
                                                 in.putExtra("pid", tempPet.getPid());
                                                 in.putExtra("username", tempPet.getUsername());
-                                                in.putExtra("qr", ((UserPets) mContext).qr);
                                                 mContext.startActivity(in);
                                             }
                                             break;
@@ -114,7 +114,6 @@ public class PetListAdapter extends BaseAdapter {
                                                 Intent in = new Intent(mContext, PetAppointments.class);
                                                 in.putExtra("pid", tempPet.getPid());
                                                 in.putExtra("username", tempPet.getUsername());
-                                                in.putExtra("qr", ((UserPets) mContext).qr);
                                                 in.putExtra("name", tempPet.getName());
                                                 mContext.startActivity(in);
                                             }

@@ -50,25 +50,14 @@
             android:id="@+id/txtChosenDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Appointments for: "
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="@id/etDate"
-            app:layout_constraintTop_toBottomOf="@id/btnNotifyAll">
+            app:layout_constraintTop_toBottomOf="@id/etDate">
 
 
         </TextView>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNotifyAll"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notify All"
-            android:textAllCaps="false"
-            android:layout_marginTop="16dp"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@id/etDate"
-            app:layout_constraintTop_toBottomOf="@id/etDate" />
 
         <ListView
             android:id="@+id/listView"

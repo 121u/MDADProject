@@ -90,7 +90,7 @@ public class PetDetails extends AppCompatActivity {
     String[] typeOptions = new String[]{"cat", "dog", "bird", "rabbit", "hamster", "terrapin"};
     String[] sexOptions = new String[]{"female", "male"};
 
-    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, username, image_path, image_name, qr;
+    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, username, image_path, image_name;
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
@@ -171,7 +171,6 @@ public class PetDetails extends AppCompatActivity {
         Intent intent = getIntent();
         pid = intent.getStringExtra(TAG_PID);
         username = intent.getStringExtra(TAG_USERNAME);
-        qr = intent.getStringExtra("qr");
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -186,27 +185,9 @@ public class PetDetails extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-            btnUpdate.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
-            btnNext.setVisibility(View.GONE);
-
-            postData(url_get_pet, dataJson, 1);
-        } else if (username != null && pid != null) {
+        if (username != null && pid != null) {
 
             btnNext.setVisibility(View.GONE);
-
-//            btmToolbar.setVisibility(View.GONE);
-//            etPetType.getEditText().setEnabled(false);
-//            etPetName.getEditText().setEnabled(false);
-//            etPetSex.getEditText().setEnabled(false);
-//            etPetBreed.getEditText().setEnabled(false);
-//            etPetDate.getEditText().setEnabled(false);
-//            etPetAge.getEditText().setEnabled(false);
-//            etPetHeight.getEditText().setEnabled(false);
-//            etPetWeight.getEditText().setEnabled(false);
-//            etPetImage.getEditText().setEnabled(false);
-//            etPetImage.setEndIconVisible(false);
 
             postData(url_get_pet, dataJson, 1);
         } else {
@@ -235,22 +216,6 @@ public class PetDetails extends AppCompatActivity {
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-//                JSONObject dataJson = new JSONObject();
-//                try {
-//                    dataJson.put(TAG_PID, pid);
-//                    dataJson.put(TAG_PET, pet);
-//                    dataJson.put(TAG_NAME, name);
-//                    dataJson.put(TAG_SEX, sex);
-//                    dataJson.put(TAG_BREED, breed);
-//                    dataJson.put(TAG_AGE, age);
-//                    dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
-//                    dataJson.put(TAG_HEIGHT, height);
-//                    dataJson.put(TAG_WEIGHT, weight);
-//                    dataJson.put(TAG_USERNAME, username);
-//
-//                } catch (JSONException e) {
-//                }
-//                postData(url_update_pets, dataJson, 2);
                 addOrUpdate = false;
                 uploadFile();
 
@@ -586,6 +551,7 @@ public class PetDetails extends AppCompatActivity {
             if (response.getInt("success") == 1) {
                 // successfully updated
 //                Intent i = getIntent();
+                Toast.makeText(PetDetails.this, "Pet deleted.", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this, UserPets.class);
                 i.putExtra(TAG_USERNAME, username);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -655,27 +621,6 @@ public class PetDetails extends AppCompatActivity {
         timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         imageFileName = "JPEG_" + timeStamp;
         etPetImage.getEditText().setText(imageFileName);
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                Uri contentURI = data.getData();
-//                try {
-//                    fixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    imgPet.setImageBitmap(fixBitmap);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(PetDetails.this, "Failed!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        } else if (requestCode == CAMERA) {
-//            fixBitmap = (Bitmap) data.getExtras().get("data");
-//            imgPet.setImageBitmap(fixBitmap);
-//        }
-//        imgPet.setClipToOutline(true);
-//        imgPet.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        imgPet.setBackgroundResource(R.drawable.roundcorners);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {

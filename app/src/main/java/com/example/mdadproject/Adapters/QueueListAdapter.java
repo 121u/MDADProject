@@ -61,10 +61,10 @@ public class QueueListAdapter extends BaseAdapter {
 
         final Queue tempQ = (Queue) getItem(position);
 
-        TextView tvId = (TextView)convertView.findViewById(R.id.id);
-        TextView tvName = (TextView)convertView.findViewById(R.id.txtName);
-        TextView tvDateTime = (TextView)convertView.findViewById(R.id.txtDateTime);
-        TextView tvQueueNo = (TextView)convertView.findViewById(R.id.txtQueueNo);
+        TextView tvId = (TextView) convertView.findViewById(R.id.id);
+        TextView tvName = (TextView) convertView.findViewById(R.id.txtName);
+        TextView tvDateTime = (TextView) convertView.findViewById(R.id.txtDateTime);
+        TextView tvQueueNo = (TextView) convertView.findViewById(R.id.txtQueueNo);
         ImageView imgDots = (ImageView) convertView.findViewById(R.id.imgDots);
 
         tvId.setText(tempQ.getQueue_id());
@@ -93,6 +93,14 @@ public class QueueListAdapter extends BaseAdapter {
                                         case R.id.menu_profile:
                                             if (mContext instanceof UserQueue) {
                                                 Intent in = new Intent(mContext, UserDetails.class);
+                                                in.putExtra("username", "staff");
+                                                in.putExtra("owner_username", tempQ.getUsername());
+                                                mContext.startActivity(in);
+                                            }
+                                            break;
+                                        case R.id.menu_pets:
+                                            if (mContext instanceof UserQueue) {
+                                                Intent in = new Intent(mContext, UserPets.class);
                                                 in.putExtra("username", "staff");
                                                 in.putExtra("owner_username", tempQ.getUsername());
                                                 mContext.startActivity(in);

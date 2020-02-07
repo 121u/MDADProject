@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -51,7 +52,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
     JSONArray pets = null;
     ListView listView;
     String username, pid;
-    public String qr;
+    public String owner_username;
     ProgressDialog pDialog;
     FloatingActionButton fab;
     private DrawerLayout drawer;
@@ -92,29 +93,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         FirebaseMessaging.getInstance().subscribeToTopic(username);
 
         Intent intent2 = getIntent();
-        qr = intent2.getStringExtra("qr");
-
-        JSONObject dataJson = new JSONObject();
-        try {
-            dataJson.put(TAG_USERNAME, username);
-        } catch (JSONException e) {
-
-        }
-
-        JSONObject dataJson2 = new JSONObject();
-        try {
-            dataJson2.put(TAG_USERNAME, qr);
-        } catch (JSONException e) {
-
-        }
-
-        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-            postData(url_pet, dataJson2);
-            Log.i("here", "here");
-        } else {
-            postData(url_pet, dataJson);
-            Log.i("there", "there");
-        }
+        owner_username = intent2.getStringExtra("owner_username");
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("We're giving it whatevfur we'ge got..");
@@ -122,41 +101,67 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         pDialog.setCancelable(true);
         pDialog.show();
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
-//                PorterDuff.Mode.SRC_ATOP);
+        SpeedDialView sdv = (SpeedDialView) findViewById(R.id.speedDial);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle("Your Pets");
-        setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-        txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-        txtGreeting.setText("Hello, " + username + "!");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        if (username != null && username.equals("staff")) {
-            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
-            nav_Menu.findItem(R.id.nav_profile).setVisible(false);
-            nav_Menu.findItem(R.id.nav_qr).setVisible(false);
-        } else {
-            nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
-            nav_Menu.findItem(R.id.nav_queue_list).setVisible(false);
+        if (username != null && SaveSharedPreference.getUserName(UserPets.this).equals("staff")) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("Pets for " + owner_username);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
+            JSONObject dataJson2 = new JSONObject();
+            try {
+                dataJson2.put(TAG_USERNAME, owner_username);
+            } catch (JSONException e) {
+
+            }
+
+            postData(url_pet, dataJson2);
+
+            sdv.setVisibility(View.GONE);
         }
+        else {
+            setTitle("Your Pets");
+            setSupportActionBar(toolbar);
+            drawer = findViewById(R.id.drawer_layout);
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            View header = navigationView.getHeaderView(0);
+            txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
+            txtGreeting.setText("Hello, " + username + "!");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
+                    toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            Menu nav_Menu = navigationView.getMenu();
+            if (username != null && username.equals("staff")) {
+                nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
+                nav_Menu.findItem(R.id.nav_profile).setVisible(false);
+                nav_Menu.findItem(R.id.nav_qr).setVisible(false);
+            } else {
+                nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
+                nav_Menu.findItem(R.id.nav_queue_list).setVisible(false);
+            }
+
+            JSONObject dataJson = new JSONObject();
+            try {
+                dataJson.put(TAG_USERNAME, username);
+            } catch (JSONException e) {
+
+            }
+
+            postData(url_pet, dataJson);
+        }
+
         listView = (ListView) findViewById(R.id.listView);
         listView.setEnabled(false);
-        SpeedDialView sdv = (SpeedDialView) findViewById(R.id.speedDial);
+
         sdv.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_new_pet, R.drawable.dog)
                 .setLabel("new pet")
                 .create());
@@ -171,7 +176,6 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                         Intent intent = null;
                         intent = new Intent(getApplicationContext(), PetDetails.class);
                         intent.putExtra(TAG_USERNAME, username);
-                        intent.putExtra("qr", qr);
                         startActivityForResult(intent, 100);
                         drawer.closeDrawer(GravityCompat.START);
                         return false; // true to keep the Speed Dial open
@@ -179,7 +183,6 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                         Intent intent2 = null;
                         intent2 = new Intent(getApplicationContext(), UserBookAppointment.class);
                         intent2.putExtra(TAG_USERNAME, username);
-                        intent2.putExtra("qr", qr);
                         startActivityForResult(intent2, 100);
                         drawer.closeDrawer(GravityCompat.START);
                         return false; // true to keep the Speed Dial open
@@ -188,17 +191,6 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 }
             }
         });
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
-//                Intent in = new Intent(getApplicationContext(), PetDetails.class);
-//                in.putExtra(TAG_PID, pid);
-//                in.putExtra(TAG_USERNAME, username);
-//                in.putExtra("qr", qr);
-//                startActivityForResult(in, 100);
-//            }
-//        });
 
     }
 
@@ -303,16 +295,12 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_profile:
                 intent = new Intent(getApplicationContext(), UserDetails.class);
                 intent.putExtra(TAG_USERNAME, username);
-                intent.putExtra("qr", qr);
                 break;
             case R.id.nav_qr:
                 intent = new Intent(getApplicationContext(), UserQrCode.class);
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
-//                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                SharedPreferences.Editor editor = settings.edit();
-//                editor.remove(TAG_USERNAME);
                 Constants.IS_STAFF = false;
                 SaveSharedPreference.clearUserName(UserPets.this);
                 intent = new Intent(getApplicationContext(), UserLogin.class);

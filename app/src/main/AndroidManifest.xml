@@ -23,7 +23,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ForgetPasswordActivity"></activity>
         <activity
             android:name=".StaffAppointments"
             android:theme="@style/AppTheme.NoActionBar"></activity>

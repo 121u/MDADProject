@@ -51,7 +51,7 @@ public class PetAppointments extends AppCompatActivity {
     private static final String TAG_PETNAME = "petname";
 
     JSONObject json = null;
-    String username, qr, aid, pid, name, newFormattedDate;
+    String username, aid, pid, name, newFormattedDate;
     JSONArray appointments = null;
     ArrayList<Appointment> AppointmentList = new ArrayList();
     ArrayList<Appointment> completedList = new ArrayList();
@@ -80,7 +80,6 @@ public class PetAppointments extends AppCompatActivity {
         pid = intent.getStringExtra(TAG_PID);
         name = intent.getStringExtra("name");
         username = intent.getStringExtra("username");
-        qr = intent.getStringExtra("qr");
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -97,14 +96,6 @@ public class PetAppointments extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-//        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-//            listView.setEnabled(true);
-//
-//        } else if (username != null) {
-//            listView.setEnabled(false);
-//
-//        }
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,8 +106,6 @@ public class PetAppointments extends AppCompatActivity {
                 in.putExtra(TAG_PID, pid);
                 in.putExtra(TAG_ID, aid);
                 Log.i("mad", aid);
-//                in.putExtra(TAG_USERNAME, username);
-//                in.putExtra("qr", qr);
                 startActivityForResult(in, 100);
             }
         });

@@ -35,7 +35,7 @@ public class UserPass extends AppCompatActivity {
     private Button btnSignUp;
     private ProgressDialog pDialog;
 
-    public static String username, password, qr, security;
+    public static String username, password, security;
 
     private static String url_create_owner = UserLogin.ipBaseAddress + "/create_ownerJson2.php";
     private static final String url_update = UserLogin.ipBaseAddress + "/updatePassword.php";
@@ -58,7 +58,6 @@ public class UserPass extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
-        qr = intent.getStringExtra("qr");
         password = intent.getStringExtra(TAG_PASSWORD);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
@@ -82,13 +81,7 @@ public class UserPass extends AppCompatActivity {
 
 
 
-        if (username != null && username.equals("staff") && Constants.IS_STAFF.equals("yes")) {
-            textView.setVisibility(View.GONE);
-            btmToolbar.setVisibility(View.GONE);
-            etUsername.getEditText().setText(qr);
-            etPassword.getEditText().setText(password);
-
-        } else if (Constants.PW_CHANGE.equals(true)) {
+        if (Constants.PW_CHANGE.equals(true)) {
             getSupportActionBar().setTitle("Change Password");
             btnSignUp.setText("Confirm");
         }
@@ -215,10 +208,10 @@ public class UserPass extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
-                finish();
                 Intent i = new Intent(this, UserLogin.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
-                // dismiss the dialog once product updated
+                finish();
 
                 pDialog.dismiss();
             }

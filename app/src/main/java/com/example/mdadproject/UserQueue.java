@@ -59,13 +59,7 @@ public class UserQueue extends AppCompatActivity {
         setContentView(R.layout.activity_user_queue);
 
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-        qr = intent.getStringExtra("qr");
-
-        if (username!= null && qr!= null) {
-            Log.i("user", username);
-            Log.i("qr", qr);
-        }
+        username = intent.getStringExtra(TAG_USERNAME);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         listView = (ListView) findViewById(R.id.listView);
@@ -170,6 +164,7 @@ public class UserQueue extends AppCompatActivity {
         menu.findItem(R.id.menu_details).setVisible(false);
         menu.findItem(R.id.menu_notify).setVisible(false);
         menu.findItem(R.id.menu_profile).setVisible(false);
+        menu.findItem(R.id.menu_pets).setVisible(false);
         return true;
     }
 

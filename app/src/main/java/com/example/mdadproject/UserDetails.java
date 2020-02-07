@@ -41,7 +41,7 @@ public class UserDetails extends AppCompatActivity {
     private Button btnDelete;
     private RelativeLayout btmToolbar;
 
-    public static String nric, name, mobilenumber, email, address, zipcode, username, qr, password;
+    public static String nric, name, mobilenumber, email, address, zipcode, username, owner_username, password;
 
     private ProgressDialog pDialog;
     private static final String url_owner = UserLogin.ipBaseAddress + "/get_owner_detailsJson.php";
@@ -95,11 +95,11 @@ public class UserDetails extends AppCompatActivity {
         }
 
         Intent intent1 = getIntent();
-        qr = intent1.getStringExtra("owner_username");
+        owner_username = intent1.getStringExtra("owner_username");
 
         JSONObject dataJson2 = new JSONObject();
         try {
-            dataJson2.put(TAG_USERNAME, qr);
+            dataJson2.put(TAG_USERNAME, owner_username);
         } catch (JSONException e) {
 
         }
@@ -110,7 +110,7 @@ public class UserDetails extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (username != null && Constants.IS_STAFF.equals(true)) {
+        if (username != null && SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
             etNric.getEditText().setEnabled(false);
             etName.getEditText().setEnabled(false);
 
@@ -154,7 +154,7 @@ public class UserDetails extends AppCompatActivity {
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-                if (username != null && Constants.IS_STAFF.equals(true)) {
+                if (username != null && SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
                     JSONObject dataJson = new JSONObject();
                     try {
                         dataJson.put(TAG_NAME, name);
@@ -163,7 +163,7 @@ public class UserDetails extends AppCompatActivity {
                         dataJson.put(TAG_ZIPCODE, zipcode);
                         dataJson.put(TAG_ADDRESS, address);
                         dataJson.put(TAG_EMAIL, email);
-                        dataJson.put(TAG_USERNAME, qr);
+                        dataJson.put(TAG_USERNAME, owner_username);
                         dataJson.put(TAG_PASSWORD, password);
                     } catch (JSONException e) {
                     }
@@ -215,7 +215,6 @@ public class UserDetails extends AppCompatActivity {
                     Intent i = new Intent(v.getContext(), UserPass.class);
                     i.putExtra(TAG_USERNAME, username);
                     i.putExtra(TAG_PASSWORD, password);
-                    i.putExtra("qr",qr);
                     startActivity(i);
                 }
                 else {
