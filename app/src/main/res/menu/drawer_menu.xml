@@ -7,27 +7,27 @@
         <item
             android:id="@+id/nav_qr_scanner"
             android:icon="@drawable/terrapin"
-            android:title="qr scanner" />
+            android:title="QR Scanner" />
         <item
             android:id="@+id/nav_queue_list"
             android:icon="@drawable/cat"
-            android:title="queue list" />
+            android:title="Queue List" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/dog"
-            android:title="profile" />
+            android:title="Profile" />
         <item
             android:id="@+id/nav_qr"
             android:icon="@drawable/bird"
-            android:title="qr code" />
+            android:title="QR Code" />
+        <item
+            android:id="@+id/nav_all_owner"
+            android:icon="@drawable/dog"
+            android:title="All Owners" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/terrapin"
-            android:title="logout" />
-        <item
-            android:id="@+id/nav_all_owner"
-            android:icon="@drawable/hamster"
-            android:title="All owners" />
+            android:title="Logout" />
     </group>
 
 </menu>

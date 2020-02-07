@@ -34,8 +34,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Adapters.PetListAdapter;
+import com.example.mdadproject.Models.Pet;
 import com.example.mdadproject.Models.Upload;
 import com.example.mdadproject.Utils.Constants;
+import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -185,11 +187,11 @@ public class PetDetails extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (username != null && pid != null) {
+        if (SaveSharedPreference.getUserName(PetDetails.this) != null && pid != null) {
 
             btnNext.setVisibility(View.GONE);
-
             postData(url_get_pet, dataJson, 1);
+
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
@@ -522,6 +524,7 @@ public class PetDetails extends AppCompatActivity {
                 etPetDate.getEditText().setText(dateofadoption);
                 etPetHeight.getEditText().setText(height);
                 etPetWeight.getEditText().setText(weight);
+
                 if (image_path.isEmpty()) {
                     String uri = "drawable/" + pet;
                     int imageResource = this.getResources().getIdentifier(uri, null, this.getPackageName());

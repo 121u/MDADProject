@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -22,15 +24,19 @@ import com.example.mdadproject.UserPets;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class OwnerListAdapter extends BaseAdapter {
+public class OwnerListAdapter extends BaseAdapter implements Filterable {
 
     Context mContext;
     ArrayList<Owners> owners = new ArrayList<>();
+    private List<Owners> ownersList;
+    private List<Owners> ownersListFull;
 
     public OwnerListAdapter(Context context, ArrayList<Owners> owner) {
         mContext = context;
         this.owners = owner;
+        ownersListFull = new ArrayList<>(owner);
     }
 
     @Override
@@ -118,4 +124,40 @@ public class OwnerListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Owners> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0) {
+                filteredList.addAll(ownersListFull);
+            }
+            else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Owners item : ownersListFull) {
+                    if (item.getUsername().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            owners.clear();
+            owners.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

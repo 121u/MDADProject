@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,7 +38,7 @@ public class StaffAllOwners extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView listView;
-    private TextView allowners;
+    private SearchView searchView;
     private ProgressDialog pDialog;
 
     public static String url_Allowner = UserLogin.ipBaseAddress + "/get_all_owner.php";
@@ -53,19 +56,20 @@ public class StaffAllOwners extends AppCompatActivity {
 
     ArrayList<Owners> owners = new ArrayList();
     JSONArray ownerList = null;
+    OwnerListAdapter myCustomAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_all_owners);
 
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         listView = (ListView) findViewById(R.id.listView);
-        allowners = (TextView) findViewById(R.id.textView6);
+        searchView = findViewById(R.id.searchView);
 
-        androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("All Owners");
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
@@ -80,6 +84,26 @@ public class StaffAllOwners extends AppCompatActivity {
 
         postData(url_Allowner, null, 1);
 
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                myCustomAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void postData(String url, final JSONObject json, final int option) {
@@ -131,7 +155,7 @@ public class StaffAllOwners extends AppCompatActivity {
                     };
                     owners.add(o);
                 }
-                OwnerListAdapter myCustomAdapter = new OwnerListAdapter(StaffAllOwners.this, owners);
+                myCustomAdapter = new OwnerListAdapter(StaffAllOwners.this, owners);
                 myCustomAdapter.notifyDataSetChanged();
 
                 listView.setAdapter(myCustomAdapter);

@@ -129,7 +129,6 @@ public class UserLogin extends AppCompatActivity {
                     } catch (JSONException e) {
 
                     }
-//                    FirebaseMessaging.getInstance().subscribeToTopic("" + uName);
                     postData(url_login, dataJson, 1);
 
                 }
@@ -174,9 +173,9 @@ public class UserLogin extends AppCompatActivity {
 
                 //save username to sharedPref
                 SaveSharedPreference.setUserName(UserLogin.this, username);
+                FirebaseMessaging.getInstance().subscribeToTopic(SaveSharedPreference.getUserName(UserLogin.this));
 
                 if (username.equals("staff")) {
-                    Constants.IS_STAFF = true;
                     Intent intent = new Intent(getApplicationContext(), StaffAppointments.class);
                     intent.putExtra(TAG_USERNAME, username);
                     startActivity(intent);

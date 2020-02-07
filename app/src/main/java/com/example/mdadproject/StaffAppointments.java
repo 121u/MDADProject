@@ -35,6 +35,7 @@ import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,7 +106,7 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-        txtGreeting.setText("Hello ");
+        txtGreeting.setText("Hello, " + SaveSharedPreference.getUserName(StaffAppointments.this) + "!");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
@@ -270,15 +271,13 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
-                Constants.IS_STAFF = false;
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(SaveSharedPreference.getUserName(StaffAppointments.this));
                 intent = new Intent(getApplicationContext(), UserLogin.class);
                 SaveSharedPreference.clearUserName(StaffAppointments.this);
                 finish();
                 break;
-
             case R.id.nav_all_owner:
                 intent = new Intent(getApplicationContext(), StaffAllOwners.class);
-                finish();
                 break;
         }
         startActivityForResult(intent, 100);

@@ -83,14 +83,11 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_user_pets);
 
         mRequestQue = Volley.newRequestQueue(this);
-//        FirebaseMessaging.getInstance().subscribeToTopic(SaveSharedPreference.getUserName(UserPets.this));
-
 
         Log.i("url", url_pet);
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
-        FirebaseMessaging.getInstance().subscribeToTopic(username);
 
         Intent intent2 = getIntent();
         owner_username = intent2.getStringExtra("owner_username");
@@ -104,7 +101,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
         SpeedDialView sdv = (SpeedDialView) findViewById(R.id.speedDial);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        if (username != null && SaveSharedPreference.getUserName(UserPets.this).equals("staff")) {
+        if (SaveSharedPreference.getUserName(UserPets.this).equals("staff")) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("Pets for " + owner_username);
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -130,7 +127,7 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
             navigationView.setNavigationItemSelectedListener(this);
             View header = navigationView.getHeaderView(0);
             txtGreeting = (TextView) header.findViewById(R.id.txtGreeting);
-            txtGreeting.setText("Hello, " + username + "!");
+            txtGreeting.setText("Hello, " + SaveSharedPreference.getUserName(UserPets.this) + "!");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
@@ -140,13 +137,14 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
 
             navigationView = (NavigationView) findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
-            if (username != null && username.equals("staff")) {
+            if (SaveSharedPreference.getUserName(UserPets.this).equals("staff")) {
                 nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(true);
                 nav_Menu.findItem(R.id.nav_profile).setVisible(false);
                 nav_Menu.findItem(R.id.nav_qr).setVisible(false);
             } else {
                 nav_Menu.findItem(R.id.nav_qr_scanner).setVisible(false);
                 nav_Menu.findItem(R.id.nav_queue_list).setVisible(false);
+                nav_Menu.findItem(R.id.nav_all_owner).setVisible(false);
             }
 
             JSONObject dataJson = new JSONObject();
@@ -301,11 +299,10 @@ public class UserPets extends AppCompatActivity implements NavigationView.OnNavi
                 intent.putExtra(TAG_USERNAME, username);
                 break;
             case R.id.nav_logout:
-                Constants.IS_STAFF = false;
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(SaveSharedPreference.getUserName(UserPets.this));
                 SaveSharedPreference.clearUserName(UserPets.this);
                 intent = new Intent(getApplicationContext(), UserLogin.class);
                 finish();
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(username);
                 break;
         }
         startActivityForResult(intent, 100);

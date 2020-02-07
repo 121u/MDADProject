@@ -84,7 +84,6 @@ public class UserDetails extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-//        username = SaveSharedPreference.getUserName(UserDetails.this);
         username = intent.getStringExtra(TAG_USERNAME);
 
         JSONObject dataJson = new JSONObject();
@@ -110,7 +109,7 @@ public class UserDetails extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (username != null && SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
+        if (SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
             etNric.getEditText().setEnabled(false);
             etName.getEditText().setEnabled(false);
 
@@ -154,7 +153,7 @@ public class UserDetails extends AppCompatActivity {
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-                if (username != null && SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
+                if (SaveSharedPreference.getUserName(UserDetails.this).equals("staff")) {
                     JSONObject dataJson = new JSONObject();
                     try {
                         dataJson.put(TAG_NAME, name);
@@ -211,13 +210,6 @@ public class UserDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (username != null) {
-                    Intent i = new Intent(v.getContext(), UserPass.class);
-                    i.putExtra(TAG_USERNAME, username);
-                    i.putExtra(TAG_PASSWORD, password);
-                    startActivity(i);
-                }
-                else {
                     nric = etNric.getEditText().getText().toString().toUpperCase();
                     name = etName.getEditText().getText().toString().toUpperCase();
                     mobilenumber = etMobileNumber.getEditText().getText().toString().toUpperCase();
@@ -241,7 +233,6 @@ public class UserDetails extends AppCompatActivity {
                         Intent i = new Intent(v.getContext(), UserPass.class);
                         startActivity(i);
                     }
-                }
             }
         });
 
