@@ -38,6 +38,7 @@ public class UserLogin extends AppCompatActivity {
     private Button btnLogin, btnForgetPassword;
     private TextView btnSignUp;
     private ProgressDialog pDialog;
+    private RequestQueue mRequestQue;
 
     private static final String url_login = ipBaseAddress + "/login.php";
 
@@ -49,6 +50,8 @@ public class UserLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
+
+        mRequestQue = Volley.newRequestQueue(this);
 
         if (SaveSharedPreference.getUserName(UserLogin.this).length() == 0) {
             // call Login Activity

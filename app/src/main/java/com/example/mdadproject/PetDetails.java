@@ -92,7 +92,7 @@ public class PetDetails extends AppCompatActivity {
     String[] typeOptions = new String[]{"cat", "dog", "bird", "rabbit", "hamster", "terrapin"};
     String[] sexOptions = new String[]{"female", "male"};
 
-    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, username, image_path, image_name;
+    public static String pid, pet, name, sex, breed, age, dateofadoption, height, weight, username, image_path, image_name, savedDOA, newFormattedDate, updatedImage_Path, owner_username;
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PID = "pid";
@@ -332,6 +332,7 @@ public class PetDetails extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
+                Toast.makeText(PetDetails.this, "Pet successfully added!", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this, UserPets.class);
                 i.putExtra(TAG_USERNAME, username);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -384,6 +385,7 @@ public class PetDetails extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUrl = uri;
+                                    updatedImage_Path = downloadUrl.toString();
 
                                     if (addOrUpdate==true) {
                                         JSONObject dataJson = new JSONObject();
@@ -393,7 +395,7 @@ public class PetDetails extends AppCompatActivity {
                                             dataJson.put(TAG_SEX, sex);
                                             dataJson.put(TAG_BREED, breed);
                                             dataJson.put(TAG_AGE, age);
-                                            dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
+                                            dataJson.put(TAG_DATEOFADOPTION, savedDOA);
                                             dataJson.put(TAG_HEIGHT, height);
                                             dataJson.put(TAG_WEIGHT, weight);
                                             dataJson.put(TAG_USERNAME, username);
@@ -406,7 +408,7 @@ public class PetDetails extends AppCompatActivity {
                                         postData(url_create_pet, dataJson, 4);
                                     }
                                     else {
-                                        updatePet();
+                                        updatePet(updatedImage_Path);
                                     }
                                 }
                             });
@@ -428,11 +430,11 @@ public class PetDetails extends AppCompatActivity {
                     });
         } else {
 //            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
-              updatePet();
+              updatePet(image_path);
         }
     }
 
-    private void updatePet() {
+    private void updatePet(String image_path) {
         JSONObject dataJson = new JSONObject();
         try {
             dataJson.put(TAG_PID, pid);
@@ -441,7 +443,7 @@ public class PetDetails extends AppCompatActivity {
             dataJson.put(TAG_SEX, sex);
             dataJson.put(TAG_BREED, breed);
             dataJson.put(TAG_AGE, age);
-            dataJson.put(TAG_DATEOFADOPTION, dateofadoption);
+            dataJson.put(TAG_DATEOFADOPTION, savedDOA);
             dataJson.put(TAG_HEIGHT, height);
             dataJson.put(TAG_WEIGHT, weight);
             dataJson.put(TAG_USERNAME, username);
@@ -511,6 +513,16 @@ public class PetDetails extends AppCompatActivity {
                 breed = petObj.getString(TAG_BREED).toLowerCase();
                 age = petObj.getString(TAG_AGE).toLowerCase();
                 dateofadoption = petObj.getString(TAG_DATEOFADOPTION).toLowerCase();
+
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date parsedDate = simpleDateFormat2.parse(dateofadoption);
+                    simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
+                    newFormattedDate = simpleDateFormat2.format(parsedDate);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 height = petObj.getString(TAG_HEIGHT).toLowerCase();
                 weight = petObj.getString(TAG_WEIGHT).toLowerCase();
                 image_path = petObj.get(TAG_IMAGEPATH).toString();
@@ -521,7 +533,7 @@ public class PetDetails extends AppCompatActivity {
                 etPetSex.getEditText().setText(sex);
                 etPetBreed.getEditText().setText(breed);
                 etPetAge.getEditText().setText(age);
-                etPetDate.getEditText().setText(dateofadoption);
+                etPetDate.getEditText().setText(newFormattedDate);
                 etPetHeight.getEditText().setText(height);
                 etPetWeight.getEditText().setText(weight);
 
@@ -554,7 +566,7 @@ public class PetDetails extends AppCompatActivity {
             if (response.getInt("success") == 1) {
                 // successfully updated
 //                Intent i = getIntent();
-                Toast.makeText(PetDetails.this, "Pet deleted.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PetDetails.this, "Pet successfully deleted!", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this, UserPets.class);
                 i.putExtra(TAG_USERNAME, username);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -585,24 +597,6 @@ public class PetDetails extends AppCompatActivity {
                 q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(q);
                 finish();
-//                JSONObject pets = petObj.getJSONObject(0);
-//                pet = pets.getString(TAG_PET);
-//                name = pets.getString(TAG_NAME);
-//                sex = pets.getString(TAG_SEX);
-//                breed = pets.getString(TAG_BREED);
-//                dateofadoption = pets.getString(TAG_DATEOFADOPTION);
-//                height = pets.getString(TAG_HEIGHT);
-//                weight = pets.getString(TAG_WEIGHT);
-//                GetImageNameFromEditText = pets.getString(ImageTag);
-
-//
-//                etPetType.getEditText().setText(pet);
-//                etPetName.getEditText().setText(name);
-//                etPetSex.getEditText().setText(sex);
-//                etPetBreed.getEditText().setText(breed);
-//                etPetDate.getEditText().setText(dateofadoption);
-//                etPetHeight.getEditText().setText(height);
-//                etPetWeight.getEditText().setText(weight);
 
             } else {
             }
@@ -613,9 +607,13 @@ public class PetDetails extends AppCompatActivity {
 
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+        String dateToShow = "dd MMMM yyyy";
 
-        etPetDate.getEditText().setText(sdf.format(myCalendar.getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+        SimpleDateFormat sdf2 = new SimpleDateFormat(dateToShow, Locale.UK);
+
+        savedDOA = sdf.format(myCalendar.getTime());
+        etPetDate.getEditText().setText(sdf2.format(myCalendar.getTime()));
     }
 
     @Override

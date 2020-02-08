@@ -78,7 +78,7 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
 
     private TextInputLayout etDate;
     private TextInputEditText etDateIn;
-    String username, chosenDate, newFormattedDate, startime, endtime, status, pid, petname;
+    String username, chosenDate, newFormattedDate, startime, endtime, status, pid, petname, formattedDate;
 
     TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
     final Calendar myCalendar = Calendar.getInstance(timeZone1);
@@ -91,12 +91,6 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
 
         Intent intent = getIntent();
         username = intent.getStringExtra(TAG_USERNAME);
-
-        pDialog = new ProgressDialog(StaffAppointments.this);
-        pDialog.setMessage("loading appointments ...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(true);
-        pDialog.show();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle("Appointments");
@@ -125,19 +119,7 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
         listView = (ListView) findViewById(R.id.listView);
 
         if (etDate.getEditText().getText().toString().trim().isEmpty()) {
-            String myFormat = "yyyy-MM-dd"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-
-            sdf.setTimeZone(timeZone1);
-            chosenDate = sdf.format(myCalendar.getTime());
-            etDate.getEditText().setText(chosenDate);
-            txtChosenDate.setText("Appointments for: " + chosenDate);
-            AppointmentList.clear();
-            JSONObject dataJson = new JSONObject();
-            try {
-                dataJson.put(TAG_DATE, chosenDate);
-            } catch (JSONException e) { }
-            postData(url_appointment, dataJson, 1);
+            updateLabel();
         }
 
         final DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
@@ -168,13 +150,22 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
 
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
+        String dateToShow = "dd-MM-yyyy";
+
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-        TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
         sdf.setTimeZone(timeZone1);
+
+        SimpleDateFormat sdf2 = new SimpleDateFormat(dateToShow, Locale.UK);
+        sdf2.setTimeZone(timeZone1);
+        formattedDate = sdf2.format(myCalendar.getTime());
+
         chosenDate = sdf.format(myCalendar.getTime());
-        etDate.getEditText().setText(chosenDate);
-        txtChosenDate.setText("Appointments for: " + chosenDate);
+
+        etDate.getEditText().setText(formattedDate);
+        txtChosenDate.setText("Appointments for: " + formattedDate);
+
         AppointmentList.clear();
+
         JSONObject dataJson = new JSONObject();
         try {
             dataJson.put(TAG_DATE, chosenDate);
@@ -182,6 +173,12 @@ public class StaffAppointments extends AppCompatActivity implements NavigationVi
 
         }
         postData(url_appointment, dataJson, 1);
+
+        pDialog = new ProgressDialog(StaffAppointments.this);
+        pDialog.setMessage("Loading appointments ...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
     }
 
     public void postData(String url, final JSONObject json, final int option) {

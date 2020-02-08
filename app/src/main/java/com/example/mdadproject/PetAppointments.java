@@ -21,7 +21,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Adapters.AptListAdapter;
 import com.example.mdadproject.Models.Appointment;
-import com.example.mdadproject.Utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +50,7 @@ public class PetAppointments extends AppCompatActivity {
     private static final String TAG_PETNAME = "petname";
 
     JSONObject json = null;
-    String username, aid, pid, name, newFormattedDate;
+    String username, apt_id, pid, name, newFormattedDate;
     JSONArray appointments = null;
     ArrayList<Appointment> AppointmentList = new ArrayList();
     ArrayList<Appointment> completedList = new ArrayList();
@@ -62,10 +61,16 @@ public class PetAppointments extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_appointments);
 
+        Intent intent = getIntent();
+
+        pid = intent.getStringExtra(TAG_PID);
+        name = intent.getStringExtra("name");
+        username = intent.getStringExtra("username");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("");
+            getSupportActionBar().setTitle("Appointments for " + name);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
@@ -75,15 +80,9 @@ public class PetAppointments extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         listView2 = (ListView) findViewById(R.id.listView2);
 
-        Intent intent = getIntent();
-
-        pid = intent.getStringExtra(TAG_PID);
-        name = intent.getStringExtra("name");
-        username = intent.getStringExtra("username");
-
         JSONObject dataJson = new JSONObject();
         try {
-            dataJson.put("pid", pid);
+            dataJson.put(TAG_PID, pid);
         } catch (JSONException e) {
 
         }
@@ -99,14 +98,13 @@ public class PetAppointments extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pid = ((TextView) view.findViewById(R.id.id)).getText().toString();
+                apt_id = ((TextView) view.findViewById(R.id.id)).getText().toString();
                 Intent in = new Intent(getApplicationContext(), UserBookAppointment.class);
                 in.putExtra(TAG_USERNAME, username);
-                in.putExtra("name", name);
+                in.putExtra(TAG_PETNAME, name);
                 in.putExtra(TAG_PID, pid);
-                in.putExtra(TAG_ID, aid);
-                Log.i("mad", aid);
-                startActivityForResult(in, 100);
+                in.putExtra("apt_id", apt_id);
+                startActivity(in);
             }
         });
 
@@ -159,7 +157,8 @@ public class PetAppointments extends AppCompatActivity {
 
                     Appointment a = new Appointment();
                     // Storing each json item in variable
-                    aid = c.getString(TAG_ID);
+                    String id = c.getString(TAG_ID);
+                    apt_id = id;
                     String date = c.getString(TAG_DATE);
                     SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                     try {
@@ -176,7 +175,7 @@ public class PetAppointments extends AppCompatActivity {
                     String username = c.getString(TAG_USERNAME);
                     String petname = c.getString(TAG_PETNAME);
 
-                    a = new Appointment(aid, newFormattedDate, startime, endtime, status, pid, username, petname);
+                    a = new Appointment(id, newFormattedDate, startime, endtime, status, pid, username, petname);
                     AppointmentList.add(a);
                 }
 

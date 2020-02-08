@@ -61,7 +61,7 @@ public class UserPass extends AppCompatActivity {
         password = intent.getStringExtra(TAG_PASSWORD);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("");
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -74,19 +74,17 @@ public class UserPass extends AppCompatActivity {
 
         etUsername = (TextInputLayout) findViewById(R.id.etUsername);
         etPassword = (TextInputLayout) findViewById(R.id.etPassword);
-        etSecurity = (TextInputLayout)findViewById(R.id.etSecurity);
+        etSecurity = (TextInputLayout) findViewById(R.id.etSecurity);
 
         btmToolbar = (RelativeLayout) findViewById(R.id.btmToolbar);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
 
-
         if (Constants.PW_CHANGE.equals(true)) {
             getSupportActionBar().setTitle("Change Password");
             btnSignUp.setText("Confirm");
-        }
-
-        else {
+            etPassword.setHint("new password");
+        } else {
 
             getSupportActionBar().setTitle("Register");
             btmToolbar.setVisibility(View.VISIBLE);
@@ -100,6 +98,9 @@ public class UserPass extends AppCompatActivity {
                 password = etPassword.getEditText().getText().toString();
                 security = etSecurity.getEditText().getText().toString();
 
+                int userLength = etUsername.getEditText().getText().length();
+                int pwLength = etPassword.getEditText().getText().length();
+
                 if (Constants.PW_CHANGE.equals(true)) {
                     if (username.isEmpty()) {
                         etUsername.setError(getString(R.string.error_field_required));
@@ -109,8 +110,11 @@ public class UserPass extends AppCompatActivity {
 
                     } else if (security.isEmpty()) {
                         etSecurity.setError(getString(R.string.error_field_required));
-                    }
-                    else {
+
+                    } else if (pwLength < 6) {
+                        etPassword.setError("Must be at least 6 characters long");
+
+                    }else {
                         pDialog = new ProgressDialog(UserPass.this);
                         pDialog.setMessage("Welcome to the bark side..");
                         pDialog.setIndeterminate(false);
@@ -129,8 +133,7 @@ public class UserPass extends AppCompatActivity {
                         }
                         postData(url_update, dataJson, 2);
                     }
-                }
-                else {
+                } else {
                     if (username.isEmpty()) {
                         etUsername.setError(getString(R.string.error_field_required));
 
@@ -139,6 +142,12 @@ public class UserPass extends AppCompatActivity {
 
                     } else if (security.isEmpty()) {
                         etSecurity.setError(getString(R.string.error_field_required));
+
+                    } else if (userLength < 3) {
+                        etUsername.setError("Must be between 3 and 20 characters");
+
+                    } else if (pwLength < 6) {
+                        etPassword.setError("Must be at least 6 characters long");
 
                     } else {
 
@@ -208,18 +217,19 @@ public class UserPass extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
+                Constants.PW_CHANGE = false;
                 Intent i = new Intent(this, UserLogin.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
 
-                pDialog.dismiss();
-            }
+                Toast.makeText(this, "Sign up successful. Welcome!", Toast.LENGTH_SHORT).show();
 
-            else {
+                pDialog.dismiss();
+            } else {
                 // product with pid not found
                 pDialog.dismiss();
-                Toast.makeText(this, "Username is already in use. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Username is already in use. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -232,20 +242,19 @@ public class UserPass extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
+                Constants.PW_CHANGE = false;
                 finish();
                 Intent i = new Intent(this, UserLogin.class);
                 startActivity(i);
                 // dismiss the dialog once product updated
                 pDialog.dismiss();
-                Log.i("here","here");
-                Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
-            }
-
-            else {
+                Log.i("here", "here");
+                Toast.makeText(this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
+            } else {
                 // product with pid not found
                 pDialog.dismiss();
-                Log.i("here1","here1");
-                Toast.makeText(this, "Username and security question do not match", Toast.LENGTH_SHORT).show();
+                Log.i("here1", "here1");
+                Toast.makeText(this, "Username and security question do not match!", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {

@@ -27,14 +27,14 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
-        android:text="please show this to our staff!"
+        android:text="Please show this to our staff!"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar2"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar2" />
 
     <EditText
         android:id="@+id/etQrInput"

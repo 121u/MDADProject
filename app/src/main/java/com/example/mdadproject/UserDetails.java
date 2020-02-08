@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mdadproject.Adapters.OwnerListAdapter;
 import com.example.mdadproject.Utils.Constants;
 import com.example.mdadproject.Utils.SaveSharedPreference;
 import com.google.android.material.textfield.TextInputLayout;
@@ -198,7 +199,7 @@ public class UserDetails extends AppCompatActivity {
                 // deleting product in background thread
                 JSONObject dataJson = new JSONObject();
                 try {
-                    dataJson.put(TAG_USERNAME, username);
+                    dataJson.put(TAG_USERNAME, owner_username);
                 } catch (JSONException e) {
 
                 }
@@ -309,11 +310,11 @@ public class UserDetails extends AppCompatActivity {
             // dismiss the dialog once product updated
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
-                // successfully updated
+
+                Toast.makeText(UserDetails.this, "Owner successfully updated!", Toast.LENGTH_SHORT).show();
+                Intent resultIntent = new Intent();
+                setResult(RESULT_OK, resultIntent);
                 finish();
-                Intent i = new Intent(getApplicationContext(), StaffAppointments.class);
-                // send result code 100 to notify about product update
-                setResult(100, i);
 
             } else {
                 // product with pid not found
@@ -329,24 +330,6 @@ public class UserDetails extends AppCompatActivity {
             if (response.getInt("success") == 1) {
                 Toast.makeText(this, "Details successfully updated", Toast.LENGTH_SHORT).show();
 
-//                JSONArray ownerObj = response.getJSONArray(TAG_OWNERS);
-//
-//                JSONObject owner = ownerObj.getJSONObject(0);
-//                nric = owner.getString(TAG_NRIC);
-//                name = owner.getString(TAG_NAME);
-//                mobilenumber = owner.getString(TAG_MOBILENUMBER);
-//                email = owner.getString(TAG_EMAIL);
-//                address = owner.getString(TAG_ADDRESS);
-//                zipcode = owner.getString(TAG_ZIPCODE);
-//                username = owner.getString(TAG_USERNAME);
-//                password = owner.getString(TAG_PASSWORD);
-//
-//                etNric.getEditText().setText(nric);
-//                etName.getEditText().setText(name);
-//                etMobileNumber.getEditText().setText(mobilenumber);
-//                etEmail.getEditText().setText(email);
-//                etAddress.getEditText().setText(address);
-//                etZipcode.getEditText().setText(zipcode);
             } else {
             }
         } catch (JSONException e) {

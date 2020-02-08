@@ -108,11 +108,22 @@ public class StaffAptListAdapter extends BaseAdapter {
                                                 mContext.startActivity(in);
                                             }
                                             break;
+                                        case R.id.menu_pets:
+                                            if (mContext instanceof StaffAppointments) {
+                                                Intent in = new Intent(mContext, UserPets.class);
+                                                in.putExtra("pid", tempAppointment.getPid());
+                                                in.putExtra("owner_username", tempAppointment.getUsername());
+//                                                in.putExtra("qr", ((UserPets) mContext).qr);
+//                                                in.putExtra("name", tempPet.getName());
+                                                mContext.startActivity(in);
+                                            }
+                                            break;
                                         case R.id.menu_apt:
                                             if (mContext instanceof StaffAppointments) {
                                                 Intent in = new Intent(mContext, PetAppointments.class);
                                                 in.putExtra("pid", tempAppointment.getPid());
                                                 in.putExtra("username", tempAppointment.getUsername());
+                                                in.putExtra("name", tempAppointment.getPetname());
 //                                                in.putExtra("qr", ((UserPets) mContext).qr);
 //                                                in.putExtra("name", tempPet.getName());
                                                 mContext.startActivity(in);

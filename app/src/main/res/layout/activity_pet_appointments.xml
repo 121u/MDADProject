@@ -24,6 +24,8 @@
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:text="Upcoming Appointments"
+                android:text="Upcoming"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
@@ -58,13 +60,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="Previous Appointments"
+                android:text="Previous"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
             <ListView
                 android:id="@+id/listView2"
-                android:layout_width="330dp"
+                android:layout_width="360dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
                 android:divider="@android:color/transparent"

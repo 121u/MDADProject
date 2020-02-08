@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -101,6 +102,26 @@ public class StaffAllOwners extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                Log.i("refresh","refresh1");
+            }
+            if (resultCode == RESULT_CANCELED) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                Log.i("refresh","refresh2");
+            }
+        }
+    }
+
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
@@ -150,16 +171,16 @@ public class StaffAllOwners extends AppCompatActivity {
                     String security = c.getString(TAG_SECURITY).toLowerCase();
 
 
-
-                    o = new Owners(nric,name,mobilenumber,email,address,zipcode,username,password,security) {
-                    };
+                    o = new Owners(nric,name,mobilenumber,email,address,zipcode,username,password,security);
                     owners.add(o);
                 }
+
                 myCustomAdapter = new OwnerListAdapter(StaffAllOwners.this, owners);
                 myCustomAdapter.notifyDataSetChanged();
 
                 listView.setAdapter(myCustomAdapter);
                 pDialog.dismiss();
+
             }else{
                 pDialog.dismiss();
             }

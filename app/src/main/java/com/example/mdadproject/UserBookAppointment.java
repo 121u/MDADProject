@@ -28,10 +28,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mdadproject.Models.Appointment;
 import com.example.mdadproject.Models.Pet;
-import com.example.mdadproject.Utils.Constants;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.messaging.FirebaseMessaging;
 //import com.leinardi.android.speeddial.SpeedDialActionItem;
 //import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -93,7 +91,7 @@ public class UserBookAppointment extends AppCompatActivity {
     private static final String TAG_IMAGENAME = "image_name";
 
     JSONArray pets = null;
-    String name, aid, date, starttime, endttime, status, pid, petname, id;
+    String name, apt_id, date, starttime, endttime, status, pid, petname, id, savedAptDate, chosenPid, updDate, updStartTime;
 
     String[] timeOptions = new String[]{"1100", "1200", "1300", "1400", "1500", "1600", "1700"};
     AutoCompleteTextView editTextFilledExposedDropdown2;
@@ -113,8 +111,9 @@ public class UserBookAppointment extends AppCompatActivity {
         pDialog.show();
 
         Intent intent = getIntent();
+        pid = intent.getStringExtra(TAG_PID);
         username = intent.getStringExtra(TAG_USERNAME);
-        name = intent.getStringExtra("name");
+        name = intent.getStringExtra(TAG_PETNAME);
 
         JSONObject dataJson = new JSONObject();
         try {
@@ -122,16 +121,15 @@ public class UserBookAppointment extends AppCompatActivity {
         } catch (JSONException e) {
 
         }
-
         postData(url_get_PetList, dataJson, 2);
 
         Intent intent2 = getIntent();
+        apt_id = intent2.getStringExtra("apt_id");
 
-        aid = intent2.getStringExtra(TAG_ID);
-
+//        Log.i("apt_id", apt_id);
         JSONObject dataJson2 = new JSONObject();
         try {
-            dataJson2.put(TAG_ID, aid);
+            dataJson2.put(TAG_ID, apt_id);
         } catch (JSONException e) {
 
         }
@@ -155,7 +153,7 @@ public class UserBookAppointment extends AppCompatActivity {
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.black),
                 PorterDuff.Mode.SRC_ATOP);
 
-        if (aid != null) {
+        if (apt_id != null) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
@@ -190,7 +188,7 @@ public class UserBookAppointment extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(UserBookAppointment.this, date1, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()+24*60*60*1000);
                 datePickerDialog.show();
             }
         });
@@ -211,29 +209,46 @@ public class UserBookAppointment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                date = etAptDate.getEditText().getText().toString();
-                starttime = etAptTime.getEditText().getText().toString();
-                String start1 = starttime.replaceAll("[^\\d]", "");
+                updDate = etAptDate.getEditText().getText().toString();
+                updStartTime = etAptTime.getEditText().getText().toString();
+
+//                date = etAptDate.getEditText().getText().toString();
+//                starttime = etAptTime.getEditText().getText().toString();
+                String start1 = updStartTime.replaceAll("[^\\d]", "");
                 int start2 = Integer.parseInt(start1) + 100;
                 endttime = Integer.toString(start2);
                 status = "pending";
 
-                pDialog = new ProgressDialog(UserBookAppointment.this);
-                pDialog.setMessage("Saving details ...");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
-
-                JSONObject dataJson = new JSONObject();
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
                 try {
-                    dataJson.put(TAG_DATE, date);
-                    dataJson.put(TAG_STARTTIME, starttime);
-                    dataJson.put(TAG_ENDTIME, endttime);
-                    dataJson.put(TAG_ID, aid);
-
-                } catch (JSONException e) {
+                    Date parsedDate = simpleDateFormat2.parse(updDate);
+                    simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+                    newFormattedDate = simpleDateFormat2.format(parsedDate);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                postData(url_update_apt, dataJson, 4);
+
+                if (newFormattedDate.equals(date) && updStartTime.equals(starttime)) {
+                    finish();
+                } else {
+                    pDialog = new ProgressDialog(UserBookAppointment.this);
+                    pDialog.setMessage("Saving details ...");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(true);
+                    pDialog.show();
+
+                    JSONObject dataJson = new JSONObject();
+                    try {
+                        dataJson.put(TAG_DATE, newFormattedDate);
+                        dataJson.put(TAG_STARTTIME, updStartTime);
+                        dataJson.put(TAG_ENDTIME, endttime);
+                        dataJson.put(TAG_ID, apt_id);
+
+                    } catch (JSONException e) {
+                    }
+
+                    postData(url_update_apt, dataJson, 4);
+                }
 
             }
         });
@@ -250,7 +265,7 @@ public class UserBookAppointment extends AppCompatActivity {
                 // deleting product in background thread
                 JSONObject dataJson = new JSONObject();
                 try {
-                    dataJson.put(TAG_ID, aid);
+                    dataJson.put(TAG_ID, apt_id);
                 } catch (JSONException e) {
 
                 }
@@ -269,13 +284,6 @@ public class UserBookAppointment extends AppCompatActivity {
                 endttime = Integer.toString(start2);
                 status = "pending";
                 petname = etAptPet.getEditText().getText().toString();
-//                getSelectedPet();
-
-                Log.i("yeet", date);
-                Log.i("yeet", starttime);
-                Log.i("yeet", endttime);
-                Log.i("yeet", status);
-                Log.i("yeet", pid);
 
                 pDialog = new ProgressDialog(UserBookAppointment.this);
                 pDialog.setMessage("Creating your a-pet-ment..");
@@ -285,7 +293,7 @@ public class UserBookAppointment extends AppCompatActivity {
 
                 JSONObject dataJson = new JSONObject();
                 try {
-                    dataJson.put(TAG_DATE, date);
+                    dataJson.put(TAG_DATE, savedAptDate);
                     dataJson.put(TAG_STARTTIME, starttime);
                     dataJson.put(TAG_ENDTIME, endttime);
                     dataJson.put(TAG_STATUS, status);
@@ -297,8 +305,6 @@ public class UserBookAppointment extends AppCompatActivity {
 
                 }
                 postData(url_create_appointment, dataJson, 1);
-                FirebaseMessaging.getInstance().subscribeToTopic(date + username + petname);
-
             }
         });
     }
@@ -310,9 +316,13 @@ public class UserBookAppointment extends AppCompatActivity {
 
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+        String dateToShow = "dd MMMM yyyy";
 
-        etAptDate.getEditText().setText(sdf.format(myCalendar.getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+        SimpleDateFormat sdf2 = new SimpleDateFormat(dateToShow, Locale.UK);
+
+        savedAptDate = sdf.format(myCalendar.getTime());
+        etAptDate.getEditText().setText(sdf2.format(myCalendar.getTime()));
     }
 
     private void getPetPid(Pet pet) {
@@ -365,14 +375,13 @@ public class UserBookAppointment extends AppCompatActivity {
         try {
             if (response.getInt(TAG_SUCCESS) == 1) {
 
-                finish();
-//                Intent i = new Intent(this, AllProductsActivity.class);
-//                startActivity(i);
-
-                // dismiss the dialog once product uupdated
-                pDialog.dismiss();
                 Toast.makeText(this, "Appointment successfully booked!", Toast.LENGTH_SHORT).show();
-
+                Intent q = new Intent(this, PetAppointments.class);
+                q.putExtra(TAG_NAME, petname);
+                q.putExtra(TAG_PID, pid);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
+                finish();
 
             } else if (response.getInt(TAG_SUCCESS) == 2){
                 pDialog.dismiss();
@@ -447,7 +456,7 @@ public class UserBookAppointment extends AppCompatActivity {
                     Appointment a = new Appointment();
                     // Storing each json item in variable
                     String id = c.getString(TAG_ID);
-                    String date = c.getString(TAG_DATE);
+                    date = c.getString(TAG_DATE);
                     SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                     try {
                         Date parsedDate = simpleDateFormat2.parse(date);
@@ -456,13 +465,13 @@ public class UserBookAppointment extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    String startime = c.getString(TAG_STARTTIME);
+                    starttime = c.getString(TAG_STARTTIME);
                     String endtime = c.getString(TAG_ENDTIME);
                     String status = c.getString(TAG_STATUS);
                     String pid = c.getString(TAG_PID);
 
-                    etAptDate.getEditText().setText(date);
-                    etAptTime.getEditText().setText(startime);
+                    etAptDate.getEditText().setText(newFormattedDate);
+                    etAptTime.getEditText().setText(starttime);
                     etAptPet.getEditText().setText(name);
 
                     final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dropdown_menu_popup_item, timeOptions);
@@ -491,9 +500,11 @@ public class UserBookAppointment extends AppCompatActivity {
             if (response.getInt("success") == 1) {
                 // successfully updated
                 Toast.makeText(this, "Appointment successfully deleted!", Toast.LENGTH_SHORT).show();
-                Intent i = getIntent();
-                // send result code 100 to notify about product update
-                setResult(100, i);
+                Intent q = new Intent(this, PetAppointments.class);
+                q.putExtra(TAG_NAME, name);
+                q.putExtra(TAG_PID, pid);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
                 finish();
 
             } else {
@@ -511,19 +522,30 @@ public class UserBookAppointment extends AppCompatActivity {
             if (response.getInt("success") == 1) {
 
                 Toast.makeText(this, "Appointment successfully updated!", Toast.LENGTH_SHORT).show();
+                Intent q = new Intent(this, PetAppointments.class);
+                q.putExtra(TAG_NAME, name);
+                q.putExtra(TAG_PID, pid);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
+                finish();
 
 //                JSONArray aptObj = response.getJSONArray(TAG_APPOINTMENT);
 //
 //                JSONObject apt = aptObj.getJSONObject(0);
 //                date = apt.getString(TAG_DATE);
 //                starttime = apt.getString(TAG_STARTTIME);
-//                aid = apt.getString(TAG_ID);
+//                apt_id = apt.getString(TAG_ID);
 //
 //
 //                etAptDate.getEditText().setText(date);
 //                etAptTime.getEditText().setText(starttime);
 
-            } else {
+            } else if (response.getInt(TAG_SUCCESS) == 2){
+                pDialog.dismiss();
+                Toast.makeText(this, "Sorry! Time slot is already taken please try another one.", Toast.LENGTH_SHORT).show();
+
+            }
+            else {
             }
 
         } catch (JSONException e) {

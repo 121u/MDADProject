@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.mdadproject.Models.Appointment;
 import com.example.mdadproject.R;
 
@@ -53,13 +55,13 @@ public class AptListAdapter extends BaseAdapter {
         TextView tvTime = (TextView) convertView.findViewById(R.id.txtTime);
         TextView tvStatus = (TextView) convertView.findViewById(R.id.status);
 
-        tvId.setText(tempAppointment.getPid());
+        tvId.setText(tempAppointment.getId());
         tvDate.setText(tempAppointment.getDate());
         tvTime.setText(tempAppointment.getStarttime() + " - " + tempAppointment.getEndtime());
         tvStatus.setText(tempAppointment.getStatus());
 
         if (tvStatus.getText().toString().equals("completed") ) {
-            convertView.setBackgroundColor(Color.parseColor("#d3d3d3"));
+            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.roundcornersgrey));
         }
 
         return convertView;
