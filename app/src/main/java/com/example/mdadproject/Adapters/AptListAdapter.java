@@ -13,12 +13,16 @@ import androidx.core.content.ContextCompat;
 import com.example.mdadproject.Models.Appointment;
 import com.example.mdadproject.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class AptListAdapter extends BaseAdapter {
 
     Context mContext;
     ArrayList<Appointment> appointments = new ArrayList<>();
+    TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
 
     public AptListAdapter(Context context, ArrayList<Appointment> appointments) {
         mContext = context;
@@ -60,8 +64,20 @@ public class AptListAdapter extends BaseAdapter {
         tvTime.setText(tempAppointment.getStarttime() + " - " + tempAppointment.getEndtime());
         tvStatus.setText(tempAppointment.getStatus());
 
-        if (tvStatus.getText().toString().equals("completed") ) {
-            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.roundcornersgrey));
+        try {
+            String date1 = tvDate.getText().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+            sdf.setTimeZone(timeZone1);
+            Date parsedDate = sdf.parse(date1);
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
+            date1 = sdf.format(parsedDate);
+            Date date2 = sdf.parse(date1);
+
+            if (tvStatus.getText().toString().equals("completed") || new Date().after(date2)) {
+                convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.roundcornersgrey));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return convertView;

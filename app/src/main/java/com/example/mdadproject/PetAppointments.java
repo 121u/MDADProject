@@ -26,9 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class PetAppointments extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class PetAppointments extends AppCompatActivity {
     ArrayList<Appointment> AppointmentList = new ArrayList();
     ArrayList<Appointment> completedList = new ArrayList();
     ArrayList<Appointment> pendingList = new ArrayList();
+    TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,8 +163,10 @@ public class PetAppointments extends AppCompatActivity {
                     String id = c.getString(TAG_ID);
                     apt_id = id;
                     String date = c.getString(TAG_DATE);
+
                     SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                     try {
+                        simpleDateFormat2.setTimeZone(timeZone1);
                         Date parsedDate = simpleDateFormat2.parse(date);
                         simpleDateFormat2 = new SimpleDateFormat("dd MMMM yyyy");
                         newFormattedDate = simpleDateFormat2.format(parsedDate);
@@ -179,13 +184,37 @@ public class PetAppointments extends AppCompatActivity {
                     AppointmentList.add(a);
                 }
 
+
                 for (Appointment a1 : AppointmentList) {
-                    if (a1.getStatus().equals("completed")) {
-                        completedList.add(a1);
-                    } else {
-                        pendingList.add(a1);
+                    try {
+                        String date1 = a1.getDate();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+                        sdf.setTimeZone(timeZone1);
+                        Date parsedDate = sdf.parse(date1);
+                        sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        date1 = sdf.format(parsedDate);
+                        Date date2 = sdf.parse(date1);
+
+//                        newFormattedDate = sdf.format(parsedDate);
+//                        Date strDate = sdf.parse(a1.getDate());
+
+                        if (new Date().after(date2) || a1.getStatus().equals("completed")) {
+                            completedList.add(a1);
+                        }else {
+                            pendingList.add(a1);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
+
+//                for (Appointment a1 : AppointmentList) {
+//                    if (a1.getStatus().equals("completed")) {
+//                        completedList.add(a1);
+//                    } else {
+//                        pendingList.add(a1);
+//                    }
+//                }
 
                 AptListAdapter myCustomAdapter = new AptListAdapter(PetAppointments.this, pendingList);
                 listView.setAdapter(myCustomAdapter);

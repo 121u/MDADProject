@@ -47,6 +47,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
 
     private static final String url_queue = UserLogin.ipBaseAddress + "/create_queueNoJson.php";
+    private static final String url_update = UserLogin.ipBaseAddress + "/update_apt_statusJson.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_QUEUE = "queue";
     private static final String TAG_QUEUE_NO = "queue_no";
@@ -221,6 +222,14 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         }
         postData(url_queue, dataJson, 1);
 
+        JSONObject dataJson2 = new JSONObject();
+        try {
+            dataJson2.put(TAG_USERNAME, qr);
+            dataJson2.put(TAG_QUEUE_DATE, currentDate);
+        } catch (JSONException e) {
+
+        }
+        postData(url_update, dataJson2, 0);
 //        Toast.makeText(this, "Contents = " + result.getText() + ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
         // * Wait 3 seconds to resume the preview.
