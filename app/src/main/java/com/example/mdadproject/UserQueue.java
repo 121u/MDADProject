@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +53,7 @@ public class UserQueue extends AppCompatActivity {
     ArrayList<Queue> todayQueueList = new ArrayList();
     JSONArray queues = null;
     String qr, queueId, queueNo, username, queueDate, queueTime, newFormattedDate;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,9 @@ public class UserQueue extends AppCompatActivity {
         currentQueueNo = (TextView) findViewById(R.id.textView6);
 
 
-        currentQueueNo.setText("Latest queue number is " + Constants.qNum);
+        SharedPreferences countPref = getSharedPreferences("Counter", MODE_PRIVATE);
+        count = countPref.getInt("count_key",count);
+        currentQueueNo.setText("Latest queue number is " + count);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Queue List");
@@ -173,9 +177,24 @@ public class UserQueue extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.reset_queue) {
+
+//            SharedPreferences countPref = getSharedPreferences("Counter", MODE_PRIVATE);
+//            SharedPreferences.Editor editorOpenClose = countPref.edit();
+//            editorOpenClose.putInt("count", counter);
+//            editorOpenClose.apply();
+
+            SharedPreferences countPref = getSharedPreferences("Counter", MODE_PRIVATE);
+            SharedPreferences.Editor editor = countPref.edit();
+            editor.clear().commit();
+            count = countPref.getInt("count_key",count);
+
             Constants.qNum = 0;
-            Toast.makeText(this, "Queue number has been reset to " + Constants.qNum, Toast.LENGTH_SHORT).show();
-            currentQueueNo.setText("Latest queue number is " + Constants.qNum);
+            Toast.makeText(this, "Queue number has been reset to " + count, Toast.LENGTH_SHORT).show();
+//            currentQueueNo.setText("Latest queue number is " + count);
+
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

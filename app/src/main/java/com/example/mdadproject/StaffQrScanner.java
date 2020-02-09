@@ -2,6 +2,7 @@ package com.example.mdadproject;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -42,6 +44,7 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     int qno = 0;
     private RequestQueue mRequestQue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
+    TimeZone timeZone1 = TimeZone.getTimeZone("Asia/Singapore");
 
     private static final String url_queue = UserLogin.ipBaseAddress + "/create_queueNoJson.php";
     private static final String TAG_SUCCESS = "success";
@@ -50,6 +53,8 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
     private static final String TAG_USERNAME = "username";
     private static final String TAG_QUEUE_DATE = "queue_date";
     private static final String TAG_QUEUE_TIME = "queue_time";
+
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,11 +152,23 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
                 finish();
                 Toast.makeText(this, qr + " has been added to queue!", Toast.LENGTH_SHORT).show();
                 sendNotification();
+                Intent i = new Intent(this,UserQueue.class);
+                i.putExtra("qr",qr);
+                i.putExtra("username", username);
+                startActivity(i);
+                finish();
 //                Intent i = new Intent(this, UserLogin.class);
 //                startActivity(i);
             } else {
                 // product with pid not found
                 Toast.makeText(this, "This owner is already here!", Toast.LENGTH_SHORT).show();
+                SharedPreferences countPref = getSharedPreferences("Counter", MODE_PRIVATE);
+                SharedPreferences.Editor editor = countPref.edit();
+                int defaultValue = countPref .getInt("count_key",count);
+                count = defaultValue-1;  // change this line
+                editor.putInt("count_value",defaultValue).commit();
+                editor.putInt("count_key",count).commit();
+                count = countPref.getInt("count_key",count);
             }
 
         } catch (JSONException e) {
@@ -162,17 +179,40 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
 
     @Override
     public void handleResult(Result result) {
+
+        SharedPreferences countPref = getSharedPreferences("Counter", MODE_PRIVATE);
+        SharedPreferences.Editor editor = countPref.edit();
+        int defaultValue = countPref .getInt("count_key",count);
+        count = defaultValue+1;  // change this line
+        editor.putInt("count_value",defaultValue).commit();
+        if(count == 1)
+        {
+            count = 1;
+            editor.putInt("count_key",count).commit();
+
+        }
+        else
+        {
+            editor.putInt("count_key",count).commit();
+            count = countPref.getInt("count_key",count);
+        }
+
+        Log.i("kappa", "" + count);
+
         Constants.qNum++;
         qr = result.getText();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        sdf.setTimeZone(timeZone1);
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        sdf2.setTimeZone(timeZone1);
+
         String currentDate = sdf.format(new Date());
         String currentTime = sdf2.format(new Date());
-        Log.i("kappa", "" + Constants.qNum);
+//        Log.i("kappa", "" + Constants.qNum);
 
         JSONObject dataJson = new JSONObject();
         try {
-            dataJson.put(TAG_QUEUE_NO, Constants.qNum);
+            dataJson.put(TAG_QUEUE_NO, count);
             dataJson.put(TAG_USERNAME, qr);
             dataJson.put(TAG_QUEUE_DATE, currentDate);
             dataJson.put(TAG_QUEUE_TIME, currentTime);
@@ -182,12 +222,6 @@ public class StaffQrScanner extends AppCompatActivity implements ZXingScannerVie
         postData(url_queue, dataJson, 1);
 
 //        Toast.makeText(this, "Contents = " + result.getText() + ", Format = " + result.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
-
-        Intent i = new Intent(this,UserQueue.class);
-        i.putExtra("qr",qr);
-        i.putExtra("username", username);
-        startActivity(i);
-        finish();
 
         // * Wait 3 seconds to resume the preview.
         Handler handler = new Handler();

@@ -312,8 +312,10 @@ public class UserDetails extends AppCompatActivity {
             if (response.getInt("success") == 1) {
 
                 Toast.makeText(UserDetails.this, "Owner successfully updated!", Toast.LENGTH_SHORT).show();
-                Intent resultIntent = new Intent();
-                setResult(RESULT_OK, resultIntent);
+                Intent q = new Intent(this, StaffAllOwners.class);
+                q.putExtra(TAG_USERNAME, username);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
                 finish();
 
             } else {
@@ -329,6 +331,11 @@ public class UserDetails extends AppCompatActivity {
             pDialog.dismiss();
             if (response.getInt("success") == 1) {
                 Toast.makeText(this, "Details successfully updated", Toast.LENGTH_SHORT).show();
+                Intent q = new Intent(this, StaffAllOwners.class);
+                q.putExtra(TAG_USERNAME, username);
+                q.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(q);
+                finish();
 
             } else {
             }

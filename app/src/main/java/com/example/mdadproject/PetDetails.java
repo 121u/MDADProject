@@ -187,11 +187,15 @@ public class PetDetails extends AppCompatActivity {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        if (SaveSharedPreference.getUserName(PetDetails.this) != null && pid != null) {
+        if (SaveSharedPreference.getUserName(PetDetails.this).equals("staff") && pid != null) {
+
+            btmToolbar.setVisibility(View.GONE);
+            postData(url_get_pet, dataJson, 1);
+
+        } else if (SaveSharedPreference.getUserName(PetDetails.this).length() > 0 && pid != null) {
 
             btnNext.setVisibility(View.GONE);
             postData(url_get_pet, dataJson, 1);
-
         } else {
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
@@ -387,7 +391,7 @@ public class PetDetails extends AppCompatActivity {
                                     Uri downloadUrl = uri;
                                     updatedImage_Path = downloadUrl.toString();
 
-                                    if (addOrUpdate==true) {
+                                    if (addOrUpdate == true) {
                                         JSONObject dataJson = new JSONObject();
                                         try {
                                             dataJson.put(TAG_NAME, name);
@@ -406,8 +410,7 @@ public class PetDetails extends AppCompatActivity {
 
                                         }
                                         postData(url_create_pet, dataJson, 4);
-                                    }
-                                    else {
+                                    } else {
                                         updatePet(updatedImage_Path);
                                     }
                                 }
@@ -430,7 +433,7 @@ public class PetDetails extends AppCompatActivity {
                     });
         } else {
 //            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
-              updatePet(image_path);
+            updatePet(image_path);
         }
     }
 
