@@ -24,11 +24,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
 
-//        Map<String, String> extraData = remoteMessage.getData();
-//
-//        String brandId = extraData.get("brandId");
-//        String category = extraData.get("category");
-
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, "TAC")
                         .setContentTitle(title)
@@ -36,22 +31,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setSmallIcon(R.drawable.ic_launcher_background);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(body));
-
-//        Intent intent;
-//        if (category.equals("shoes")) {
-//            intent = new Intent(this, UserPets.class);
-//
-//        } else {
-//            intent = new Intent(this, UserPets.class);
-//
-//        }
-//        intent.putExtra("brandId", brandId);
-//        intent.putExtra("category", category);
-
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        notificationBuilder.setContentIntent(pendingIntent);
-
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
